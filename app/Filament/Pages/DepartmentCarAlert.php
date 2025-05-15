@@ -84,9 +84,21 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
     {
         return [
             SelectFilter::make('responsible_id')
+            ->label('Department')
             ->relationship('responsible', 'dept_name')
             ->searchable()
             ->preload()
+            ->indicator('Department'),
+
+            SelectFilter::make('status')
+                ->options([
+                    'accepted' => 'Accepted',
+                    'reported' => 'Reported',
+                    'in_progress' => 'In progress',
+                    'pending_review' => 'Pending review',
+                    'reopened' => 'Reopened',
+                    'closed' => 'Closed'
+                ])  ->indicator('status'),
         ];
 
     }
@@ -142,7 +154,7 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
     public static function getNavigationBadge(): ?string
     {
         // ตรวจสอบว่าผู้ใช้เป็นแผนกหรือไม่
-        if (Auth::user()?->role !== 'department') {
+        if (Auth::user()?->role === 'User') {
             return null;
         }
 

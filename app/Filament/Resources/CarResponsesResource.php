@@ -19,8 +19,10 @@ use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\CarResponsesResource\Pages;
@@ -173,23 +175,32 @@ class CarResponsesResource extends Resource
                 ->dateTime('d/m/Y H:i'),
             ])
             ->filters([
+                SelectFilter::make('status')
+                ->options([
+                    'reported' => 'Reported',
+                    'in_progress' => 'In progress',
+                    'pending_review' => 'Pending review',
+                    'reopened' => 'Reopened',
+                    'closed' => 'Closed'
+                ])  ->indicator('status'),
+
                 Filter::make('created_at')
                 ->form([
-                    DatePicker::make('created_from')->displayFormat('d/m/Y')->native(false),
-                    DatePicker::make('created_until')->displayFormat('d/m/Y')->native(false)->default(now()),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['created_from'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
-                            )
-                            ->when(
-                                $data['created_until'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
-                            );
-                    })
-            ])
+                    DatePicker::make('created_from'),
+                    DatePicker::make('created_until'),
+                ])
+                ->query(function (Builder $query, array $data): Builder {
+                    return $query
+                        ->when(
+                            $data['created_from'],
+                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                        )
+                        ->when(
+                            $data['created_until'],
+                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                        );
+                })->columnSpan(2)->columns(2)
+            ],layout: FiltersLayout::AboveContent)->filtersFormColumns(3)
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),

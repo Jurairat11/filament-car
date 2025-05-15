@@ -11,6 +11,7 @@ use Filament\Tables\Table;
 use Filament\Facades\Filament;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Filters\Filter;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -22,8 +23,10 @@ use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ProblemResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -84,6 +87,7 @@ class ProblemResource extends Resource
                     FileUpload::make('prob_img')
                         ->label('Problem picture')
                         ->image()
+                        ->downloadable()
                         ->required()
                         ->directory('form-attachments')
                         ->visibility('public'),
@@ -121,12 +125,14 @@ class ProblemResource extends Resource
                         'new' => 'info',
                         'accepted' => 'success',
                         'dismissed' => 'danger',
+                        'reported' => 'warning',
                         'closed' => 'gray'
                     })
                     ->formatStateUsing(fn (string $state) => match ($state) {
                         'new' => 'new',
                         'accepted' => 'accepted',
                         'dismissed' => 'dismissed',
+                        'reported' => 'reported',
                         'closed' => 'closed',
                         default => ucfirst($state),
                     }),
@@ -137,8 +143,31 @@ class ProblemResource extends Resource
                     ->timezone('Asia/Bangkok'),
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('status')
+                ->options([
+                    'new' => 'New',
+                    'accepted' => 'Accepted',
+                    'dismissed' => 'Dismissed',
+                    'reported' => 'Reported',
+                ])  ->indicator('status'),
+
+                Filter::make('created_at')
+                ->form([
+                    DatePicker::make('created_from'),
+                    DatePicker::make('created_until'),
+                ])
+                ->query(function (Builder $query, array $data): Builder {
+                    return $query
+                        ->when(
+                            $data['created_from'],
+                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                        )
+                        ->when(
+                            $data['created_until'],
+                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                        );
+                })->columnSpan(2)->columns(2)
+            ], layout: FiltersLayout::AboveContent)->filtersFormColumns(3)
             ->actions([
                 EditAction::make(),
                 ViewAction::make(),
@@ -236,12 +265,15 @@ class ProblemResource extends Resource
         ];
     }
 
-    // public static function getNavigationBadge(): ?string
-    // {
-    //     $count = Problem::where('status', 'new')->count();
+    public static function getNavigationBadge(): ?string
+    {
+        if (User::role('Safety')) {
+            return null;
+        }
+        return Problem::where('status', 'new')
+            ->count();
+    }
 
-    //     return $count > 0 ? (string) $count : null;
-    // }
     public static function getEloquentQuery(): Builder
     {
         $user = Filament::auth()->user();

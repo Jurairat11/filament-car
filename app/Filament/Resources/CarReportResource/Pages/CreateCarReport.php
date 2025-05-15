@@ -31,7 +31,7 @@ class CreateCarReport extends CreateRecord
             'hazard_level_id'   => request()->get('hazard_level_id'),
             'hazard_type_id'    => request()->get('hazard_type_id'),
             'img_before'        => request()->get('img_before'),
-            'created_by'        => Auth::user()?->FullName,
+            //'created_by'        => Auth::user()?->FullName,
             'responsible_dept_id' => request()->get('responsible_dept_id'),
             'parent_car_id'       => request()->get('parent_car_id'),
         ]);

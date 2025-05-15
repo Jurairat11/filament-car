@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use Carbon\Carbon;
+use App\Models\User;
 use Filament\Tables;
 use App\Models\Problem;
 use Filament\Forms\Form;
@@ -14,13 +16,16 @@ use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
+use Filament\Tables\Filters\Indicator;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\CarReportResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -193,22 +198,29 @@ class CarReportResource extends Resource
 
             ])
             ->filters([
+                SelectFilter::make('responsible_id')
+                ->label('Department')
+                ->relationship('responsible', 'dept_name')
+                ->searchable()
+                ->preload()
+                ->indicator('Department'),
+
                 Filter::make('created_at')
                 ->form([
-                    DatePicker::make('created_from')->displayFormat('d/m/Y')->native(false),
-                    DatePicker::make('created_until')->displayFormat('d/m/Y')->native(false),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['created_from'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
-                            )
-                            ->when(
-                                $data['created_until'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
-                            );
-                    })
+                    DatePicker::make('created_from'),
+                    DatePicker::make('created_until'),
+                ])
+                ->query(function (Builder $query, array $data): Builder {
+                    return $query
+                        ->when(
+                            $data['created_from'],
+                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                        )
+                        ->when(
+                            $data['created_until'],
+                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                        );
+                })
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -238,12 +250,15 @@ class CarReportResource extends Resource
         ];
     }
 
-    public static function getNavigationBadge(): ?string
-    {
-        $count = Car_report::where('status', 'pending_review')->count();
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     if (User::role('Safety')) {
+    //         return Car_report::where('status', 'pending_review')
+    //         ->count();
+    //     }
 
-        return $count > 0 ? (string) $count : null;
-    }
+    //     return null; // Ensure a value is returned in all paths
+    // }
 
     // public static function shouldRegisterNavigation(): bool
     // {

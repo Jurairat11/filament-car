@@ -36,7 +36,7 @@ class ViewCarReport extends ViewRecord
                     //'responsible_dept_id' => $data['responsible_dept_id'],
                     // ไม่ต้องอัปเดต dept_id
                 ]);
-                //Problem::where('id', $record->id)->update(['status' => 'reported']);
+                Problem::where('id', $record->problem_id)->update(['status' => 'reported']);
 
                 //แจ้งหน่วยงานที่รับผิดชอบ
                 $departmentUsers = User::whereHas('roles', function ($query) {
@@ -135,10 +135,12 @@ class ViewCarReport extends ViewRecord
 
                     //แจ้งพนักงานผู้แจ้งปัญหา
                     $problem = Problem::where('id', $this->record->problem_id)->first();
-                    dd($this->record->problem_id);
+                    //dd($this->record->problem_id);
+                    //dd($problem); 7
 
                     if ($problem) {
                         $employee = User::where('id', $problem->user_id)->first();
+                        //dd($problem->user_id); 4
                         if ($employee) {
                             Notification::make()
                                 ->iconColor('success')
@@ -291,7 +293,7 @@ class ViewCarReport extends ViewRecord
                         Placeholder::make('perm_desc')
                         ->label('Permanent action')
                         ->columnSpan(2)
-                        ->content(fn($record)=>$record->carResponse?->perm_desc ? $record->carResponse?->temp_desc : '-'),
+                        ->content(fn($record)=>$record->carResponse?->perm_desc ? $record->carResponse?->perm_desc : '-'),
 
 
                         Placeholder::make('perm_due_date')
