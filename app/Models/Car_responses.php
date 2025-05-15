@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+class Car_responses extends Model
+{
+    use HasFactory;
+
+    protected $primaryKey = 'id';
+    protected $fillable =[
+        'car_id',
+        'cause',
+        'img_after',
+        'temp_desc',
+        'temp_due_date',
+        'temp_responsible_id',
+        'perm_desc',
+        'perm_due_date',
+        'perm_responsible_id',
+        'preventive',
+        'status',
+        'created_by'
+    ];
+
+
+    public function carReport() {
+        return $this->belongsTo(Car_report::class,'car_id','id');
+    }
+
+    public function tempResponsible(){
+        return $this->belongsTo(User::class,'temp_responsible_id','id');
+    }
+    public function permResponsible(){
+        return $this->belongsTo(User::class,'perm_responsible_id','id');
+    }
+
+    public function createdResponse(){
+        return $this->belongsTo(User::class,'created_by','id');
+    }
+}
