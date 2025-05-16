@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('car_desc');
             $table->string('img_before');
             $table->string('status');
+            $table->date('close_car_date')->nullable();
 
             // Foreign keys
             $table->foreignId('dept_id')->constrained('departments','dept_id')->onDelete('cascade');

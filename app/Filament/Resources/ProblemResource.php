@@ -98,6 +98,7 @@ class ProblemResource extends Resource
                         'new' => 'New',
                         'accepted' => 'Accepted',
                         'dismissed' => 'Dismissed',
+                        'reported' => 'Reported',
                         'closed' => 'Closed'
                     ])
                     ->default('new')

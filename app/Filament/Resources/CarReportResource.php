@@ -185,6 +185,10 @@ class CarReportResource extends Resource
                     'closed' => 'closed',
                     default => ucfirst($state),
                 }),
+                TextColumn::make('close_car_date')
+                ->label('Close date')
+                ->dateTime('d/m/Y')
+                ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('users.FullName')
                 ->label('Created by'),

@@ -13,7 +13,8 @@ class ListDepartments extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make('Create')
+            ->label('Create'),
         ];
     }
 }

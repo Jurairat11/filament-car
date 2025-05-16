@@ -25,7 +25,8 @@ class Car_report extends Model
         'created_by',
         'parent_car_id',
         'followed_car_id',
-        'responsible_dept_id'
+        'responsible_dept_id',
+        'close_car_date'
     ];
 
     public static function generateNextCarNo(): string

@@ -17,24 +17,24 @@ class DatabaseSeeder extends Seeder
     {
         //User::factory(10)->create();
 
-        $adminRole = Role::firstOrCreate(['name' => 'Admin']);
+        //$adminRole = Role::firstOrCreate(['name' => 'Admin']);
         $safetyRole = Role::firstOrCreate(['name' => 'Safety']);
 
-        $user1 = User::factory()->create([
-            'emp_id' => 'admin01',
-            'emp_name' => 'Admin',
-            'last_name' => 'System',
-            'email' => 'admin@example.com',
-            'dept_id' => 1,
-            'password' => Hash::make('admin1234'),
-        ]);
-        $user1->assignRole($adminRole);
+        // $user1 = User::factory()->create([
+        //     'emp_id' => 'admin',
+        //     'emp_name' => 'Admin',
+        //     'last_name' => 'System',
+        //     'email' => 'admin02@example.com',
+        //     'dept_id' => 1,
+        //     'password' => Hash::make('admin1234'),
+        // ]);
+        // $user1->assignRole($adminRole);
 
         $user2 = User::factory()->create([
-            'emp_id' => 'she12',
+            'emp_id' => 'she01',
             'emp_name' => 'Jennie',
             'last_name' => 'Kim',
-            'email' => 'jennie@example.com',
+            'email' => 'jennie01@example.com',
             'dept_id' => 2,
             'password' => Hash::make('she1234'),
         ]);

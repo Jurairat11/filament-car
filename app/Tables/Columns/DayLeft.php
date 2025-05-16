@@ -13,6 +13,12 @@ class DayLeft extends Column
     {
         $dueDate = Carbon::parse($this->getRecord()->car_due_date);
         $today = Carbon::today();
+        $carStatus = $this->getRecord()->status;
+        $closeDate = Carbon::parse($this->getRecord()->close_car_date)->format('d/m/Y');
+
+        if($carStatus === 'closed') {
+            return 'completed at: '.$closeDate;
+        }
 
         return $today->diffInDays($dueDate, false); // false = คืนค่าติดลบถ้าเลยกำหนด
     }

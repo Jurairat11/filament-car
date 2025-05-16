@@ -63,6 +63,12 @@ class ViewCarReport extends ViewRecord
             User::role('Safety') && $record->status === 'pending_review')
             ->action(function () {
                 $this->record->update(['status' => 'reopened']);
+
+                if ($this->record->problem_id) {
+                        Problem::where('id', $this->record->problem_id)
+                            ->update(['status' => 'accepted']);
+                    }
+
                 // ปิดใบ CAR ก่อนหน้า
                 if ($this->record->parent_car_id) {
                     $this->record->parent()->update(['status' => 'reopened']);
@@ -98,6 +104,7 @@ class ViewCarReport extends ViewRecord
                     'hazard_type_id'       => $this->record->hazard_type_id,
                     'img_before'           => $this->record->img_before,
                     'responsible_dept_id'  => $this->record->responsible_dept_id,
+                    'created_by'           => $this->record->created_by,
                     'parent_car_id'        => $this->record->id, //ชี้กลับไปยัง CAR แม่
                      //ชึ้ไปยัง CAR ลูกที่ตามมา
                 ]);
@@ -112,6 +119,7 @@ class ViewCarReport extends ViewRecord
                 ->action(function () {
                     // ปิดใบปัจจุบัน
                     $this->record->update(['status' => 'closed']);
+                    $this->record->update(['close_car_date' => today()]);
 
                     // ปิดใบ CAR ก่อนหน้า
                     if ($this->record->parent_car_id) {
@@ -119,14 +127,14 @@ class ViewCarReport extends ViewRecord
                     }
 
                     // ปิดปัญหาต้นทาง
-                    if ($this->record->problem_id) {
-                        Problem::where('id', $this->record->problem_id)
-                            ->update(['status' => 'closed']);
-                    }
+                    // if ($this->record->problem_id) {
+                    //     Problem::where('id', $this->record->problem_id)
+                    //         ->update(['status' => 'closed']);
+                    // }
 
                     // ปิด responses ที่เกี่ยวข้อง
-                    $id = $this->record->id;
-                    Car_responses::where('car_id', $id)->update(['status' => 'closed']);
+                    // $id = $this->record->id;
+                    // Car_responses::where('car_id', $id)->update(['status' => 'closed']);
                     //dd($this->record->id);
 
                     $parent_car_id = $this->record->parent_car_id;
@@ -134,37 +142,64 @@ class ViewCarReport extends ViewRecord
                     //dd($this->record->parent_car_id);
 
                     //แจ้งพนักงานผู้แจ้งปัญหา
-                    $problem = Problem::where('id', $this->record->problem_id)->first();
-                    //dd($this->record->problem_id);
-                    //dd($problem); 7
+                    $problem = Problem::find($this->record->problem_id);
 
-                    if ($problem) {
-                        $employee = User::where('id', $problem->user_id)->first();
-                        //dd($problem->user_id); 4
+                    if ($problem && $problem->user_id) {
+                        $employee = User::find($problem->user_id);
+
                         if ($employee) {
                             Notification::make()
-                                ->iconColor('success')
                                 ->icon('heroicon-o-check-circle')
+                                ->iconColor('success')
                                 ->title('Your issue has been solved')
-                                ->body("Your Problem ID: {$problem->prob_id} has been resolved and closed.")
+                                ->body("Your Problem ID: {$problem->prob_id} has been resolved.")
                                 ->sendToDatabase($employee);
+
+                            //logger("Sent notification to: {$employee->name}");
                         }
                     }
 
-                    //แจ้งหน่วยงานที่รับผิดชอบ
-                    $departmentUsers = User::role('User')
-                    ->where('dept_id', $this->record->responsible_dept_id)
-                    ->get();
+                    // Notify department
+                    $users = User::role('User')
+                        ->where('dept_id', $this->record->responsible_dept_id)
+                        ->get();
 
-                    foreach ($departmentUsers as $user) {
-                    Notification::make()
-                        ->iconColor('success')
-                        ->icon('heroicon-o-check-circle')
-                        ->title('P-CAR completed')
-                        ->body("The P-CAR for CAR no: {$this->record->car_no} has been completed successfully.")
-                        ->sendToDatabase($user);
-                }
+                    foreach ($users as $user) {
+                        Notification::make()
+                            ->icon('heroicon-o-check-circle')
+                            ->iconColor('success')
+                            ->title('P-CAR Completed')
+                            ->body("CAR no: {$this->record->car_no} has been completed.")
+                            ->sendToDatabase($user);
+
+                        //logger("Sent to dept user: {$user->name}");
+                    }
             }),
+
+            Action::make('Reopen CAR')
+                ->label('Reopen CAR')
+                ->color('primary')
+                ->icon('heroicon-o-arrow-path')
+                ->visible(fn ($record) =>
+                User::role('Safety') && $record->status === 'reopened')
+                ->requiresConfirmation()
+                ->action(function () {
+                    return redirect()->route('filament.admin.resources.car-reports.create', [
+                        'problem_id'          => $this->record->problem_id, //เก็บ problem_id ของอันก่อนหน้า เพื่อสร้าง CAR ใหม่
+                        'dept_id'             => $this->record->dept_id,
+                        'sec_id'              => $this->record->sec_id,
+                        'car_date'            => $this->record->car_date,
+                        'car_due_date'        => $this->record->car_due_date,
+                        'car_desc'            => $this->record->car_desc,
+                        'hazard_level_id'     => $this->record->hazard_level_id,
+                        'hazard_type_id'      => $this->record->hazard_type_id,
+                        'img_before'          => $this->record->img_before,
+                        'created_by'          => $this->record->created_by,
+                        'responsible_dept_id' => $this->record->responsible_dept_id,
+                        'parent_car_id'       => $this->record->id,
+                    ]);
+                }),
+                //dd($this->record->problem_id)
         ];
     }
 
@@ -181,7 +216,7 @@ class ViewCarReport extends ViewRecord
                         ->content(fn ($record) => $record->problem?->prob_id),
 
                     Placeholder::make('user_id')
-                        ->label('Employee ID')
+                        ->label('Reporter')
                         ->content(fn ($record) => optional($record->problem?->user)->FullName),
 
                     Placeholder::make('dept_id')
