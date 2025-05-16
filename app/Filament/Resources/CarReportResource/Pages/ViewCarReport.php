@@ -2,19 +2,20 @@
 
 namespace App\Filament\Resources\CarReportResource\Pages;
 
-use App\Filament\Resources\CarReportResource;
-use Filament\Actions\Action;
-use App\Models\Problem;
-use App\Models\User;
-use Filament\Notifications\Notification;
-use App\Models\Car_responses;
 use Carbon\Carbon;
-use Filament\Forms\Components\Placeholder;
+use App\Models\User;
+use App\Models\Problem;
 use Filament\Forms\Form;
-use Filament\Forms\Components\Section;
+use Illuminate\Support\Str;
+use Filament\Actions\Action;
+use App\Models\Car_responses;
 use Filament\Forms\Components\View;
-use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\Section;
+use Filament\Notifications\Notification;
+use Filament\Resources\Pages\ViewRecord;
+use Filament\Forms\Components\Placeholder;
+use App\Filament\Resources\CarReportResource;
 
 class ViewCarReport extends ViewRecord
 {
@@ -33,8 +34,7 @@ class ViewCarReport extends ViewRecord
             ->action(function($record, array $data) {
                 $record->update([
                     'status' => 'reported',
-                    //'responsible_dept_id' => $data['responsible_dept_id'],
-                    // ไม่ต้องอัปเดต dept_id
+
                 ]);
                 Problem::where('id', $record->problem_id)->update(['status' => 'reported']);
 
@@ -53,6 +53,34 @@ class ViewCarReport extends ViewRecord
                     ->body("The P-CAR for CAR no: {$this->record->car_no} has been reported.")
                     ->sendToDatabase($user);
             }
+
+            // Define $problem before using it
+            //$problem = Problem::find($record->problem_id);
+
+            $data = [
+                'car_no' => $this->record->car_no ?? '-',
+                'car_desc' => $this->record->car_desc ?? '-',
+                'responsible_dept_id' => $this->record->responsible->dept_name?? '-',
+                'created_by' => $this->record->users->emp_id?? '-',
+            ];
+
+            $txtTitle = "รายงานใบ CAR ใหม่";
+
+            // create connector instance
+            $connector = new \Sebbmyr\Teams\TeamsConnector(env('MSTEAM_API'));
+            // // create card
+            // $card  = new \Sebbmyr\Teams\Cards\SimpleCard(['title' => $data['title'], 'text' => $data['description']]);
+
+            // create a custom card
+            $card  = new \Sebbmyr\Teams\Cards\CustomCard("พนักงาน " . Str::upper($data['created_by']), "หัวข้อ: " . $txtTitle);
+            // add information
+            $card->setColor('01BC36')
+                ->addFacts('รายละเอียด', ['เลขที่ CAR ' => $data['car_no'], 'ความไม่ปลอดภัย' => $data['car_desc'],
+                'หน่วยงานผู้รับผิดชอบ' => $data['responsible_dept_id']])
+                ->addAction('Visit Issue', route('filament.admin.pages.department-car-alert', $this->record));
+            // send card via connector
+            $connector->send($card);
+
         }),
 
             Action::make('Reopen')
@@ -126,16 +154,16 @@ class ViewCarReport extends ViewRecord
                         $this->record->parent()->update(['status' => 'closed']);
                     }
 
-                    // ปิดปัญหาต้นทาง
-                    // if ($this->record->problem_id) {
-                    //     Problem::where('id', $this->record->problem_id)
-                    //         ->update(['status' => 'closed']);
-                    // }
+                    //ปิดปัญหาต้นทาง
+                    if ($this->record->problem_id) {
+                        Problem::where('id', $this->record->problem_id)
+                            ->update(['status' => 'closed']);
+                    }
 
                     // ปิด responses ที่เกี่ยวข้อง
-                    // $id = $this->record->id;
-                    // Car_responses::where('car_id', $id)->update(['status' => 'closed']);
-                    //dd($this->record->id);
+                    $id = $this->record->id;
+                    Car_responses::where('car_id', $id)->update(['status' => 'closed']);
+                    dd($this->record->id);
 
                     $parent_car_id = $this->record->parent_car_id;
                     Car_responses::where('car_id',$parent_car_id)->update(['status'=> 'closed']);

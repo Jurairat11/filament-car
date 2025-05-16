@@ -26,22 +26,28 @@ class ListCarReports extends ListRecords
             ->badge(Car_report::count()),
             'accepted' => Tab::make()
             ->badge(Car_report::query()->where('status', 'accepted')->count())
-            ->badgeColor('success'),
+            ->badgeColor('success')
+            ->query(fn ($query) => $query->where('status', 'accepted')),
             'reported' => Tab::make()
             ->badge(Car_report::query()->where('status', 'reported')->count())
-            ->badgeColor('info'),
+            ->badgeColor('info')
+            ->query(fn ($query) => $query->where('status', 'reported')),
             'in progress' => Tab::make()
             ->badge(Car_report::query()->where('status', 'in_progress')->count())
-            ->badgeColor('warning'),
+            ->badgeColor('warning')
+            ->query(fn ($query) => $query->where('status', 'in_progress')),
             'pending review' => Tab::make()
             ->badge(Car_report::query()->where('status', 'pending_review')->count())
-            ->badgeColor('success'),
+            ->badgeColor('success')
+            ->query(fn ($query) => $query->where('status', 'pending_review')),
             'reopened' => Tab::make()
             ->badge(Car_report::query()->where('status', 'reopened')->count())
-            ->badgeColor('warning'),
+            ->badgeColor('warning')
+            ->query(fn ($query) => $query->where('status', 'reopened')),
             'closed' => Tab::make()
             ->badge(Car_report::query()->where('status', 'closed')->count())
-            ->badgeColor('gray'),
+            ->badgeColor('gray')
+            ->query(fn ($query) => $query->where('status', 'closed')),
         ];
     }
     public function getDefaultActiveTab(): string | int | null

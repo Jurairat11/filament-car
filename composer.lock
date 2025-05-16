@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d328bb8d0ea5c1fdc48614b64974e8f1",
+    "content-hash": "ce92012025b0bee30d42a4363ceaa5ad",
     "packages": [
         {
             "name": "althinect/filament-spatie-roles-permissions",
@@ -4772,6 +4772,117 @@
                 }
             ],
             "time": "2025-02-25T09:09:36+00:00"
+        },
+        {
+            "name": "sebbmeyer/laravel-teams-connector",
+            "version": "0.6.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebbmeyer/laravel-teams-connector.git",
+                "reference": "7fea20ccab6f0ae7c21e1e57d60d2df9b33704eb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebbmeyer/laravel-teams-connector/zipball/7fea20ccab6f0ae7c21e1e57d60d2df9b33704eb",
+                "reference": "7fea20ccab6f0ae7c21e1e57d60d2df9b33704eb",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "5.5.x|5.6.x|5.7.x|5.8.x|6.x|7.x|8.x|9.x|10.x|^11.0|^12.0",
+                "php": ">=7.0.0",
+                "sebbmeyer/php-microsoft-teams-connector": "0.2.*"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "TeamsConnector": "Sebbmyr\\LaravelTeams\\Facades\\TeamsConnector"
+                    },
+                    "providers": [
+                        "Sebbmyr\\LaravelTeams\\TeamsConnectorServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Sebbmyr\\LaravelTeams\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Meyer",
+                    "email": "sebbmyr@gmail.com"
+                }
+            ],
+            "description": "Microsoft Teams Connector for Laravel 5/6",
+            "keywords": [
+                "Teams",
+                "connector",
+                "connectors",
+                "laravel",
+                "messagecard",
+                "microsoft"
+            ],
+            "support": {
+                "issues": "https://github.com/sebbmeyer/laravel-teams-connector/issues",
+                "source": "https://github.com/sebbmeyer/laravel-teams-connector/tree/0.6.5"
+            },
+            "time": "2025-02-28T09:53:56+00:00"
+        },
+        {
+            "name": "sebbmeyer/php-microsoft-teams-connector",
+            "version": "0.2.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebbmeyer/php-microsoft-teams-connector.git",
+                "reference": "ad8e423007a89a026f1bdd4d568f14892ecbd961"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebbmeyer/php-microsoft-teams-connector/zipball/ad8e423007a89a026f1bdd4d568f14892ecbd961",
+                "reference": "ad8e423007a89a026f1bdd4d568f14892ecbd961",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "vlucas/phpdotenv": "^3.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sebbmyr\\Teams\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Bretschneider",
+                    "email": "sebbmyr@gmail.com"
+                }
+            ],
+            "description": "PHP Microsoft Teams Connector",
+            "keywords": [
+                "Teams",
+                "connector",
+                "connectors",
+                "messagecard",
+                "microsoft",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/sebbmeyer/php-microsoft-teams-connector/issues",
+                "source": "https://github.com/sebbmeyer/php-microsoft-teams-connector/tree/0.2.6"
+            },
+            "time": "2024-11-13T12:14:14+00:00"
         },
         {
             "name": "spatie/color",
