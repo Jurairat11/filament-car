@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Car_report extends Model
 {
@@ -26,7 +27,12 @@ class Car_report extends Model
         'parent_car_id',
         'followed_car_id',
         'responsible_dept_id',
-        'close_car_date'
+        'close_car_date',
+        'equipment',
+        'place_id',
+        'hazard_source_id',
+        'car_delay',
+        'status_delay',
     ];
 
     public static function generateNextCarNo(): string
@@ -55,6 +61,7 @@ class Car_report extends Model
             ]);
         }
     }
+
 
     public function department() {
         return $this->belongsTo(Department::class, 'dept_id');
@@ -89,8 +96,9 @@ class Car_report extends Model
 
     public function parent()
     {
-        return $this->belongsTo(Car_report::class, 'parent_car_id');
+        return $this->belongsTo(Car_report::class, 'parent_car_id','id');
     }
+
     public function followUp()
     {
         return $this->belongsTo(Car_report::class, 'follow_car_id');
@@ -98,6 +106,12 @@ class Car_report extends Model
     public function children()
     {
         return $this->hasOne(Car_report::class, 'followed_car_id');
+    }
+    public function hazardSource() {
+        return $this->belongsTo(Hazard_source::class, 'hazard_source_id','id');
+    }
+    public function place() {
+        return $this->belongsTo(Place::class, 'place_id','id');
     }
 
 }

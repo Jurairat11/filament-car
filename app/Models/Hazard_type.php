@@ -10,8 +10,7 @@ class Hazard_type extends Model
     use HasFactory;
     protected $primaryKey = 'id';
     protected $fillable = [
-        'type_name',
-        'type_desc'
+        'type_name'
     ];
 
 }

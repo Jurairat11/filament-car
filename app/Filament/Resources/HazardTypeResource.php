@@ -6,7 +6,6 @@ use App\Filament\Resources\HazardTypeResource\Pages;
 use App\Filament\Resources\HazardTypeResource\RelationManagers;
 use App\Models\Hazard_type;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -31,9 +30,6 @@ class HazardTypeResource extends Resource
                 TextInput::make('type_name')
                     ->label('Type')
                     ->required(),
-                TextInput::make('type_desc')
-                    ->label('Description')
-                    ->required(),
             ]);
     }
 
@@ -45,8 +41,6 @@ class HazardTypeResource extends Resource
                     ->label('ID'),
                 TextColumn::make('type_name')
                     ->label('Hazard type'),
-                TextColumn::make('type_desc')
-                    ->label('Description')
             ])
             ->filters([
                 //

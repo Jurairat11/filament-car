@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\ProblemResource\Pages;
 
 use App\Filament\Resources\ProblemResource;
-use Filament\Actions;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
@@ -18,7 +17,12 @@ class ViewProblem extends ViewRecord
     public function form(Form $form): Form{
         return $form
         ->schema([
-            Section::make('Reporter Information')
+
+            Section::make('Problem Details')
+            ->description(fn ($livewire) =>
+                    'Problem ID: ' . ($livewire->form->getRawState()['prob_id'] ?? 'new')
+                )
+
             ->schema([
                 Placeholder::make('user_id')
                     ->label('Employee ID')
@@ -27,22 +31,15 @@ class ViewProblem extends ViewRecord
                 Placeholder::make('dept_id')
                     ->label('Department')
                     ->content(fn ($record) => optional($record->department)->dept_name),
-                ])->columns(2),
-
-            Section::make('Problem Details')
-            ->description(fn ($livewire) =>
-                    'Problem ID: ' . ($livewire->form->getRawState()['prob_id'] ?? 'new')
-                )
-
-            ->schema([
-                Placeholder::make('prob_desc')
-                    ->label('Description')
-                    ->columnspan(2)
-                    ->content(fn ($record) => $record->prob_desc),
 
                 Placeholder::make('prob_date')
                     ->label('Reported Date')
                     ->content(fn ($record) => Carbon::parse($record->prob_date)->format('d/m/Y')),
+
+                Placeholder::make('prob_desc')
+                    ->label('Description')
+                    ->columnspan(2)
+                    ->content(fn ($record) => $record->prob_desc),
 
                 Placeholder::make('status')
                     ->label('Status')
@@ -71,7 +68,7 @@ class ViewProblem extends ViewRecord
                 ])
                 ->columnSpanFull()
 
-            ])->columns(4),
+            ])->columns(3),
         ]);
     }
 }

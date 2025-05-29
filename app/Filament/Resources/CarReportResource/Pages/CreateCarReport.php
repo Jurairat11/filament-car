@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\CarReportResource\Pages;
 
-use Filament\Actions;
+use Carbon\Carbon;
 use App\Models\Car_report;
 use Illuminate\Support\Facades\Auth;
 use Filament\Resources\Pages\CreateRecord;
@@ -21,17 +21,17 @@ class CreateCarReport extends CreateRecord
 
         $this->form->fill([
             'car_no' => $this->generatedCarNo,
-            'status' => 'accepted',
+            'status' => 'draft',
             'problem_id'        => request()->get('problem_id'),
-            'dept_id'           => request()->get('dept_id'),
-            'sec_id'            => request()->get('sec_id'),
+            'dept_id'           => Auth::user()?->dept_id,
+            'sec_id'            => Auth::user()?->sec_id,
             'car_date'          => now(),
             'car_due_date'      => request()->get('car_due_date'),
             'car_desc'          => request()->get('car_desc'),
             'hazard_level_id'   => request()->get('hazard_level_id'),
             'hazard_type_id'    => request()->get('hazard_type_id'),
             'img_before'        => request()->get('img_before'),
-            'created_by'        => request()->get('created_by'),
+            'created_by'        => Auth::user()?->id,
             'responsible_dept_id' => request()->get('responsible_dept_id'),
             'parent_car_id'       => request()->get('parent_car_id'),
         ]);
@@ -51,6 +51,17 @@ class CreateCarReport extends CreateRecord
                 ->update([
                     'followed_car_id' => $this->record->id,
                 ]);
+        }
+
+         $hazard = $this->record->hazardLevel; // ความสัมพันธ์ hazard_level_id -> hazardLevel
+
+        if ($hazard) {
+            $carDate = Carbon::parse($this->record->car_date);
+            $dueDate = $carDate->copy()->addDays($hazard->due_days);
+            $this->record->update([
+                'car_due_date' => $dueDate,
+                'car_delay' => $hazard->due_days,
+            ]);
         }
     }
 

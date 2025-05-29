@@ -29,7 +29,7 @@ class ViewCarReport extends ViewRecord
             ->color('success')
             ->requiresConfirmation()
             ->visible(fn ($record) =>
-                        Auth::user()?->hasRole('Safety') && $record->status === 'accepted'
+                        Auth::user()?->hasRole('Safety') && $record->status === 'draft'
                     )
             ->action(function($record, array $data) {
                 $record->update([
@@ -53,9 +53,6 @@ class ViewCarReport extends ViewRecord
                     ->body("The P-CAR for CAR no: {$this->record->car_no} has been reported.")
                     ->sendToDatabase($user);
             }
-
-            // Define $problem before using it
-            //$problem = Problem::find($record->problem_id);
 
             $data = [
                 'car_no' => $this->record->car_no ?? '-',
@@ -162,8 +159,23 @@ class ViewCarReport extends ViewRecord
 
                     // ปิด responses ที่เกี่ยวข้อง
                     $id = $this->record->id;
-                    Car_responses::where('car_id', $id)->update(['status' => 'closed']);
-                    dd($this->record->id);
+                    Car_responses::where('car_id', $id)
+                    ->update(['status' => 'closed']);
+                    //dd($this->record->id);
+
+                    // $temp = Car_responses::where('car_id', $id)->first();
+                    // if ($temp->temp_status !== 'none') {
+                    //     $temp->update(['temp_status' => 'finished']);
+                    // } else {
+                    //     $temp->update(['temp_status' => 'none']);
+                    // }
+
+                    // $perm = Car_responses::where('car_id', $id)->first();
+                    // if ($perm->perm_status !== 'none') {
+                    //     $perm->update(['perm_status' => 'finished']);
+                    // } else {
+                    //     $perm->update(['perm_status' => 'none']);
+                    // }
 
                     $parent_car_id = $this->record->parent_car_id;
                     Car_responses::where('car_id',$parent_car_id)->update(['status'=> 'closed']);
@@ -202,6 +214,26 @@ class ViewCarReport extends ViewRecord
 
                         //logger("Sent to dept user: {$user->name}");
                     }
+                    $data = [
+                    'car_no' => $this->record->car_no ?? '-',
+                    'close_car_date' => $this->record->close_car_date ?? '-',
+                    'created_by' => $this->record->users->emp_id?? '-',
+            ];
+                    $txtTitle = "ปิดใบ CAR";
+
+                    // create connector instance
+                    $connector = new \Sebbmyr\Teams\TeamsConnector(env('MSTEAM_API'));
+                    // // create card
+                    // $card  = new \Sebbmyr\Teams\Cards\SimpleCard(['title' => $data['title'], 'text' => $data['description']]);
+
+                    // create a custom card
+                    $card  = new \Sebbmyr\Teams\Cards\CustomCard("พนักงาน " . Str::upper($data['created_by']), "หัวข้อ: " . $txtTitle);
+                    // add information
+                    $card->setColor('01BC36')
+                        ->addFacts('รายละเอียด', ['เลขที่ CAR ' => $data['car_no'], 'วันที่เสร็จสิ้น' => $data['close_car_date']->format('d/m/Y')])
+                        ->addAction('Visit Issue', route('filament.admin.resources.car-reports.view', $this->record));
+                    // send card via connector
+                    $connector->send($card);
             }),
 
             Action::make('Reopen CAR')
@@ -226,6 +258,7 @@ class ViewCarReport extends ViewRecord
                         'responsible_dept_id' => $this->record->responsible_dept_id,
                         'parent_car_id'       => $this->record->id,
                     ]);
+
                 }),
                 //dd($this->record->problem_id)
         ];

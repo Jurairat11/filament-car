@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\ProblemResource\Pages;
 
 use App\Filament\Resources\ProblemResource;
-use Filament\Actions;
 use illuminate\Support\Facades\Auth;
 use App\Models\Problem;
 use Filament\Resources\Pages\CreateRecord;
@@ -31,7 +30,7 @@ class CreateProblem extends CreateRecord
         // fill ค่าเข้า form
         $this->form->fill([
             'prob_id' => $this->generatedProbId,
-            'user_id' => Auth::user()?->FullName,
+            'user_id' => Auth::user()?->id,
             'dept_id' => Auth::user()?->dept_id,
             'prob_date' => now(),
             'status' => 'new'

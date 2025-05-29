@@ -17,12 +17,16 @@ class Car_responses extends Model
         'temp_desc',
         'temp_due_date',
         'temp_responsible_id',
+        'temp_status',
         'perm_desc',
         'perm_due_date',
         'perm_responsible_id',
+        'perm_status',
         'preventive',
         'status',
-        'created_by'
+        'created_by',
+        'status_reply'
+
     ];
 
 

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\HazardLevelResource\Pages;
 use App\Filament\Resources\HazardLevelResource\RelationManagers;
 use App\Models\Hazard_level;
+use Dom\Text;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -31,7 +32,11 @@ class HazardLevelResource extends Resource
                 TextInput::make('level_name')
                 ->label('Level'),
                 TextInput::make('level_desc')
-                ->label('Description')
+                ->label('Description'),
+                TextInput::make('due_days')
+                ->label('Due Days')
+                ->numeric()
+                ->minValue(0)
 
             ]);
     }
@@ -46,6 +51,9 @@ class HazardLevelResource extends Resource
                 ->label('Level'),
                 TextColumn::make('level_desc')
                 ->label('Description'),
+                TextColumn::make('due_days')
+                ->label('Due Days')
+
             ])
             ->filters([
                 //

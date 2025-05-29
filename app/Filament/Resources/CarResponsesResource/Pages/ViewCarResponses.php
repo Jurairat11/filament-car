@@ -2,19 +2,20 @@
 
 namespace App\Filament\Resources\CarResponsesResource\Pages;
 
-use App\Filament\Resources\CarResponsesResource;
-use App\Models\Car_report;
-use App\Models\Car_responses;
-use Filament\Actions\Action;
-use App\Models\User;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Form;
 use Carbon\Carbon;
-use Filament\Forms\Components\Section;
+use App\Models\User;
+use Filament\Forms\Form;
+use App\Models\Car_report;
+use Illuminate\Support\Str;
+use Filament\Actions\Action;
+use App\Models\Car_responses;
 use Filament\Forms\Components\View;
-use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\Section;
 use Filament\Notifications\Notification;
+use Filament\Resources\Pages\ViewRecord;
+use Filament\Forms\Components\Placeholder;
+use App\Filament\Resources\CarResponsesResource;
 
 class ViewCarResponses extends ViewRecord
 {
@@ -31,7 +32,7 @@ class ViewCarResponses extends ViewRecord
             ->visible(fn (Car_responses $record) =>
                 Auth::check() &&
                 Auth::user()->hasRole('User') &&
-                $record->status === 'in_progress' &&
+                $record->status === 'draft' &&
                 $record->carReport?->responsible_dept_id === Auth::user()->dept_id
             )
             ->action(function () {
@@ -40,7 +41,10 @@ class ViewCarResponses extends ViewRecord
 
                 if ($this->record->car_id) {
                     Car_report::where('id', $this->record->car_id)
-                        ->update(['status' => 'pending_review']);
+                        ->update([
+                            'status' => 'pending_review',
+                            'status_delay' => 'finished'
+                        ]);
         }
             User::role('Safety')->get()
             ->each(fn ($user) =>
@@ -52,6 +56,27 @@ class ViewCarResponses extends ViewRecord
                     ->sendToDatabase($user)
             );
 
+            $data = [
+                'car_id' => $this->record->carReport->car_no ?? '-',
+                'cause' => $this->record->cause ?? '-',
+                'created_by' => $this->record->createdResponse->emp_id?? '-',
+            ];
+
+            $txtTitle = "ตอบกลับใบ CAR";
+
+            // create connector instance
+            $connector = new \Sebbmyr\Teams\TeamsConnector(env('MSTEAM_API'));
+            // // create card
+            // $card  = new \Sebbmyr\Teams\Cards\SimpleCard(['title' => $data['title'], 'text' => $data['description']]);
+
+            // create a custom card
+            $card  = new \Sebbmyr\Teams\Cards\CustomCard("พนักงาน " . Str::upper($data['created_by']), "หัวข้อ: " . $txtTitle);
+            // add information
+            $card->setColor('01BC36')
+                ->addFacts('รายละเอียด', ['เลขที่ CAR ' => $data['car_id'], 'สาเหตุ' => $data['cause']])
+                ->addAction('Visit Issue', route('filament.admin.resources.car-responses.view', $this->record));
+            // send card via connector
+            $connector->send($card);
             }),
 
         ];
@@ -61,68 +86,87 @@ class ViewCarResponses extends ViewRecord
 {
     return $form
         ->schema([
-            Section::make('CAR Response Information')
+            Section::make('CAR Response')
+                ->description(fn ($livewire) =>
+                    'Status: ' . ucfirst(str_replace('_', ' ', $livewire->form->getRawState()['status'] ?? '')
+                ))
+                //ucfirst(str_replace('_', ' ', $livewire->form->getRawState()['status'] ?? '')
                 ->schema([
 
                     View::make('components.car-responses-view-image')
                         ->label('After Image')
                         ->viewData([
                             'path' => $this->getRecord()->img_after,
-                        ])->columnSpanFull(),
+                        ])->columnSpan(1),
 
                     Placeholder::make('cause')
-                    ->label('Cause')
-                    ->columnSpan(2)
-                    ->content(fn ($record) => $record->cause ),
-
-                    Placeholder::make('status')
-                    ->label('Status')
-                    ->content(fn ($record) =>
-                    ucfirst(str_replace('_', ' ', $record->status))),
+                        ->label('Cause')
+                        ->columnSpan(2)
+                        ->content(fn ($record) => $record->cause ),
 
                     Placeholder::make('created_by')
                     ->label('Created by')
                     ->content(fn($record)=>optional($record->createdResponse)->FullName),
 
-                    Placeholder::make('temp_desc')
-                    ->label('Temporary Action')
-                    ->columnSpan(2)
-                    ->content(fn($record)=>$record->temp_desc ? $record->temp_desc : '-'),
+                ])->columns(4),
 
-                    Placeholder::make('temp_due_date')
-                    ->label('Due date')
-                    ->content(fn ($record) => $record->temp_due_date
-                                ? Carbon::parse($record->temp_due_date)->format('d/m/Y')
-                                : '-'),
+                    Section::make('Temporary actions')
+                    ->description(fn ($livewire) =>
+                    'Status: ' . ucfirst(str_replace('_', ' ', $livewire->form->getRawState()['temp_status'] ?? '')
+                ))
+                    ->schema([
 
-                    Placeholder::make('temp_responsible')
-                    ->label('Responsible')
-                    ->content(fn($record)=>optional($record->tempResponsible)->FullName ?
-                    ($record->tempResponsible)->FullName : '-'),
+                        Placeholder::make('temp_desc')
+                        ->label('Temporary C/M')
+                        ->columnSpan(2)
+                        ->content(fn($record)=>$record->temp_desc ? $record->temp_desc : '-'),
 
-                    Placeholder::make('perm_desc')
-                    ->label('Permanent Action')
-                    ->columnSpan(2)
-                    ->content(fn($record)=>$record->perm_desc ? $record->perm_desc : '-'),
+                        Placeholder::make('temp_due_date')
+                        ->label('Due date')
+                        ->content(fn ($record) => $record->temp_due_date
+                                    ? Carbon::parse($record->temp_due_date)->format('d/m/Y')
+                                    : '-'),
+
+                        Placeholder::make('temp_responsible')
+                        ->label('Responsible')
+                        ->content(fn($record)=>optional($record->tempResponsible)->FullName ?
+                        ($record->tempResponsible)->FullName : '-'),
+
+                    ])->columns(4),
+
+                    Section::make('Permanent actions')
+                    ->description(fn ($livewire) =>
+                        'Status: ' . ucfirst(str_replace('_', ' ', $livewire->form->getRawState()['perm_status'] ?? '')
+                    ))
+                    ->schema([
+
+                            Placeholder::make('perm_desc')
+                            ->label('Permanent C/M')
+                            ->columnSpan(2)
+                            ->content(fn($record)=>$record->perm_desc ? $record->perm_desc : '-'),
 
 
-                    Placeholder::make('perm_due_date')
-                    ->label('Due date')
-                    ->content(fn ($record) => $record->perm_due_date
-                                ? Carbon::parse($record->perm_due_date)->format('d/m/Y')
-                                : '-'),
+                            Placeholder::make('perm_due_date')
+                            ->label('Due date')
+                            ->content(fn ($record) => $record->perm_due_date
+                                        ? Carbon::parse($record->perm_due_date)->format('d/m/Y')
+                                        : '-'),
 
-                    Placeholder::make('perm_responsible')
-                    ->label('Responsible')
-                    ->content(fn($record)=>optional($record->permResponsible)->FullName ?
-                    ($record->permResponsible)->FullName : '-'),
+                            Placeholder::make('perm_responsible')
+                            ->label('Responsible')
+                            ->content(fn($record)=>optional($record->permResponsible)->FullName ?
+                            ($record->permResponsible)->FullName : '-'),
 
-                    Placeholder::make('preventive')
-                    ->label('Preventive action')
-                    ->columnSpanFull()
-                    ->content(fn($record)=>$record->preventive),
+                    ])->columns(4),
 
-                ])->columns(4)
+                    Section::make()
+                    ->schema([
+                        Placeholder::make('preventive')
+                            ->label('Preventive actions')
+                            ->columnSpanFull()
+                            ->content(fn($record)=>$record->preventive),
+                    ])
+
         ]);
 }
 }

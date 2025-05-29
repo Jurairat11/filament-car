@@ -12,6 +12,7 @@ use Filament\Facades\Filament;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Filters\Filter;
+use Filament\Forms\Components\Split;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -28,9 +29,15 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
 use App\Filament\Resources\ProblemResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ProblemResource\RelationManagers;
+use App\Filament\Resources\ProblemResource\Pages\EditProblem;
+use App\Filament\Resources\ProblemResource\Pages\ViewProblem;
+use App\Filament\Resources\ProblemResource\Pages\ListProblems;
+use App\Filament\Resources\ProblemResource\Pages\CreateProblem;
 
 class ProblemResource extends Resource
 {
@@ -55,11 +62,14 @@ class ProblemResource extends Resource
                         ->dehydrated()
                         ->required(),
 
-                    Select::make('user_id')
+                    Split::make([
+                    Section::make()
+                    ->schema([
+                        Select::make('user_id')
                         ->label('Reporter')
                         ->searchable()
                         ->preload()
-                        ->relationship('user','emp_id')
+                        ->options(fn () => User::where('dept_id',Auth::user()?->dept_id)->pluck('emp_id', 'id'))
                         ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->emp_id} ({$record->emp_name} {$record->last_name})")
                         ->required(),
 
@@ -72,25 +82,32 @@ class ProblemResource extends Resource
                         ->options(fn () => Department::all()->pluck('dept_name', 'dept_id'))
                         ->default(fn () => Auth::user()?->dept_id),
 
-                    Textarea::make('prob_desc')
-                        ->label('Description')
-                        ->autosize()
-                        ->required(),
-
                     DatePicker::make('prob_date')
                         ->label('Report date')
                         ->native(false)
                         ->displayFormat('d/m/Y')
                         ->closeOnDateSelection()
                         ->required(),
+                    ])->columns(1),
 
-                    FileUpload::make('prob_img')
+                    Section::make()
+                    ->schema([
+                        FileUpload::make('prob_img')
                         ->label('Problem picture')
                         ->image()
                         ->downloadable()
                         ->required()
                         ->directory('form-attachments')
                         ->visibility('public'),
+
+                        Textarea::make('prob_desc')
+                            ->label('Description')
+                            ->autosize()
+                            ->required(),
+
+                            ])->columns(1)->columnSpan(2),
+                        ])->from('md'),
+                    ]),
 
                     Select::make('status')
                     ->label('Status')
@@ -103,7 +120,6 @@ class ProblemResource extends Resource
                     ])
                     ->default('new')
 
-                ])->columns(2)
             ]);
     }
 
@@ -266,14 +282,6 @@ class ProblemResource extends Resource
         ];
     }
 
-    public static function getNavigationBadge(): ?string
-    {
-        if (User::role('Safety')) {
-            return null;
-        }
-        return Problem::where('status', 'new')
-            ->count();
-    }
 
     public static function getEloquentQuery(): Builder
     {

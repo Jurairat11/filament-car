@@ -10,4 +10,12 @@ class CreateHazardType extends CreateRecord
 {
     protected static string $resource = HazardTypeResource::class;
     protected static ?string $title = 'Create Hazard Type';
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Hazard type created';
+    }
 }

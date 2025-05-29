@@ -11,7 +11,8 @@ class Hazard_level extends Model
     protected $primaryKey = 'id';
     protected $fillable = [
         'level_name',
-        'level_desc'
+        'level_desc',
+        'due_days',
 
     ];
 

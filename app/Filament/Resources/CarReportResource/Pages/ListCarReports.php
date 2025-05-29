@@ -24,10 +24,10 @@ class ListCarReports extends ListRecords
         return [
             'all' => Tab::make('All')
             ->badge(Car_report::count()),
-            'accepted' => Tab::make()
-            ->badge(Car_report::query()->where('status', 'accepted')->count())
-            ->badgeColor('success')
-            ->query(fn ($query) => $query->where('status', 'accepted')),
+            'draft' => Tab::make()
+            ->badge(Car_report::query()->where('status', 'draft')->count())
+            ->badgeColor('gray')
+            ->query(fn ($query) => $query->where('status', 'draft')),
             'reported' => Tab::make()
             ->badge(Car_report::query()->where('status', 'reported')->count())
             ->badgeColor('info')
