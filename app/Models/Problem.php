@@ -18,7 +18,9 @@ use Illuminate\Database\Eloquent\Model;
         'status',
         'dismiss_reason',
         'user_id',
-        'dept_id'
+        'dept_id',
+        'title',
+        'place'
     ];
 
     public static function generateNextProbId(): string

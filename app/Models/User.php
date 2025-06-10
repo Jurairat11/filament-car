@@ -66,7 +66,7 @@ class User extends Authenticatable implements FilamentUser, HasName
     }
     public function getFilamentName(): string
     {
-        return "{$this->emp_name} {$this->last_name}";
+        return "{$this->emp_id} {$this->emp_name} {$this->last_name}";
     }
 
     public function getFullNameAttribute(): string

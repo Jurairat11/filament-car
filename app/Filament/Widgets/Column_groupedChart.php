@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Car_report;
+use Illuminate\Support\Facades\Auth;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
@@ -30,7 +31,7 @@ class Column_groupedChart extends ApexChartWidget
      */
     protected static bool $isLazy = false;
     protected static ?int $sort = 1;
-    protected int | string | array $columnSpan = 'full';
+    protected int | string | array $columnSpan = 3;
 
     use InteractsWithPageFilters;
 
@@ -195,5 +196,11 @@ class Column_groupedChart extends ApexChartWidget
             'colors' => [ '#3b82f6','#10b981','#f59e0b']
 
         ];
+    }
+    public static function canView(): bool
+    {
+        return Auth::user()?->hasAnyRole(['Safety', 'Admin']);
+        // $user = Auth::user();
+        // return in_array($user?->name, ['Admin','Safety']);
     }
 }

@@ -32,7 +32,7 @@ class CreateCarResponses extends CreateRecord
             //'temp_due_date' => now(),
             // 'perm_due_date' => now(),
             'temp_status' => 'finished',
-            'perm_status' => 'on process',
+            //'perm_status' => 'on process',
             'created_by' => Auth::user()->id,
         ]);
 

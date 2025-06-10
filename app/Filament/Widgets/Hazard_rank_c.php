@@ -6,6 +6,7 @@ use Filament\Tables;
 use App\Models\Car_report;
 use Filament\Tables\Table;
 use Filament\Tables\Filters\Filter;
+use Illuminate\Support\Facades\Auth;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\DatePicker;
@@ -17,15 +18,17 @@ class Hazard_rank_c extends BaseWidget
 {
     protected static ?string $heading = 'Rank C';
     protected static ?string $description = 'little injury (no absent)';
-    protected static ?int $sort = 4;
+    protected static ?int $sort = 7;
+    protected int | string | array $columnSpan = 2;
     protected static bool $isLazy = false;
     protected function getTableHeading(): ?string
     {
         $counts = Car_report::query()
-            ->where('hazard_level_id', '3')
-            ->selectRaw('status_delay, COUNT(*) as count')
-            ->groupBy('status_delay')
-            ->pluck('count', 'status_delay')
+            ->join('car_responses','car_responses.car_id','=','car_reports.id')
+            ->where('car_reports.hazard_level_id', '3')
+            ->selectRaw('car_responses.status_reply, COUNT(*) as count')
+            ->groupBy('car_responses.status_reply')
+            ->pluck('count', 'car_responses.status_reply')
             ->toArray();
 
         $total = array_sum($counts);
@@ -42,18 +45,18 @@ class Hazard_rank_c extends BaseWidget
         ->emptyStateIcon('heroicon-o-bookmark')
         ->query(
             Car_report::query()
-                    ->selectRaw('MIN(id) as id, status_delay, COUNT(*) as count')
-                    ->where('hazard_level_id', '3')
-                    ->groupBy('status_delay')
+                        ->join('car_responses','car_responses.car_id','=','car_reports.id')
+                        ->selectRaw('MIN(car_reports.id) as id, car_responses.status_reply, COUNT(*) as count')
+                        ->where('car_reports.hazard_level_id', '3')
+                        ->groupBy('car_responses.status_reply')
         )
         ->columns([
-            TextColumn::make('status_delay')
+            TextColumn::make('status_reply')
                 ->label('Status')
                 ->formatStateUsing(fn (string $state) => match ($state) {
-                    'on_process' => 'On process',
+                    'on process' => 'On process',
                     'finished' => 'Finished',
                     'delay' => 'Delay',
-                    'none' => 'None',
                     default => ucfirst($state)
                 }),
             TextColumn::make('count')
@@ -61,22 +64,36 @@ class Hazard_rank_c extends BaseWidget
 
             ])
             ->filters([
-                Filter::make('created_at')
+                Filter::make('car_responses.created_at')
                 ->form([
-                    DatePicker::make('created_from'),
-                    DatePicker::make('created_until'),
+                    DatePicker::make('created_from')->native(false)->displayFormat('d/m/Y')->placeholder('dd/mm/yyyy'),
+                    DatePicker::make('created_until')->native(false)->displayFormat('d/m/Y')->placeholder('dd/mm/yyyy'),
                 ])
                 ->query(function (Builder $query, array $data): Builder {
                     return $query
                         ->when(
                             $data['created_from'],
-                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            fn (Builder $query, $date): Builder => $query->whereDate('car_responses.created_at', '>=', $date),
                         )
                         ->when(
                             $data['created_until'],
-                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            fn (Builder $query, $date): Builder => $query->whereDate('car_responses.created_at', '<=', $date),
                         );
+                })
+                ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+
+                        if ($data['created_from']) {
+                        $indicators[] = 'from: ' . \Carbon\Carbon::parse($data['created_from'])->format('d/m/Y');
+                        }
+
+                        if ($data['created_until']) {
+                        $indicators[] = 'until: ' . \Carbon\Carbon::parse($data['created_until'])->format('d/m/Y');
+                        }
+
+                        return $indicators;
                 }),
+
                 SelectFilter::make('responsible_id')
                 ->label('Department')
                 ->relationship('responsible', 'dept_name')
@@ -103,6 +120,12 @@ class Hazard_rank_c extends BaseWidget
             //         );
             //     }),
             // ]);
+    }
+    public static function canView(): bool
+    {
+        return Auth::user()?->hasAnyRole(['Safety', 'Admin']);
+        // $user = Auth::user();
+        // return in_array($user?->name, ['Admin','Safety']);
     }
 
 }

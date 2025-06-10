@@ -22,6 +22,7 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Enums\FiltersLayout;
@@ -92,20 +93,30 @@ class ProblemResource extends Resource
 
                     Section::make()
                     ->schema([
+                        TextInput::make('title')
+                        ->label('Title')
+                        ->required(),
+
+                        TextInput::make('place')
+                        ->label('Place')
+                        ->required(),
+
                         FileUpload::make('prob_img')
                         ->label('Problem picture')
                         ->image()
                         ->downloadable()
                         ->required()
                         ->directory('form-attachments')
-                        ->visibility('public'),
+                        ->visibility('public')
+                        ->columnSpanFull(),
 
                         Textarea::make('prob_desc')
                             ->label('Description')
                             ->autosize()
-                            ->required(),
+                            ->required()
+                            ->columnSpanFull(),
 
-                            ])->columns(1)->columnSpan(2),
+                            ])->columns(2),
                         ])->from('md'),
                     ]),
 
@@ -135,7 +146,7 @@ class ProblemResource extends Resource
                     ->label('Department'),
                 ImageColumn::make('prob_img')
                     ->label('Image'),
-                    TextColumn::make('status')
+                TextColumn::make('status')
                     ->label('Status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -291,6 +302,21 @@ class ProblemResource extends Resource
         ->when(! $user->hasRole(['Admin','Safety']), function ($query) use ($user) {
             $query->where('dept_id', $user->dept_id);
         });
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+
+        if (Auth::user()->hasRole('Safety')) {
+            return (string) static::$model::where('status', 'new')->count();
+        }
+        return null;
+
+    }
+
+    public static function getNavigationBadgeTooltip(): ?string
+    {
+        return 'The number of new problem report';
     }
 
 

@@ -73,6 +73,7 @@ class CarReportResource extends Resource
                     ->relationship('department','dept_name')
                     ->searchable()
                     ->preload()
+                    ->reactive()
                     ->required(),
 
                     Select::make('sec_id')
@@ -80,7 +81,23 @@ class CarReportResource extends Resource
                     ->relationship('section','sec_name')
                     ->searchable()
                     ->preload()
-                    ->required(),
+                    ->required(), // รองรับการโหลด option ใหม่
+
+                    // Forms\Components\Select::make('safety_dept')
+                    //         ->label('Safety Department')
+                    //         ->options(Dept::pluck('dept_name', 'dept_id'))
+                    //         ->reactive(),  // เมื่อเปลี่ยนแผนก จะ re-render
+
+                    //     Forms\Components\Select::make('section')
+                    //         ->label('Safety Section')
+                    //         ->options(function (callable $get) {
+                    //             $deptId = $get('safety_dept');
+                    //             return Section::where('dept_id', $deptId)
+                    //                         ->pluck('sec_name', 'sec_id');
+                    //         })
+                    //         ->required()
+                    //         ->disabled(fn (callable $get) => ! $get('safety_dept'))
+                    //         ->reactive(), // รองรับการโหลด option ใหม่
 
                     DatePicker::make('car_date')
                     ->label('Create date')
@@ -98,7 +115,6 @@ class CarReportResource extends Resource
                     ->closeOnDateSelection()
                     ->required(),
             ])->columns(5),
-
 
             Section::make('Hazard Details')
             ->schema([
@@ -198,6 +214,7 @@ class CarReportResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc') //sort order by created_at
             ->columns([
                 TextColumn::make('car_no')
                 ->label('Car No.')
@@ -217,6 +234,10 @@ class CarReportResource extends Resource
                 ImageColumn::make('img_before')
                 ->label('Picture before'),
 
+                TextColumn::make('hazardLevel.level_name')
+                ->label('Hazard level')
+                ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('hazardType.type_name')
                 ->label('Hazard type')
                 ->toggleable(isToggledHiddenByDefault: true),
@@ -228,9 +249,9 @@ class CarReportResource extends Resource
                     'draft' => 'gray',
                     'reported' => 'info',
                     'in_progress' => 'warning',
-                    'pending_review' => 'warning',
+                    'pending_review' => 'success',
                     'reopened' => 'warning',
-                    'closed' => 'success',
+                    'closed' => 'gray',
                     default => 'gray',
                 })
                 ->formatStateUsing(fn (string $state) => match ($state) {
@@ -249,8 +270,7 @@ class CarReportResource extends Resource
                 ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('responsible.dept_name')
-                ->label('Reported to')
-                ->toggleable(isToggledHiddenByDefault: true),
+                ->label('Reported to'),
 
                 TextColumn::make('users.FullName')
                 ->label('Created by'),
@@ -261,63 +281,6 @@ class CarReportResource extends Resource
                 ->dateTime('d/m/Y H:i')
                 //->dateTimeTooltip()
                 ->timezone('Asia/Bangkok'),
-
-                TextColumn::make('remaining_days')
-                ->label('Remaining')
-                ->getStateUsing(function ($record) {
-                    // ถ้าสถานะเป็น pending_review หรือ closed ให้แสดงว่า Replied
-                    if (in_array($record->status, ['pending_review', 'closed'])) {
-                        return 'Replied';
-                    }
-
-                    // ถ้าสถานะเป็น draft ให้คืนค่าที่เคยคำนวณไว้ก่อนหน้านี้
-                    if ($record->status === 'draft') {
-                        return $record->remaining_days ?? ''; // หรือใช้ฟิลด์อื่นที่เก็บค่าไว้
-                    }
-
-                    // คำนวณ remaining days สำหรับ reported หรือสถานะอื่น ๆ
-                    $carDate = Carbon::parse($record->car_date);
-                    $dueDate = $carDate->addDays($record->car_delay ?? 0);
-                    $remaining = (int) round(now()->floatDiffInDays($dueDate, false));
-                    $unit = abs($remaining) === 1 ? 'day' : 'days';
-
-                    // ถ้าเหลือ -1 วัน และยังไม่ได้ตั้งค่า delay ให้ตั้งค่า
-                    if ($remaining === -1 && $record->status_delay !== 'delay') {
-                        $record->status_delay = 'delay';
-                        $record->save();
-                    }
-
-                    return "{$remaining} {$unit}";
-                })
-                ->color(function ($record) {
-                    if (in_array($record->status, ['pending_review', 'closed'])) {
-                        return 'info';
-                    }
-
-                    if ($record->status === 'draft') {
-                        return null;
-                    }
-
-                    return now()->gt(Carbon::parse($record->car_date)->addDays($record->car_delay)) ? 'danger' : 'success';
-                }),
-
-
-                // TextColumn::make('status_delay')
-                // ->label('Reply status')
-                // ->badge()
-                // ->color(fn (string $state): string => match ($state) {
-                //     'on_process' => 'warning',
-                //     'finished' => 'success',
-                //     'delay' => 'danger',
-                //     'none' => 'gray'
-                // })
-                // ->formatStateUsing(fn (string $state) => match ($state) {
-                //     'on_process' => 'on process',
-                //     'finished' => 'finished',
-                //     'delay' => 'delay',
-                //     'none' => 'none',
-                //     default => ucfirst($state),
-                // })->default('none'),
 
             ])
             ->filters([
@@ -396,21 +359,20 @@ class CarReportResource extends Resource
             'edit' => Pages\EditCarReport::route('/{record}/edit'),
         ];
     }
+    public static function getNavigationBadge(): ?string
+        {
 
-    // public static function getNavigationBadge(): ?string
-    // {
-    //     if (User::role('Safety')) {
-    //         return Car_report::where('status', 'pending_review')
-    //         ->count();
-    //     }
+            if (Auth::user()->hasRole('Safety')) {
+            return (string) static::$model::where('status', 'pending_review')->count();
+            }
+            return null;
 
-    //     return null; // Ensure a value is returned in all paths
-    // }
+        }
 
-    // public static function shouldRegisterNavigation(): bool
-    // {
-    //     $user = Auth::user();
-    //     return in_array($user?->name, ['Admin','Safety']);
-    // }
+    public static function getNavigationBadgeTooltip(): ?string
+        {
+            return 'The number of car pending review';
+        }
+
 
 }

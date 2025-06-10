@@ -4,11 +4,14 @@ namespace App\Filament\Pages;
 
 use Filament\Forms\Form;
 use App\Models\Department;
+use Filament\Forms\Components\Tabs;
+use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 
 class Dashboard extends \Filament\Pages\Dashboard
@@ -27,28 +30,52 @@ class Dashboard extends \Filament\Pages\Dashboard
                     ->searchable()
                     ->preload(),
                 DatePicker::make('startDate')
-                ->native(false)
-                // ->displayFormat('d/m/Y')
-                ->closeOnDateSelection(),
+                    ->native(false)
+                    ->displayFormat('d/m/Y')
+                    ->placeholder('dd-mm-yyyy')
+                    ->closeOnDateSelection()
+                    ->suffixAction(
+                    Action::make('resetDate')
+                        ->icon('heroicon-o-x-circle')
+                        ->tooltip('clear')
+                        ->action(fn ($state, callable $set) => $set('startDate', null))
+                    ),
                 DatePicker::make('endDate')
-                ->native(false)
-                //->displayFormat('d/m/Y')
-                ->closeOnDateSelection(),
-                Toggle::make('active')
-                ])->columns(4)
-            ]);
-    }
-    // public function getColumns(): int | string | array
-    // {
-    //     return [
-    //         'md' => 6,
-    //         'xl' => 2,
-    //     ];
-    // }
-    public function getColumns(): int | string | array
-    {
-        return 3;
+                    ->native(false)
+                    ->displayFormat('d/m/Y')
+                    ->placeholder('dd-mm-yyyy')
+                    ->closeOnDateSelection()
+                    ->suffixAction(
+                    Action::make('resetDate')
+                        ->icon('heroicon-o-x-circle')
+                        ->tooltip('clear')
+                        ->action(fn ($state, callable $set) => $set('endDate', null))
+                    ),
+                ])->columns(3)
+                ->hidden(function () {
+                    return Auth::user()->hasRole('User');
+    }),
+
+        ]);
+
+
     }
 
+    public function getColumns(): int | string | array
+    {
+        return 6;
+    }
+
+    // public static function shouldRegisterNavigation(): bool
+    // {
+    //     return Auth::check() && Auth::user()->hasRole('Safety');
+    // }
+
+    // public static function canAccess(): bool
+    // {
+    //     // return in_array(Auth::user()->hasRole,['Safety','Admin']);
+    //     // $user = Auth::user();
+    //     // return in_array($user?->name, ['Admin','Safety']);
+    // }
 
 }

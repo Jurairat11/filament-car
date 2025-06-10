@@ -46,4 +46,6 @@ class Car_reportObserver
     {
         //
     }
+
 }
+

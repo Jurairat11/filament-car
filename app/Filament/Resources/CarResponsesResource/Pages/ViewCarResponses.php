@@ -25,60 +25,37 @@ class ViewCarResponses extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('Response')
-            ->icon('heroicon-o-paper-airplane')
-            ->color('warning')
-            ->requiresConfirmation()
-            ->visible(fn (Car_responses $record) =>
-                Auth::check() &&
-                Auth::user()->hasRole('User') &&
-                $record->status === 'draft' &&
-                $record->carReport?->responsible_dept_id === Auth::user()->dept_id
-            )
-            ->action(function () {
-                // ปิดใบปัจจุบัน
-                $this->record->update(['status' => 'pending_review']);
+            // Action::make('Response')
+            // ->icon('heroicon-o-paper-airplane')
+            // ->color('warning')
+            // ->requiresConfirmation()
+            // ->visible(fn (Car_responses $record) =>
+            //     Auth::check() &&
+            //     Auth::user()->hasRole('User') &&
+            //     $record->status === 'draft' &&
+            //     $record->carReport?->responsible_dept_id === Auth::user()->dept_id
+            // )
+            // ->action(function () {
+            //     // ปิดใบปัจจุบัน
+            //     $this->record->update(['status' => 'pending_review']);
 
-                if ($this->record->car_id) {
-                    Car_report::where('id', $this->record->car_id)
-                        ->update([
-                            'status' => 'pending_review',
-                            'status_delay' => 'finished'
-                        ]);
-        }
-            User::role('Safety')->get()
-            ->each(fn ($user) =>
-                Notification::make()
-                    ->iconColor('success')
-                    ->icon('heroicon-o-document-check')
-                    ->title('Department response submitted')
-                    ->body("CAR report CAR no: {$this->record->carReport->car_no} has been responded to.")
-                    ->sendToDatabase($user)
-            );
+            //     if ($this->record->car_id) {
+            //         Car_report::where('id', $this->record->car_id)
+            //             ->update([
+            //                 'status' => 'pending_review',
+            //             ]);
+            // }
+            // User::role('Safety')->get()
+            // ->each(fn ($user) =>
+            //     Notification::make()
+            //         ->iconColor('success')
+            //         ->icon('heroicon-o-document-check')
+            //         ->title('Department response submitted')
+            //         ->body("CAR report CAR no: {$this->record->carReport->car_no} has been responded to.")
+            //         ->sendToDatabase($user)
+            // );
 
-            $data = [
-                'car_id' => $this->record->carReport->car_no ?? '-',
-                'cause' => $this->record->cause ?? '-',
-                'created_by' => $this->record->createdResponse->emp_id?? '-',
-            ];
-
-            $txtTitle = "ตอบกลับใบ CAR";
-
-            // create connector instance
-            $connector = new \Sebbmyr\Teams\TeamsConnector(env('MSTEAM_API'));
-            // // create card
-            // $card  = new \Sebbmyr\Teams\Cards\SimpleCard(['title' => $data['title'], 'text' => $data['description']]);
-
-            // create a custom card
-            $card  = new \Sebbmyr\Teams\Cards\CustomCard("พนักงาน " . Str::upper($data['created_by']), "หัวข้อ: " . $txtTitle);
-            // add information
-            $card->setColor('01BC36')
-                ->addFacts('รายละเอียด', ['เลขที่ CAR ' => $data['car_id'], 'สาเหตุ' => $data['cause']])
-                ->addAction('Visit Issue', route('filament.admin.resources.car-responses.view', $this->record));
-            // send card via connector
-            $connector->send($card);
-            }),
-
+            // }),
         ];
     }
 

@@ -124,6 +124,9 @@ class ViewCarReport extends ViewRecord
                     'sec_id'               => $this->record->sec_id,
                     'car_date'             => $this->record->car_date,
                     'car_due_date'         => $this->record->car_due_date,
+                    'equipment'            => $this->record->equipment,
+                    'place_id'             => $this->record->place_id,
+                    'hazard_source_id'     => $this->record->hazard_source_id,
                     'car_desc'             => $this->record->car_desc,
                     'hazard_level_id'      => $this->record->hazard_level_id,
                     'hazard_type_id'       => $this->record->hazard_type_id,
@@ -162,20 +165,6 @@ class ViewCarReport extends ViewRecord
                     Car_responses::where('car_id', $id)
                     ->update(['status' => 'closed']);
                     //dd($this->record->id);
-
-                    // $temp = Car_responses::where('car_id', $id)->first();
-                    // if ($temp->temp_status !== 'none') {
-                    //     $temp->update(['temp_status' => 'finished']);
-                    // } else {
-                    //     $temp->update(['temp_status' => 'none']);
-                    // }
-
-                    // $perm = Car_responses::where('car_id', $id)->first();
-                    // if ($perm->perm_status !== 'none') {
-                    //     $perm->update(['perm_status' => 'finished']);
-                    // } else {
-                    //     $perm->update(['perm_status' => 'none']);
-                    // }
 
                     $parent_car_id = $this->record->parent_car_id;
                     Car_responses::where('car_id',$parent_car_id)->update(['status'=> 'closed']);

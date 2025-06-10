@@ -2,18 +2,24 @@
 
 namespace App\Filament\Widgets;
 
+use Carbon\Carbon;
 use App\Models\Car_report;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\Filter;
+use Illuminate\Support\Facades\Auth;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Widgets\TableWidget as BaseWidget;
 
 class Hazard_type_table extends BaseWidget
 {
-    protected static ?string $heading = 'Stop type';
-    protected static ?int $sort = 6;
+    protected static ?string $heading = 'Stop Type';
+    protected static ?int $sort = 4;
     protected static bool $isLazy = false;
+    protected int | string | array $columnSpan = 3;
     protected function getTableHeading(): ?string
     {
         $counts = Car_report::query()
@@ -26,7 +32,7 @@ class Hazard_type_table extends BaseWidget
 
         $total = $counts->sum('count');
 
-        return "Stop type Total: {$total}";
+        return "Stop Type Total: {$total}";
     }
     public function table(Table $table): Table
     {
@@ -50,6 +56,44 @@ class Hazard_type_table extends BaseWidget
                 TextColumn::make('count')
                     ->label('Count')
             ])
+            ->filters([
+                Filter::make('car_reports.created_at')
+                ->form([
+                    DatePicker::make('created_from')->native(false)->displayFormat('d/m/Y')->placeholder('dd/mm/yyyy'),
+                    DatePicker::make('created_until')->native(false)->displayFormat('d/m/Y')->placeholder('dd/mm/yyyy'),
+                ])
+                ->query(function (Builder $query, array $data): Builder {
+                    return $query
+                        ->when(
+                            $data['created_from'],
+                            fn (Builder $query, $date): Builder => $query->whereDate('car_reports.created_at', '>=', $date),
+                        )
+                        ->when(
+                            $data['created_until'],
+                            fn (Builder $query, $date): Builder => $query->whereDate('car_reports.created_at', '<=', $date),
+                        );
+                })
+                ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+
+                        if ($data['created_from']) {
+                        $indicators[] = 'from: ' . Carbon::parse($data['created_from'])->format('d/m/Y');
+                        }
+
+                        if ($data['created_until']) {
+                        $indicators[] = 'until: ' . Carbon::parse($data['created_until'])->format('d/m/Y');
+                        }
+
+                        return $indicators;
+                }),
+
+                SelectFilter::make('responsible_id')
+                ->label('Department')
+                ->relationship('responsible', 'dept_name')
+                ->searchable()
+                ->preload()
+                ->indicator('Department'),
+            ])
             ->actions([
 
                 ViewAction::make()
@@ -70,6 +114,12 @@ class Hazard_type_table extends BaseWidget
                     );
                 }),
             ]);
+    }
+    public static function canView(): bool
+    {
+        return Auth::user()?->hasAnyRole(['Safety', 'Admin']);
+        // $user = Auth::user();
+        // return in_array($user?->name, ['Admin','Safety']);
     }
 
 }

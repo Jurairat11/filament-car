@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Car_responses extends Model
 {
     use HasFactory;
-
     protected $primaryKey = 'id';
     protected $fillable =[
         'car_id',
@@ -29,6 +28,17 @@ class Car_responses extends Model
 
     ];
 
+    public function getDaysPermAttribute()
+    {
+        if (!$this->perm_desc || $this->perm_status === 'finished') {
+            return null;
+        }
+
+        $value = round( now()->diffInDays($this->perm_due_date, false));
+        return $value === 0 ? 0 : $value;
+
+
+    }
 
     public function carReport() {
         return $this->belongsTo(Car_report::class,'car_id','id');
@@ -43,5 +53,9 @@ class Car_responses extends Model
 
     public function createdResponse(){
         return $this->belongsTo(User::class,'created_by','id');
+    }
+
+    public function department() {
+        return $this->belongsTo(Department::class,'dept_id','dept_id');
     }
 }

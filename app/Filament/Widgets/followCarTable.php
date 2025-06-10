@@ -2,34 +2,33 @@
 
 namespace App\Filament\Widgets;
 
-use Carbon\Carbon;
 use App\Models\Car_report;
-use Filament\Tables\Table;
-use App\Models\Car_responses;
-use Filament\Tables\Filters\Filter;
-use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use Filament\Forms\Components\DatePicker;
+use Filament\Tables;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 
-class overviewTable extends BaseWidget
+class followCarTable extends BaseWidget
 {
-    protected int | string | array $columnSpan = 'full';
-    protected static ?string $heading = 'Overview';
-    protected static ?int $sort = 7;
     protected static bool $isLazy = false;
-    public function table(Table $table): Table
-    {
+    protected int | string | array $columnSpan = 'full';
+    protected static ?string $heading = 'Following CAR Overview';
+    public function table(Table $table): Table {
+
         return $table
-        // ->paginated(false)
             ->emptyStateHeading('No data available')
             ->emptyStateDescription('No data available for this table.')
             ->emptyStateIcon('heroicon-o-bookmark')
             ->query(
                 Car_report::query()
+                    ->where('responsible_dept_id',Auth::user()->dept_id)
                     ->leftJoin('car_responses', 'car_reports.id', '=','car_responses.car_id')
                     ->select('car_reports.*', 'car_responses.temp_desc', 'car_responses.temp_status', 'car_responses.perm_desc', 'car_responses.perm_status','car_responses.status_reply')
             )
@@ -122,7 +121,7 @@ class overviewTable extends BaseWidget
                         'delay' => 'delay',
                         default => ucfirst($state),
                     }),
-                ])
+            ])
             ->filters([
                 Filter::make('car_reports.created_at')
                 ->form([
@@ -180,12 +179,13 @@ class overviewTable extends BaseWidget
                     );
                 }),
             ]);
-    }
-    public static function canView(): bool
-    {
-        return Auth::user()?->hasAnyRole(['Safety', 'Admin']);
-        // $user = Auth::user();
-        // return in_array($user?->name, ['Admin','Safety']);
+        }
+        public static function canView(): bool
+        {
+            return Auth::user()->hasRole('User');
+            // $user = Auth::user();
+            // return in_array($user?->name, ['Admin','Safety']);
+        }
     }
 
-}
+

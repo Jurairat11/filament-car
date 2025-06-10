@@ -19,6 +19,7 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Support\Enums\ActionSize;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
@@ -41,6 +42,21 @@ class CarResponsesResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-arrow-uturn-left';
     protected static ?string $navigationGroup = 'Car Responses';
     protected static ?int $navigationSort = 3;
+
+    public static function getEloquentQuery(): Builder
+    {
+        // If user has 'Safety' role, show all records
+        if (Auth::user()?->hasRole('Safety')) {
+            return parent::getEloquentQuery();
+        }
+
+        // Otherwise, filter by responsible_dept_id
+        return parent::getEloquentQuery()
+            ->whereHas('carReport', function ($query) {
+                $query->where('responsible_dept_id', Auth::user()->dept_id);
+            });
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -95,6 +111,7 @@ class CarResponsesResource extends Resource
                         Textarea::make('preventive')
                             ->label('Preventive action')
                             ->autosize()
+                            ->nullable()
                             ->required(),
                     ]),
 
@@ -135,7 +152,6 @@ class CarResponsesResource extends Resource
                             Textarea::make('perm_desc')
                             ->label('Permanent action')
                             ->autosize(),
-
 
                             DatePicker::make('perm_due_date')
                             ->label('Due date')
@@ -186,30 +202,44 @@ class CarResponsesResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at','desc')
             ->columns([
                 TextColumn::make('carReport.car_no')
                 ->label('CAR no.')
                 ->searchable(),
+
                 ImageColumn::make('img_after')
                 ->label('Picture after'),
+
                 TextColumn::make('status')
                 ->label('Status')
                 ->badge()
                 ->color(fn (string $state): string => match ($state) {
-                    'in_progress' => 'warning',
                     'draft' => 'gray',
                     'pending_review' => 'success',
                     'reopened' => 'warning',
                     'closed' => 'gray'
                 })
                 ->formatStateUsing(fn (string $state) => match ($state) {
-                    'in_progress' => 'in progress',
                     'draft' => 'draft',
                     'pending_review' => 'pending review',
                     'reopened' => 'reopened',
                     'closed' => 'closed',
                     default => ucfirst($state),
-                })->toggleable(isToggledHiddenByDefault: true),
+                }),
+                // ->getStateUsing(function($record){
+                //     if($record->status_reply === 'finished' && $record->perm_status === 'finished'){
+                //         $record->status = 'pending_review';
+
+                //         $car_report = $record->carReport;
+
+                //         if($car_report) {
+                //             $car_report->status = 'pending_review';
+                //             $car_report->save(); // Save the updated status
+                //     }
+
+                //     }
+                // }),
 
                 TextColumn::make('createdResponse.FullName')
                 ->label('Created by')
@@ -256,76 +286,81 @@ class CarResponsesResource extends Resource
                 ->dateTime('d/m/Y'),
 
                 TextColumn::make('days_perm')
-                ->label('Days Perm')
-                ->getStateUsing( function ($record) {
-                    $permDueDate = Carbon::parse($record->perm_due_date);
-                    $today = now();
-
-                    // หาค่าความต่างของวัน
-                    $diff = (int) round($today->diffInDays($permDueDate, false));
-
-                    // เงื่อนไข: ถ้ามี perm_desc และ perm_due_date ตรงกับวันนี้
-                    if ($record->perm_desc !== null && $permDueDate->isSameDay($today)) {
-                        if ($record->perm_status !== 'finished') {
-                            $record->perm_status = 'finished';
-                            //$record->status_reply = 'finished';
-                            $record->save();
-                        }
-                    }
-
-                    // เงื่อนไขการแสดงผล
-                    if ($record->perm_desc === null || $record->perm_status === 'finished') {
-                        return '';
-                    }
-
-                    if ($diff < 0) {
-                        return "{$diff}  days";
-                    } elseif ($diff > 0) {
-                        return "{$diff} days";
-                    } else {
-                        return "Due today";
-                    }
-
-                }),
+                ->label('Days Perm'),
 
                 TextColumn::make('perm_status')
                 ->label('Perm status')
                 ->badge()
                 ->color(fn (string $state): string => match ($state) {
-                    'on_process' => 'warning',
+                    'on process' => 'warning',
                     'finished' => 'success',
+                    default => 'gray',
                 })
                 ->formatStateUsing(fn (string $state) => match ($state) {
-                    'on_process' => 'on process',
+                    'on process' => 'on process',
                     'finished' => 'finished',
                     default => ucfirst($state),
                 }),
+                // ->getStateUsing(function($record){
+                //     if('days_perm' === 0){
+                //         $record->perm_status = 'finished';
+                //         $record->save();
+                //         return $record->perm_status;
+                //     }
+
+                    //ถ้ามีคำอธิบาย (perm_desc) และยังไม่มีสถานะ (perm_status)
+                //     if($record->perm_desc && !$record->perm_status) {
+                //         if($todayDate->lte ($record->perm_due_date)) {
+                //             return $record->perm_status = 'on process';
+                //         }elseif ($todayDate->eq($record->perm_due_date)) {
+                //             return $record->perm_status = 'finished';
+                //         }
+                //     }
+                //}),
 
                 TextColumn::make('status_reply')
                 ->label('Status reply')
                 ->badge()
                 ->color(fn (string $state): string => match ($state) {
-                    'on_process' => 'warning',
+                    'on process' => 'warning',
                     'finished' => 'success',
-                    'delay' => 'danger'
+                    'delay' => 'danger',
+                    default => 'gray',
                 })
                 ->formatStateUsing(fn (string $state) => match ($state) {
-                    'on_process' => 'on process',
+                    'on process' => 'on process',
                     'finished' => 'finished',
                     'delay' => 'delay',
                     default => ucfirst($state),
-                }),
+                })
+
+                // ->getStateUsing(function($record){
+                //     if(is_null($record->days_perm)&& $record->perm_status === 'finished'){
+                //         return $record->status_reply = 'finished';
+                //     }elseif ($record->days_perm < 0) {
+                //         return $record->status_reply = 'delay';
+                //     }else{
+                //         return $record->status_reply = 'on process';
+                //     }
+
+                // }),
 
             ])
             ->filters([
                 SelectFilter::make('status')
                 ->options([
-                    'in_progress' => 'In progress',
                     'draft' => 'Draft',
                     'pending_review' => 'Pending review',
                     'reopened' => 'Reopened',
                     'closed' => 'Closed'
-                ])  ->indicator('status'),
+                ])->indicator('status'),
+
+                SelectFilter::make('status_reply')
+                ->options([
+                    'on process' => 'On process',
+                    'finished' => 'Finished',
+                    'delay' => 'Delay',
+                ])->indicator('Status reply')->default(request('status_reply')),
 
                 Filter::make('created_at')
                 ->form([
@@ -343,7 +378,7 @@ class CarResponsesResource extends Resource
                             fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
                         );
                 })->columnSpan(2)->columns(2)
-            ],layout: FiltersLayout::AboveContent)->filtersFormColumns(3)
+            ],layout: FiltersLayout::AboveContent)->filtersFormColumns(4)
 
             ->actions([
                 Tables\Actions\ActionGroup::make([
@@ -387,15 +422,18 @@ class CarResponsesResource extends Resource
         ];
     }
 
-    // protected function updated($record)
+    // public static function getNavigationBadge(): ?string
     // {
-    //     if (
-    //         $this->$record->perm_desc &&
-    //         $this->$record->perm_due_date &&
-    //         Carbon::parse($this->$record->perm_due_date)->isSameDay(now())
-    //     ) {
-    //         $this->$record->perm_status = 'finished';
-    //     }
+    //     return static::getModel()::count();
+
+    // }
+
+    // public static function getEloquentQuery(): Builder
+    // {
+    //     return parent::getEloquentQuery()
+    //         ->whereHas('carReport', function ($query) {
+    //             $query->where('responsible_dept_id', Auth::user()->dept_id);
+    //         });
     // }
 
 

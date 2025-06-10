@@ -2,8 +2,9 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Car_report;
 use App\Models\User;
+use App\Models\Car_report;
+use Illuminate\Support\Facades\Auth;
 use Filament\Support\Enums\IconPosition;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
@@ -22,7 +23,7 @@ class StatsOverview extends BaseWidget
     {
         $start = $this->filters['startDate'];
         $end = $this->filters['endDate'];
-        $active = $this->filters['active'];
+        // $active = $this->filters['active'];
         $dept = $this->filters['dept_id'];
 
         return [
@@ -92,5 +93,11 @@ class StatsOverview extends BaseWidget
         ->chart([7, 2, 10, 3, 15, 4, 17])
         ->color('warning'),
         ];
+    }
+    public static function canView(): bool
+    {
+        return Auth::user()?->hasAnyRole(['Safety', 'Admin']);
+        // $user = Auth::user();
+        // return in_array($user?->name, ['Admin','Safety']);
     }
 }
