@@ -188,7 +188,7 @@ class Column_groupedChart extends ApexChartWidget
                 ],
                 'beginAtZero' => true,
                         'min' => 0,
-                        'max' => 10,
+                        'max' => 50,
                         'ticks' => [
                             'stepSize' => 2,
                         ],

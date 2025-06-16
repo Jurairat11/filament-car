@@ -63,10 +63,6 @@ class StatsOverview extends BaseWidget
         ->where('status', 'closed')
         ->count()
         )
-        ->extraAttributes([
-                'class' => 'cursor-pointer',
-                'wire:click' => "\$dispatch('setStatusFilter', { filter: 'closed' })",
-        ])
         ->description('Number of closed car report.')
         ->descriptionIcon('heroicon-m-check-circle', IconPosition::Before)
         ->chart([7, 2, 10, 3, 15, 4, 17])

@@ -30,16 +30,17 @@ class Car_responses extends Model
 
     public function getDaysPermAttribute()
     {
-        if (!$this->perm_desc || $this->perm_status === 'finished') {
+        // if (!$this->perm_desc || $this->perm_status === 'finished') {
+        //     return null;
+        // }
+
+        if ($this->perm_status === 'finished') {
             return null;
         }
 
-        $value = round( now()->diffInDays($this->perm_due_date, false));
-        return $value === 0 ? 0 : $value;
-
+        return round( now()->diffInDays($this->perm_due_date, false));
 
     }
-
     public function carReport() {
         return $this->belongsTo(Car_report::class,'car_id','id');
     }

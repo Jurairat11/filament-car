@@ -46,7 +46,6 @@ class ProblemResource extends Resource
     protected static ?string $navigationGroup = 'Car Responses';
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-exclamation-circle';
-
     public static function form(Form $form): Form
     {
         return $form
@@ -70,8 +69,12 @@ class ProblemResource extends Resource
                         ->label('Reporter')
                         ->searchable()
                         ->preload()
-                        ->options(fn () => User::where('dept_id',Auth::user()?->dept_id)->pluck('emp_id', 'id'))
-                        ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->emp_id} ({$record->emp_name} {$record->last_name})")
+                        ->relationship('user','emp_id',function ($query){
+                            $query->where('dept_id',Auth::user()->dept_id);
+                        })
+                        ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->emp_id} ({$record->emp_name} {$record->last_name})")
+                        //->options(fn () => User::where('dept_id',Auth::user()?->dept_id)->pluck('emp_id', 'id'))
+                        //->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->emp_id} ({$record->emp_name} {$record->last_name})")
                         ->required(),
 
                     Select::make('dept_id')
@@ -120,16 +123,9 @@ class ProblemResource extends Resource
                         ])->from('md'),
                     ]),
 
-                    Select::make('status')
-                    ->label('Status')
-                    ->options([
-                        'new' => 'New',
-                        'accepted' => 'Accepted',
-                        'dismissed' => 'Dismissed',
-                        'reported' => 'Reported',
-                        'closed' => 'Closed'
-                    ])
+                    Hidden::make('status')
                     ->default('new')
+                    ->dehydrated(true)
 
             ]);
     }
@@ -137,6 +133,7 @@ class ProblemResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at','desc')
             ->columns([
                 TextColumn::make('prob_id')
                     ->label('ID'),
@@ -177,12 +174,13 @@ class ProblemResource extends Resource
                     'accepted' => 'Accepted',
                     'dismissed' => 'Dismissed',
                     'reported' => 'Reported',
-                ])  ->indicator('status'),
+                    'closed' => 'Closed'
+                ]) ->indicator('status'),
 
                 Filter::make('created_at')
                 ->form([
-                    DatePicker::make('created_from'),
-                    DatePicker::make('created_until'),
+                    DatePicker::make('created_from')->native(false)->displayFormat('d/m/y')->placeholder('dd/mm/yyyy'),
+                    DatePicker::make('created_until')->native(false)->displayFormat('d/m/y')->placeholder('dd/mm/yyyy'),
                 ])
                 ->query(function (Builder $query, array $data): Builder {
                     return $query
@@ -205,12 +203,8 @@ class ProblemResource extends Resource
                     ->color('success')
                     ->requiresConfirmation()
                     ->visible(fn ($record) =>
-                        Auth::user()?->hasRole('Safety') && $record->status === 'new'
+                        Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status === 'new'
                     )
-
-                    // ->visible(fn ($record) =>
-                    //     Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status === 'new'
-                    // )
 
                     ->action(function($record, array $data) {
                         $record->update([
@@ -246,7 +240,7 @@ class ProblemResource extends Resource
                         ->maxLength(500),
                 ])
                 ->visible(fn ($record) =>
-                        Auth::user()?->hasRole('Safety') && $record->status === 'new'
+                        Auth::user()?->hasAnyRole(['Safety','Admin']) && $record->status === 'new'
                     )
                 ->action(function ($record, array $data) {
                     $record->update([
@@ -307,7 +301,7 @@ class ProblemResource extends Resource
     public static function getNavigationBadge(): ?string
     {
 
-        if (Auth::user()->hasRole('Safety')) {
+        if (Auth::user()->hasAnyRole(['Safety','Admin'])) {
             return (string) static::$model::where('status', 'new')->count();
         }
         return null;
@@ -316,7 +310,7 @@ class ProblemResource extends Resource
 
     public static function getNavigationBadgeTooltip(): ?string
     {
-        return 'The number of new problem report';
+        return 'New problem report';
     }
 
 

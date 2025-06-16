@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use Carbon\Carbon;
-use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
 use Filament\Forms\Form;
@@ -19,7 +17,6 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Support\Enums\ActionSize;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
@@ -46,7 +43,7 @@ class CarResponsesResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         // If user has 'Safety' role, show all records
-        if (Auth::user()?->hasRole('Safety')) {
+        if (Auth::user()?->hasAnyRole(['Safety','Admin']))  {
             return parent::getEloquentQuery();
         }
 
@@ -69,12 +66,19 @@ class CarResponsesResource extends Resource
                 ->schema([
                     Select::make('car_id')
                         ->label('CAR No.')
-                        ->options(function() {
-                        $deptId = Auth::user()?->dept_id;
-                        return Car_report::where('responsible_dept_id', $deptId)
-                            ->where('status', 'in_progress')
-                            ->pluck('car_no', 'id');
+                        ->relationship('carReport','car_no', function ($query){
+                            $query->where('responsible_dept_id',Auth::user()->dept_id);
                         })
+                        ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->car_no} ({$record->status})")
+                        ->preload()
+                        ->searchable()
+                        // ->options(function() {
+                        // $deptId = Auth::user()?->dept_id;
+                        // return Car_report::where('responsible_dept_id', $deptId)
+                        //     // ->where('status', 'in_progress')
+                        //     ->pluck('car_no', 'id')
+                        //     ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->car_id} ({$record->status})");
+                        // })
                         ->reactive()
                         ->required()
                         ->afterStateUpdated(function ($state, callable $set){
@@ -85,16 +89,14 @@ class CarResponsesResource extends Resource
                             }
                         }),
 
-                        Select::make('status')
-                            ->label('Status')
-                            ->options([
-                                'in_progress' => 'In progress',
-                                'draft' => 'Draft',
-                                'pending_review' => 'Pending review',
-                                'reopened' => 'Reopened',
-                                'closed' => 'Closed'
-                            ])
-                            ->default('draft'),
+                        // Select::make('problem_id')
+                        // ->label('Problem ID')
+                        // ->relationship('problem', 'prob_id')
+                        // ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->prob_id} ({$record->status})"),
+
+                        Hidden::make('status')
+                        ->default('draft')
+                        ->dehydrated(true),
 
                         Textarea::make('cause')
                         ->label('Cause')
@@ -108,13 +110,7 @@ class CarResponsesResource extends Resource
                             ->directory('form-attachments')
                             ->visibility('public'),
 
-                        Textarea::make('preventive')
-                            ->label('Preventive action')
-                            ->autosize()
-                            ->nullable()
-                            ->required(),
                     ]),
-
 
                 Tabs::make('Tabs')
                 ->tabs([
@@ -138,13 +134,6 @@ class CarResponsesResource extends Resource
                             // ->options(fn () => User::where('dept_id',Auth::user()?->dept_id)->pluck('emp_id', 'id'))
                             ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->emp_id} ({$record->emp_name} {$record->last_name})")
                             ->preload(),
-
-                            Select::make('temp_status')
-                            ->label('Temp status')
-                            ->options([
-                                'on_process' => 'On process',
-                                'finished' => 'Finished',
-                            ])->default('finished'),
 
                         ]),
                     Tabs\Tab::make('Permanent action')
@@ -170,24 +159,15 @@ class CarResponsesResource extends Resource
                             ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->emp_id} ({$record->emp_name} {$record->last_name})")
                             ->preload(),
 
-                            Select::make('perm_status')
-                                ->label('Perm status')
-                                ->options([
-                                    'on_process' => 'On process',
-                                    'finished' => 'Finished',
-                                ])->default('on_process')
+                            Textarea::make('preventive')
+                            ->label('Preventive action')
+                            ->autosize()
+                            ->nullable()
 
                         ]),
                     ]),
                 ]),
             ])->columns(1)->columnSpan(2),
-
-                // Select::make('status_reply')
-                // ->label('Reply status')
-                // ->options([
-                //     'on_process' => 'On process',
-                //     'finished' => 'Finished',
-                // ]),
 
                 Hidden::make('created_by')
                 ->label('Created by')
@@ -227,19 +207,6 @@ class CarResponsesResource extends Resource
                     'closed' => 'closed',
                     default => ucfirst($state),
                 }),
-                // ->getStateUsing(function($record){
-                //     if($record->status_reply === 'finished' && $record->perm_status === 'finished'){
-                //         $record->status = 'pending_review';
-
-                //         $car_report = $record->carReport;
-
-                //         if($car_report) {
-                //             $car_report->status = 'pending_review';
-                //             $car_report->save(); // Save the updated status
-                //     }
-
-                //     }
-                // }),
 
                 TextColumn::make('createdResponse.FullName')
                 ->label('Created by')
@@ -258,92 +225,65 @@ class CarResponsesResource extends Resource
                 ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('temp_due_date')
-                ->label('Due date')
+                ->label('Temp due date')
                 ->timezone('Asia/Bangkok')
                 ->dateTime('d/m/Y'),
 
                 TextColumn::make('temp_status')
-                ->label('Temp status')
-                ->badge()
-                ->color(fn (string $state): string => match ($state) {
-                    'on_process' => 'warning',
-                    'finished' => 'success',
-                })
-                ->formatStateUsing(fn (string $state) => match ($state) {
-                    'on_process' => 'on process',
-                    'finished' => 'finished',
-                    default => ucfirst($state),
-                }),
+                    ->label('Temp status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'on process' => 'warning',
+                        'finished' => 'success',
+                    })
+                    ->formatStateUsing(fn (string $state) => match ($state) {
+                        'on process' => 'on process',
+                        'finished' => 'finished',
+                        default => ucfirst($state),
+                    }),
 
                 TextColumn::make('perm_desc')
-                ->label('Permanent action')
-                ->limit(50)
-                ->toggleable(isToggledHiddenByDefault: true),
+                    ->label('Permanent action')
+                    ->limit(50)
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('perm_due_date')
-                ->label('Due date')
-                ->timezone('Asia/Bangkok')
-                ->dateTime('d/m/Y'),
+                    ->label('Perm due date')
+                    ->timezone('Asia/Bangkok')
+                    ->dateTime('d/m/Y'),
 
                 TextColumn::make('days_perm')
-                ->label('Days Perm'),
+                    ->label('Days Perm'),
 
                 TextColumn::make('perm_status')
-                ->label('Perm status')
-                ->badge()
-                ->color(fn (string $state): string => match ($state) {
-                    'on process' => 'warning',
-                    'finished' => 'success',
-                    default => 'gray',
-                })
-                ->formatStateUsing(fn (string $state) => match ($state) {
-                    'on process' => 'on process',
-                    'finished' => 'finished',
-                    default => ucfirst($state),
-                }),
-                // ->getStateUsing(function($record){
-                //     if('days_perm' === 0){
-                //         $record->perm_status = 'finished';
-                //         $record->save();
-                //         return $record->perm_status;
-                //     }
-
-                    //ถ้ามีคำอธิบาย (perm_desc) และยังไม่มีสถานะ (perm_status)
-                //     if($record->perm_desc && !$record->perm_status) {
-                //         if($todayDate->lte ($record->perm_due_date)) {
-                //             return $record->perm_status = 'on process';
-                //         }elseif ($todayDate->eq($record->perm_due_date)) {
-                //             return $record->perm_status = 'finished';
-                //         }
-                //     }
-                //}),
+                    ->label('Perm status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'on process' => 'warning',
+                        'finished' => 'success',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state) => match ($state) {
+                        'on process' => 'on process',
+                        'finished' => 'finished',
+                        default => ucfirst($state),
+                    }),
 
                 TextColumn::make('status_reply')
-                ->label('Status reply')
-                ->badge()
-                ->color(fn (string $state): string => match ($state) {
-                    'on process' => 'warning',
-                    'finished' => 'success',
-                    'delay' => 'danger',
-                    default => 'gray',
-                })
-                ->formatStateUsing(fn (string $state) => match ($state) {
-                    'on process' => 'on process',
-                    'finished' => 'finished',
-                    'delay' => 'delay',
-                    default => ucfirst($state),
-                })
-
-                // ->getStateUsing(function($record){
-                //     if(is_null($record->days_perm)&& $record->perm_status === 'finished'){
-                //         return $record->status_reply = 'finished';
-                //     }elseif ($record->days_perm < 0) {
-                //         return $record->status_reply = 'delay';
-                //     }else{
-                //         return $record->status_reply = 'on process';
-                //     }
-
-                // }),
+                    ->label('Status reply')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'on process' => 'warning',
+                        'finished' => 'success',
+                        'delay' => 'danger',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state) => match ($state) {
+                        'on process' => 'on process',
+                        'finished' => 'finished',
+                        'delay' => 'delay',
+                        default => ucfirst($state),
+                    })
 
             ])
             ->filters([
@@ -364,8 +304,16 @@ class CarResponsesResource extends Resource
 
                 Filter::make('created_at')
                 ->form([
-                    DatePicker::make('created_from'),
-                    DatePicker::make('created_until'),
+                    DatePicker::make('created_from')
+                        ->native(false)
+                        ->displayFormat('d/m/Y')
+                        ->placeholder('dd-mm-yyyy')
+                        ->closeOnDateSelection(),
+                    DatePicker::make('created_until')
+                        ->native(false)
+                        ->displayFormat('d/m/Y')
+                        ->placeholder('dd-mm-yyyy')
+                        ->closeOnDateSelection()
                 ])
                 ->query(function (Builder $query, array $data): Builder {
                     return $query
@@ -421,20 +369,5 @@ class CarResponsesResource extends Resource
             'edit' => Pages\EditCarResponses::route('/{record}/edit'),
         ];
     }
-
-    // public static function getNavigationBadge(): ?string
-    // {
-    //     return static::getModel()::count();
-
-    // }
-
-    // public static function getEloquentQuery(): Builder
-    // {
-    //     return parent::getEloquentQuery()
-    //         ->whereHas('carReport', function ($query) {
-    //             $query->where('responsible_dept_id', Auth::user()->dept_id);
-    //         });
-    // }
-
 
 }

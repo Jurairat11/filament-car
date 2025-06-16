@@ -17,7 +17,6 @@ use Filament\Widgets\TableWidget as BaseWidget;
 class Hazard_rank_a extends BaseWidget
 {
     protected static ?string $heading = 'Rank A';
-    //protected static ?string $description = 'Fatal Death';
     protected static ?string $maxHeight = '300px';
     protected static ?int $sort = 5;
     protected int | string | array $columnSpan = 2;
@@ -131,4 +130,4 @@ class Hazard_rank_a extends BaseWidget
 
 }
 // $user = Auth::user();
-        // return in_array($user?->name, ['Admin','Safety']);
+//         return in_array($user?->name, ['Admin','Safety']);

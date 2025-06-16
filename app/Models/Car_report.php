@@ -32,7 +32,7 @@ class Car_report extends Model
         'place_id',
         'hazard_source_id',
         'car_delay',
-        'status_delay',
+        'reopen_car_reason',
     ];
 
     public static function generateNextCarNo(): string
@@ -101,7 +101,7 @@ class Car_report extends Model
 
     public function followUp()
     {
-        return $this->belongsTo(Car_report::class, 'follow_car_id');
+        return $this->belongsTo(Car_report::class, 'followed_car_id','id');
     }
     public function children()
     {

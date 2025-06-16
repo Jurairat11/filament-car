@@ -7,14 +7,16 @@ use App\Models\User;
 use App\Models\Problem;
 use Filament\Forms\Form;
 use Illuminate\Support\Str;
-use Filament\Actions\Action;
+
 use App\Models\Car_responses;
 use Filament\Forms\Components\View;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Forms\Components\Placeholder;
+use Filament\Actions\Action;
 use App\Filament\Resources\CarReportResource;
 
 class ViewCarReport extends ViewRecord
@@ -29,7 +31,7 @@ class ViewCarReport extends ViewRecord
             ->color('success')
             ->requiresConfirmation()
             ->visible(fn ($record) =>
-                        Auth::user()?->hasRole('Safety') && $record->status === 'draft'
+                        Auth::user()?->hasAnyRole(['Safety','Admin']) && $record->status === 'draft'
                     )
             ->action(function($record, array $data) {
                 $record->update([
@@ -84,10 +86,23 @@ class ViewCarReport extends ViewRecord
             ->icon('heroicon-o-arrow-path')
             ->color('warning')
             ->requiresConfirmation()
+            ->form([
+                Textarea::make('reopen_car_reason')
+                        ->label('Reason for reopening CAR')
+                        ->required()
+                        ->autosize()
+                        ->maxLength(500),
+                ])
             ->visible(fn ($record) =>
-            User::role('Safety') && $record->status === 'pending_review')
-            ->action(function () {
-                $this->record->update(['status' => 'reopened']);
+            Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status === 'pending_review')
+
+            ->action(function ( $record, array $data) {
+                $record->update([
+                    'status' => 'reopened',
+                    'reopen_car_reason' => $data['reopen_car_reason'],
+                ]);
+
+                //$this->record->update(['status' => 'reopened']);
 
                 if ($this->record->problem_id) {
                         Problem::where('id', $this->record->problem_id)
@@ -143,7 +158,7 @@ class ViewCarReport extends ViewRecord
             ->color('success')
             ->requiresConfirmation()
             ->visible(fn ($record) =>
-                User::role('Safety') && $record->status === 'pending_review')
+                Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status === 'pending_review')
                 ->action(function () {
                     // ปิดใบปัจจุบัน
                     $this->record->update(['status' => 'closed']);
@@ -184,7 +199,6 @@ class ViewCarReport extends ViewRecord
                                 ->body("Your Problem ID: {$problem->prob_id} has been resolved.")
                                 ->sendToDatabase($employee);
 
-                            //logger("Sent notification to: {$employee->name}");
                         }
                     }
 
@@ -201,7 +215,6 @@ class ViewCarReport extends ViewRecord
                             ->body("CAR no: {$this->record->car_no} has been completed.")
                             ->sendToDatabase($user);
 
-                        //logger("Sent to dept user: {$user->name}");
                     }
                     $data = [
                     'car_no' => $this->record->car_no ?? '-',
@@ -230,7 +243,7 @@ class ViewCarReport extends ViewRecord
                 ->color('primary')
                 ->icon('heroicon-o-arrow-path')
                 ->visible(fn ($record) =>
-                User::role('Safety') && $record->status === 'reopened')
+                Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status === 'reopened')
                 ->requiresConfirmation()
                 ->action(function () {
                     return redirect()->route('filament.admin.resources.car-reports.create', [
@@ -239,6 +252,9 @@ class ViewCarReport extends ViewRecord
                         'sec_id'              => $this->record->sec_id,
                         'car_date'            => $this->record->car_date,
                         'car_due_date'        => $this->record->car_due_date,
+                        'equipment'            => $this->record->equipment,
+                        'place_id'             => $this->record->place_id,
+                        'hazard_source_id'     => $this->record->hazard_source_id,
                         'car_desc'            => $this->record->car_desc,
                         'hazard_level_id'     => $this->record->hazard_level_id,
                         'hazard_type_id'      => $this->record->hazard_type_id,
@@ -306,6 +322,18 @@ class ViewCarReport extends ViewRecord
                         ->label('Due date')
                         ->content(fn($record)=>Carbon::parse($record->car_due_date)->format('d/m/Y')),
 
+                    Placeholder::make('hazard_source_id')
+                        ->label('Hazard source')
+                        ->content(fn ($record) => optional ($record->hazardSource)->source_name),
+
+                    Placeholder::make('place_id')
+                        ->label('Place')
+                        ->content(fn ($record) => optional ($record->Place)->place_name),
+
+                    Placeholder::make('equipment')
+                    ->label('Equipment')
+                    ->content(fn($record)=>$record->equipment),
+
                     Placeholder::make('car_desc')
                         ->label('Description')
                         ->columnSpan(2)
@@ -333,6 +361,13 @@ class ViewCarReport extends ViewRecord
                     Placeholder::make('responsible_dept_id')
                         ->label('Reported to')
                         ->content(fn ($record) => optional ($record->responsible)->dept_name ),
+
+                    Placeholder::make('reopen_car_reason')
+                        ->label('Reason for reopening CAR')
+                        ->content(fn ($record) => $record->reopen_car_reason ?? '-')
+                        ->visible(fn ($record) => $record->status === 'reopened')
+                        ->columns(2),
+
                 ])->columns('5'),
 
                 Section::make('CAR Responses')
@@ -362,7 +397,7 @@ class ViewCarReport extends ViewRecord
                         Placeholder::make('temp_desc')
                         ->label('Temporary action')
                         ->columnSpan(2)
-                        ->content(fn($record)=>$record->carResponse?->temp_desc ? $record->carResponse?->temp_desc : '-'),
+                        ->content(fn($record)=>$record->carResponse?->temp_desc ? $record->carResponse?->temp_desc : ''),
 
                         Placeholder::make('temp_due_date')
                         ->label('Due date')
@@ -373,12 +408,12 @@ class ViewCarReport extends ViewRecord
                         Placeholder::make('temp_responsible')
                         ->label('Responsible')
                         ->content(fn($record)=>optional($record->carResponse?->tempResponsible)->FullName ?
-                        ($record->carResponse?->tempResponsible)->FullName : '-'),
+                        ($record->carResponse?->tempResponsible)->FullName : ''),
 
                         Placeholder::make('perm_desc')
                         ->label('Permanent action')
                         ->columnSpan(2)
-                        ->content(fn($record)=>$record->carResponse?->perm_desc ? $record->carResponse?->perm_desc : '-'),
+                        ->content(fn($record)=>$record->carResponse?->perm_desc ? $record->carResponse?->perm_desc : ''),
 
 
                         Placeholder::make('perm_due_date')
@@ -390,7 +425,7 @@ class ViewCarReport extends ViewRecord
                         Placeholder::make('perm_responsible')
                         ->label('Responsible')
                         ->content(fn($record)=>optional($record->carResponse?->permResponsible)->FullName ?
-                        ($record->carResponse?->permResponsible)->FullName : '-'),
+                        ($record->carResponse?->permResponsible)->FullName : ''),
 
                         Placeholder::make('preventive')
                         ->label('Preventive action')

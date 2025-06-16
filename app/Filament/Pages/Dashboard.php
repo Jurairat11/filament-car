@@ -54,7 +54,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                 ])->columns(3)
                 ->hidden(function () {
                     return Auth::user()->hasRole('User');
-    }),
+            }),
 
         ]);
 
@@ -65,17 +65,5 @@ class Dashboard extends \Filament\Pages\Dashboard
     {
         return 6;
     }
-
-    // public static function shouldRegisterNavigation(): bool
-    // {
-    //     return Auth::check() && Auth::user()->hasRole('Safety');
-    // }
-
-    // public static function canAccess(): bool
-    // {
-    //     // return in_array(Auth::user()->hasRole,['Safety','Admin']);
-    //     // $user = Auth::user();
-    //     // return in_array($user?->name, ['Admin','Safety']);
-    // }
 
 }

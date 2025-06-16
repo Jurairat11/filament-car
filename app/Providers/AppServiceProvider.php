@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Jobs\UpdatePermStatus;
 use App\Models\User;
 use App\Models\Problem;
 use App\Policies\UserPolicy;
@@ -34,9 +33,6 @@ class AppServiceProvider extends ServiceProvider
         Car_responses::observe(Car_responsesObserver::class);
         Gate::policy(User::class, UserPolicy::class);
 
-        // $this->app->bindMethod([UpdatePermStatus::class, 'handle'], function (UpdatePermStatus $job) {
-        //     return $job->handle();
-        // });
 
     //     Filament::registerRenderHook('panels::auth.login', function (){
     //     $user = Auth::user();

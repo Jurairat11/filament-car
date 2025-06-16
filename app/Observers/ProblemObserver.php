@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Problem;
 use Illuminate\Support\Str;
 use Filament\Notifications\Notification;
+use Filament\Notifications\Actions\Action;
 
 class ProblemObserver
 {
@@ -21,6 +22,13 @@ class ProblemObserver
                 ->iconColor('warning')
                 ->title('New problem reported')
                 ->body("Problem ID: {$problem->prob_id}")
+                // ->actions([
+                //     Action::make('view')
+                //         ->button()
+                //         ->url(route('filament.admin.resources.problems.view',['record' => $problem->id]), shouldOpenInNewTab: true),
+                //     Action::make('undo')
+                //         ->color('gray'),
+                //     ])
                 ->sendToDatabase($user);
         });
 

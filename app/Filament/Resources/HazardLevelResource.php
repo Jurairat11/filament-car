@@ -53,6 +53,7 @@ class HazardLevelResource extends Resource
                 ->label('Description'),
                 TextColumn::make('due_days')
                 ->label('Due Days')
+                ->numeric()
 
             ])
             ->filters([

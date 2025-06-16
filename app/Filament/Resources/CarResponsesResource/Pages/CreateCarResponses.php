@@ -29,24 +29,9 @@ class CreateCarResponses extends CreateRecord
         // fill ค่าเข้า form
         $this->form->fill([
             'status' => 'draft',
-            //'temp_due_date' => now(),
-            // 'perm_due_date' => now(),
-            'temp_status' => 'finished',
-            //'perm_status' => 'on process',
             'created_by' => Auth::user()->id,
         ]);
 
     }
-
-    // protected function afterCreate(): void
-    // {
-    //     // เช็คว่าฟอร์มมี temp_desc หรือไม่
-    //     if ($this->record->temp_desc) {
-    //         Car_responses::where('id', $this->record->temp_desc)
-    //             ->update([
-    //                 'temp_status' => 'finished',
-    //             ]);
-    //     }
-    // }
 
 }

@@ -49,18 +49,17 @@ class CarReportResource extends Resource
                     'No: ' . ($livewire->form->getRawState()['car_no'] ?? '')
                 )
                 ->schema([
+                    // Select::make('problem_id')
+                    // ->label('Problem ID')
+                    // ->options(fn() => Problem::where('status','!=','closed')->pluck('prob_id', 'id'))
+                    // ->required(),
+
                     Select::make('problem_id')
                     ->label('Problem ID')
-                    ->options(fn() => Problem::all()->pluck('prob_id', 'id'))
-                    ->required(),
-
-                    // Select::make('created_by')
-                    // ->label('Created by')
-                    // ->options(fn () => User::where('dept_id',Auth::user()?->dept_id)->pluck('emp_id', 'id'))
-                    // ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->emp_id} ({$record->emp_name} {$record->last_name})")
-                    // ->searchable()
-                    // ->preload()
-                    // ->required(),
+                    ->relationship('problem', 'prob_id')
+                    ->preload()
+                    ->searchable()
+                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->prob_id} ({$record->status})"),
 
                     Hidden::make('created_by')
                     ->default(Auth::user()?->id)
@@ -179,33 +178,15 @@ class CarReportResource extends Resource
                     ])->columns(1)->columnSpan(2),
                 ]),
 
-
-                    Select::make('status')
-                    ->label('Status')
-                    ->options([
-                        'draft' => 'Draft',
-                        'reported' => 'Reported',
-                        'in_progress' => 'In progress',
-                        'pending_review' => 'Pending review',
-                        'reopened' => 'Reopened',
-                        'closed' => 'Closed'
-                    ])
-                    ->default('draft'),
-
-                    // Select::make('status_delay')
-                    // ->label('Status')
-                    // ->options([
-                    //     'on_process' => 'On process',
-                    //     'finished' => 'Finished',
-                    //     'delay' => 'Delay',
-                    //     'none' => 'None'
-                    // ])->default('none'),
-
                     Hidden::make('parent_car_id')
                     ->dehydrated(true)
                     ->default(request()->get('parent_car_id')),
 
                     Hidden::make('followed_car_id')
+                    ->dehydrated(true),
+
+                    Hidden::make('status')
+                    ->default('accepted')
                     ->dehydrated(true)
 
             ]);
@@ -282,12 +263,26 @@ class CarReportResource extends Resource
                 //->dateTimeTooltip()
                 ->timezone('Asia/Bangkok'),
 
+                TextColumn::make('follow_car')
+                ->label('Reopen car')
+                ->getStateUsing(function ($record) {
+                    return $record->status === 'reopened' ? optional($record->followUp)->car_no : null;
+                })
+                ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Filter::make('created_at')
                 ->form([
-                    DatePicker::make('created_from'),
-                    DatePicker::make('created_until'),
+                    DatePicker::make('created_from')
+                    ->native(false)
+                    ->displayFormat('d/m/Y')
+                    ->placeholder('dd-mm-yyyy')
+                    ->closeOnDateSelection(),
+                    DatePicker::make('created_until')
+                    ->native(false)
+                    ->displayFormat('d/m/Y')
+                    ->placeholder('dd-mm-yyyy')
+                    ->closeOnDateSelection(),
                 ])
                 ->query(function (Builder $query, array $data): Builder {
                     return $query
@@ -371,7 +366,7 @@ class CarReportResource extends Resource
 
     public static function getNavigationBadgeTooltip(): ?string
         {
-            return 'The number of car pending review';
+            return 'Pending review CAR';
         }
 
 

@@ -96,18 +96,18 @@ class ViewCarResponses extends ViewRecord
                         Placeholder::make('temp_desc')
                         ->label('Temporary C/M')
                         ->columnSpan(2)
-                        ->content(fn($record)=>$record->temp_desc ? $record->temp_desc : '-'),
+                        ->content(fn($record)=>$record->temp_desc ? $record->temp_desc : ''),
 
                         Placeholder::make('temp_due_date')
                         ->label('Due date')
                         ->content(fn ($record) => $record->temp_due_date
                                     ? Carbon::parse($record->temp_due_date)->format('d/m/Y')
-                                    : '-'),
+                                    : ''),
 
                         Placeholder::make('temp_responsible')
                         ->label('Responsible')
                         ->content(fn($record)=>optional($record->tempResponsible)->FullName ?
-                        ($record->tempResponsible)->FullName : '-'),
+                        ($record->tempResponsible)->FullName : ''),
 
                     ])->columns(4),
 
@@ -120,7 +120,7 @@ class ViewCarResponses extends ViewRecord
                             Placeholder::make('perm_desc')
                             ->label('Permanent C/M')
                             ->columnSpan(2)
-                            ->content(fn($record)=>$record->perm_desc ? $record->perm_desc : '-'),
+                            ->content(fn($record)=>$record->perm_desc ? $record->perm_desc : ''),
 
 
                             Placeholder::make('perm_due_date')
@@ -132,7 +132,7 @@ class ViewCarResponses extends ViewRecord
                             Placeholder::make('perm_responsible')
                             ->label('Responsible')
                             ->content(fn($record)=>optional($record->permResponsible)->FullName ?
-                            ($record->permResponsible)->FullName : '-'),
+                            ($record->permResponsible)->FullName : ''),
 
                     ])->columns(4),
 

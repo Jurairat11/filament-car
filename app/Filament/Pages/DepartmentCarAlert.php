@@ -2,22 +2,18 @@
 
 namespace App\Filament\Pages;
 
-use Carbon\Carbon;
 use App\Models\User;
 use Filament\Tables;
 use Filament\Pages\Page;
 use App\Models\Car_report;
-use Livewire\Attributes\Layout;
 use Filament\Tables\Actions\Action;
 use Illuminate\Support\Facades\Auth;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Support\Facades\Request;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\DeleteBulkAction;
-use App\Models\Car_responses;
 
 
 class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
@@ -98,50 +94,6 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
                 ->label('Reported to')
                 ->searchable(),
 
-            // TextColumn::make('remaining_days')
-            //     ->label('Remaining')
-            //     ->getStateUsing(function ($record) {
-            //         // เงื่อนไข: ถ้าตอบกลับแล้ว และสถานะคือ pending_review
-            //         if (in_array($record->status, ['pending_review','closed','reopened'])) {
-            //             return 'Replied';
-            //         }
-
-            //         // คำนวณวันตามปกติ
-            //         $carDate = Carbon::parse($record->car_date);
-            //         $dueDate = $carDate->addDays($record->car_delay ?? 0);
-            //         $remaining = round(now()->floatDiffInDays($dueDate, false));
-            //         $unit = abs($remaining) === 1 ? 'day' : 'days';
-
-            //         // Update status_delay if remaining == -1
-            //         if ($remaining === -1 && $record->status_delay !== 'delay') {
-            //             $record->status_delay = 'delay';
-            //             $record->save();
-            //         }
-
-            //         return "{$remaining} {$unit}";
-            //     })
-            //     ->color(function ($record) {
-            //         if (in_array($record->status, ['pending_review','closed','reopened'])) {
-            //             return 'info';
-            //         }
-            //         return now()->gt(Carbon::parse($record->car_date)->addDays($record->car_delay)) ? 'danger' : 'success';
-            //     }),
-
-            // TextColumn::make('car_responses.status_reply')
-            //     ->label('Status reply')
-            //     ->badge()
-            //     ->color(fn (string $state): string => match ($state) {
-            //         'on_process' => 'warning',
-            //         'finished' => 'success',
-            //         'delay' => 'danger',
-            //     })
-            //     ->formatStateUsing(fn (string $state) => match ($state) {
-            //         'on_process' => 'on process',
-            //         'finished' => 'finished',
-            //         'delay' => 'delay',
-            //         default => ucfirst($state),
-            //     }),
-
         ];
     }
     protected function getTableFilters(): array
@@ -219,7 +171,6 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
             ->action(function (Car_report $record) {
                 // อัปเดตสถานะ
                 $record->update(['status' => 'in_progress'] );
-                //$record->update(['status_delay' => 'on_process'] );
 
                 // แจ้งไปยังผู้มี role = safety
                 User::role('Safety')->get()
@@ -252,7 +203,7 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
 
     public static function getNavigationBadgeTooltip(): ?string
     {
-        return 'The number of new car report';
+        return 'New CAR report';
     }
 
 }
