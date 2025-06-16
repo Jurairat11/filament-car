@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Section extends Model
+class Sections extends Model
 {
     use HasFactory;
     protected $primaryKey = 'sec_id';
@@ -20,7 +20,7 @@ class Section extends Model
     }
 
     public function section() {
-        return $this->hasMany(Section::class,'sec_id','sec_id');
+        return $this->hasMany(Sections::class,'sec_id','sec_id');
     }
 }
 

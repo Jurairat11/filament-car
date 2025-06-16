@@ -2,24 +2,25 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Car_report;
 use Carbon\Carbon;
-use Filament\Forms\Components\DatePicker;
 use Filament\Tables;
+use App\Models\Car_report;
+use Filament\Tables\Table;
+use Filament\Tables\Filters\Filter;
+use Illuminate\Support\Facades\Auth;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Filter;
+use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Table;
-use Filament\Widgets\TableWidget as BaseWidget;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Widgets\TableWidget as BaseWidget;
 
 class followCarTable extends BaseWidget
 {
     protected static bool $isLazy = false;
     protected int | string | array $columnSpan = 'full';
     protected static ?string $heading = 'Following CAR Overview';
+
     public function table(Table $table): Table {
 
         return $table

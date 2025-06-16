@@ -46,6 +46,11 @@ class ProblemResource extends Resource
     protected static ?string $navigationGroup = 'Car Responses';
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-exclamation-circle';
+
+    // public static function getEloquentQuery(): Builder{
+    //     return parent::getEloquentQuery()->with(['user']);
+    // }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -66,16 +71,25 @@ class ProblemResource extends Resource
                     Section::make()
                     ->schema([
                         Select::make('user_id')
-                        ->label('Reporter')
-                        ->searchable()
-                        ->preload()
-                        ->relationship('user','emp_id',function ($query){
-                            $query->where('dept_id',Auth::user()->dept_id);
-                        })
-                        ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->emp_id} ({$record->emp_name} {$record->last_name})")
+                            ->label('Reporter')
+                            ->options(function (){
+                                return User::all()->mapWithKeys(fn ($user) => [$user->id => "{$user->emp_id} ({$user->emp_name} {$user->last_name})",]);
+                            })
+                            ->searchable()
+                            ->default(fn($record)=> $record?->user_id),
+
+                        // Select::make('user_id')
+                        // ->label('Reporter')
+                        // ->searchable()
+                        // ->preload()
+                        // ->relationship('user','emp_id',function ($query){
+                        //     $query->where('dept_id',Auth::user()->dept_id);
+                        // })
+                        // ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->emp_id} ({$record->emp_name} {$record->last_name})")
+                        // ->required(),
+
                         //->options(fn () => User::where('dept_id',Auth::user()?->dept_id)->pluck('emp_id', 'id'))
                         //->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->emp_id} ({$record->emp_name} {$record->last_name})")
-                        ->required(),
 
                     Select::make('dept_id')
                         ->label('Department')

@@ -28,7 +28,10 @@ class Dashboard extends \Filament\Pages\Dashboard
                     ->label('Department')
                     ->options(Department::all()->pluck('dept_name', 'dept_id'))
                     ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->hidden(function () {
+                    return Auth::user()->hasRole('User');
+                }),
                 DatePicker::make('startDate')
                     ->native(false)
                     ->displayFormat('d/m/Y')
@@ -52,9 +55,6 @@ class Dashboard extends \Filament\Pages\Dashboard
                         ->action(fn ($state, callable $set) => $set('endDate', null))
                     ),
                 ])->columns(3)
-                ->hidden(function () {
-                    return Auth::user()->hasRole('User');
-            }),
 
         ]);
 

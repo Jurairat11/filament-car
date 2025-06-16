@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
-use Filament\Support\Enums\ActionSize;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
@@ -66,19 +65,13 @@ class CarResponsesResource extends Resource
                 ->schema([
                     Select::make('car_id')
                         ->label('CAR No.')
-                        ->relationship('carReport','car_no', function ($query){
-                            $query->where('responsible_dept_id',Auth::user()->dept_id);
-                        })
-                        ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->car_no} ({$record->status})")
-                        ->preload()
-                        ->searchable()
-                        // ->options(function() {
-                        // $deptId = Auth::user()?->dept_id;
-                        // return Car_report::where('responsible_dept_id', $deptId)
-                        //     // ->where('status', 'in_progress')
-                        //     ->pluck('car_no', 'id')
-                        //     ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->car_id} ({$record->status})");
-                        // })
+                        ->options(function (){
+                                return Car_report::all()->mapWithKeys(fn ($car) => [$car->id => "{$car->car_no} ({$car->status})"]);
+                            })
+                            ->searchable()
+                            ->preload()
+                            ->default(fn($record)=> $record?->car_id)
+
                         ->reactive()
                         ->required()
                         ->afterStateUpdated(function ($state, callable $set){

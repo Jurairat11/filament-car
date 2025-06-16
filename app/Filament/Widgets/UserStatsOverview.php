@@ -16,21 +16,49 @@ class UserStatsOverview extends BaseWidget
     use InteractsWithPageFilters;
     protected function getStats(): array
     {
+        $start = $this->filters['startDate'];
+        $end = $this->filters['endDate'];
+
         return [
-            Stat::make('Total Hazard', Car_report::where('responsible_dept_id', Auth::user()->dept_id)->count())
+            Stat::make('Total Hazard',
+            Car_report::when(
+            $start,
+            fn ($query)=> $query->whereDate('created_at', '>',$start)
+            ->when(
+            $end,
+            fn($query)=> $query->whereDate('created_at','<',$end)
+            ))
+                ->where('responsible_dept_id', Auth::user()->dept_id)->count())
+
                 ->description('Total created car report.')
                 ->descriptionIcon('heroicon-m-document-text', IconPosition::Before)
                 ->chart([7, 2, 10, 3, 15, 4, 17])
                 ->color('info'),
 
-            Stat::make('Completed CAR', Car_report::where('status','closed')
+            Stat::make('Completed CAR',
+            Car_report::when(
+                $start,
+                    fn ($query)=> $query->whereDate('created_at', '>',$start)
+                ->when(
+                $end,
+                fn($query)=> $query->whereDate('created_at','<',$end)
+            ))
+            ->where('status','closed')
             ->where('responsible_dept_id', Auth::user()->dept_id)->count())
             ->description('Number of closed car report.')
                 ->descriptionIcon('heroicon-m-check-circle', IconPosition::Before)
                 ->chart([7, 2, 10, 3, 15, 4, 17])
                 ->color('success'),
 
-            Stat::make('In Progress CAR', Car_report::whereNot('status','closed')
+            Stat::make('In Progress CAR',
+            Car_report::when(
+                $start,
+                    fn ($query)=> $query->whereDate('created_at', '>',$start)
+                ->when(
+                $end,
+                    fn($query)=> $query->whereDate('created_at','<',$end)
+            ))
+            ->whereNot('status','closed')
             ->where('responsible_dept_id', Auth::user()->dept_id)->count())
             ->description('Number of in progress car report.')
                 ->descriptionIcon('heroicon-m-clock', IconPosition::Before)
@@ -42,7 +70,5 @@ class UserStatsOverview extends BaseWidget
     public static function canView(): bool
     {
         return Auth::user()->hasRole('User');
-        // $user = Auth::user();
-        // return in_array($user?->name, ['Admin','Safety']);
     }
 }

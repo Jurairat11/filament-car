@@ -68,7 +68,7 @@ class Car_report extends Model
     }
 
     public function section() {
-        return $this->belongsTo(Section::class, 'sec_id','sec_id');
+        return $this->belongsTo(Sections::class, 'sec_id','sec_id');
     }
 
     public function hazardLevel() {
