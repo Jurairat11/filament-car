@@ -21,6 +21,7 @@ class Profile extends EditProfile
                 Forms\Components\Section::make()
                     ->schema([
                         FileUpload::make('avatar')
+                            ->label('Picture')
                             ->image()
                             ->imageEditor()
                             ->circleCropper()

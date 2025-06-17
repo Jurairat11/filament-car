@@ -76,33 +76,15 @@ class Column_groupedChart extends ApexChartWidget
             fn($query)=> $query->where('responsible_dept_id',$dept)
 
         )
-        ->selectRaw("strftime('%m', created_at) as month, COUNT(strftime('%m', created_at)) as total")
+        ->selectRaw("to_char(created_at,'MM') as month, COUNT(to_char(created_at,'MM')) as total")
         ->groupBy('month')
         ->orderBy('month')
         ->get();
 
-        // $data = Car_report::query()
-        //     ->selectRaw("strftime('%m', created_at) as month, COUNT(strftime('%m', created_at)) as total")
-        //     ->groupBy('month')
-        //     ->orderBy('month')
-        //     ->get();
-
-        // Prepare series data
-        // $seriesData = [];
-        // foreach ($data as $item) {
-        //     array_push($seriesData, $item->total);
-        //
 
         foreach ($data as $item) {
             $seriesData[$item->month] = $item->total;
         }
-
-        //dd($seriesData); //05
-
-        // return [
-        //     'categories' => $categories,
-        //     'seriesData' => array_values($seriesData), // Convert associative array to indexed array
-        // ];
 
         // Closed Status
         $data = Car_report::when(
@@ -117,7 +99,7 @@ class Column_groupedChart extends ApexChartWidget
             $dept,
             fn($query)=> $query->where('responsible_dept_id',$dept)
         )
-        ->selectRaw("strftime('%m', created_at) as month, COUNT(*) as total")
+        ->selectRaw("to_char(created_at,'MM') as month, COUNT(*) as total")
         ->where('status', 'closed')
         ->groupBy('month')
         ->orderBy('month')
@@ -140,7 +122,7 @@ class Column_groupedChart extends ApexChartWidget
             $dept,
             fn($query)=> $query->where('responsible_dept_id',$dept)
         )
-        ->selectRaw("strftime('%m', created_at) as month, COUNT(*) as total")
+        ->selectRaw("to_char(created_at,'MM') as month, COUNT(*) as total")
         ->whereNot('status', 'closed')
         ->groupBy('month')
         ->orderBy('month')

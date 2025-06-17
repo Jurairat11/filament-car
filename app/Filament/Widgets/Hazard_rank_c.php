@@ -49,6 +49,7 @@ class Hazard_rank_c extends BaseWidget
                         ->selectRaw('MIN(car_reports.id) as id, car_responses.status_reply, COUNT(*) as count')
                         ->where('car_reports.hazard_level_id', '3')
                         ->groupBy('car_responses.status_reply')
+                        ->orderByRaw('MIN(car_reports.id)')
         )
         ->columns([
             TextColumn::make('status_reply')

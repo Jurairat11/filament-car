@@ -113,7 +113,6 @@ class overviewTable extends BaseWidget
                         'on process' => 'warning',
                         'finished' => 'success',
                         'delay' => 'danger',
-                        // default => 'gray'
                     })
                     ->formatStateUsing(fn (string $state) => match ($state) {
                         'on process' => 'on process',

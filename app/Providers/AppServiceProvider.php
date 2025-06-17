@@ -32,14 +32,5 @@ class AppServiceProvider extends ServiceProvider
         Problem::observe(ProblemObserver::class);
         Car_responses::observe(Car_responsesObserver::class);
         Gate::policy(User::class, UserPolicy::class);
-
-
-    //     Filament::registerRenderHook('panels::auth.login', function (){
-    //     $user = Auth::user();
-    //     if($user->hasRole('User')){
-    //     return redirect()->to('filament.pages.general-user-dashboard');
-    //     }
-    //     return redirect()->to('/dashboard');
-    // });
     }
 }

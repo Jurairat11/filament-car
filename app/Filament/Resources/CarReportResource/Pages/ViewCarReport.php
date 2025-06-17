@@ -265,7 +265,14 @@ class ViewCarReport extends ViewRecord
                     ]);
 
                 }),
-                //dd($this->record->problem_id)
+
+                Action::make('print_car')
+                ->label('Download CAR')
+                ->icon('heroicon-o-arrow-down-tray')
+                ->url(fn () => route('car.download', ['car_no' => $this->record->car_no]))
+                ->openUrlInNewTab(),
+
+
         ];
     }
 

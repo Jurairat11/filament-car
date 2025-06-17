@@ -17,30 +17,28 @@ class DatabaseSeeder extends Seeder
     {
         //User::factory(10)->create();
 
-        //$adminRole = Role::firstOrCreate(['name' => 'Admin']);
-        //$safetyRole = Role::firstOrCreate(['name' => 'Safety']);
+        $adminRole = Role::firstOrCreate(['name' => 'Admin']);
+        $safetyRole = Role::firstOrCreate(['name' => 'Safety']);
 
-        // $user1 = User::factory()->create([
-        //     'emp_id' => 'admin03',
-        //     'emp_name' => 'Admin',
-        //     'last_name' => 'System',
-        //     'email' => 'admin03@example.com',
-        //     'dept_id' => 1,
-        //     'password' => Hash::make('admin1234'),
-        // ]);
-        // $user1->assignRole($adminRole);
+        $user1 = User::factory()->create([
+            'emp_id' => '3052',
+            'emp_name' => 'Jurairat',
+            'last_name' => 'Phoempanyasap',
+            'email' => 'jurai11j0@gmail.com',
+            'dept_id' => 1,
+            'password' => Hash::make('admin@vcs'),
+        ]);
+        $user1->assignRole($adminRole);
 
-        // $user2 = User::factory()->create([
-        //     'emp_id' => 'she01',
-        //     'emp_name' => 'Jennie',
-        //     'last_name' => 'Kim',
-        //     'email' => 'jennie01@example.com',
-        //     'dept_id' => 2,
-        //     'password' => Hash::make('she1234'),
-        // ]);
-        // $user2->assignRole($safetyRole);
-
-
+        $user2 = User::factory()->create([
+            'emp_id' => '2412',
+            'emp_name' => 'Jennie',
+            'last_name' => 'Kim',
+            'email' => 'jennie01@example.com',
+            'dept_id' => 2,
+            'password' => Hash::make('she1234'),
+        ]);
+        $user2->assignRole($safetyRole);
 
     }
 }

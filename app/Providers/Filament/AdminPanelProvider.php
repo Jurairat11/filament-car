@@ -5,8 +5,12 @@ namespace App\Providers\Filament;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Facades\Filament;
 use App\Filament\Pages\Profile;
+use Filament\Navigation\MenuItem;
 use Filament\Support\Colors\Color;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Filament\Http\Middleware\Authenticate;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -28,6 +32,8 @@ class AdminPanelProvider extends PanelProvider
     {
         //DatabaseNotifications::trigger('filament.notifications.database-notifications-trigger');
         DatabaseNotifications::pollingInterval(null);
+        //Log::info('User from filament',[Auth::user()]);
+        //dd(Auth::user());
 
         return $panel
             ->default()
@@ -40,6 +46,12 @@ class AdminPanelProvider extends PanelProvider
             ->topbar(fn () => [
                 DatabaseNotifications::class, // ให้ Bell icon ทำงาน
             ])
+            ->authGuard('web')
+            // ->userMenuItems([
+            // 'profile' => MenuItem::make()
+            //     ->label('Emp ID:'. Auth::user()?->emp_id)
+            //     ->visible(fn() => Auth::user()?->emp_id)
+            // ])
             ->colors([
                 'primary' => Color::Indigo,
             ])
@@ -51,8 +63,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                //summaryCarChart::class,
-
                 // Widgets\AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
 
