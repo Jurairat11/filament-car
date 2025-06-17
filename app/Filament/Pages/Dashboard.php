@@ -33,6 +33,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                     return Auth::user()->hasRole('User');
                 }),
                 DatePicker::make('startDate')
+                    ->label('Created from')
                     ->native(false)
                     ->displayFormat('d/m/Y')
                     ->placeholder('dd-mm-yyyy')
@@ -44,6 +45,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                         ->action(fn ($state, callable $set) => $set('startDate', null))
                     ),
                 DatePicker::make('endDate')
+                    ->label('Created until')
                     ->native(false)
                     ->displayFormat('d/m/Y')
                     ->placeholder('dd-mm-yyyy')
@@ -64,6 +66,10 @@ class Dashboard extends \Filament\Pages\Dashboard
     public function getColumns(): int | string | array
     {
         return 6;
+    }
+    public static function getNavigationIcon(): ?string
+    {
+        return 'heroicon-o-chart-bar-square'; // Replace with your desired icon
     }
 
 }

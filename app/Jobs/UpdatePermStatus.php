@@ -49,10 +49,6 @@ class UpdatePermStatus implements ShouldQueue
             $user = User::find($pending->dept_id);
         }
 
-        // $problem = Problem::find($this->record->problem_id);
-        //             if ($problem && $problem->user_id) {
-        //                 $employee = User::find($problem->user_id);
-
         if($user) {
             Notification::make()
             ->title("CAR waiting for review")

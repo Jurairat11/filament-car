@@ -73,23 +73,16 @@ class ProblemResource extends Resource
                         Select::make('user_id')
                             ->label('Reporter')
                             ->options(function (){
-                                return User::all()->mapWithKeys(fn ($user) => [$user->id => "{$user->emp_id} ({$user->emp_name} {$user->last_name})",]);
+
+                                $deptID = Auth::user()->dept_id;
+
+                                return User::where('dept_id', $deptID)
+                                        ->get()
+                                        ->mapWithKeys(fn ($user)
+                                        => [$user->id => "{$user->emp_id} ({$user->emp_name} {$user->last_name})",]);
                             })
                             ->searchable()
                             ->default(fn($record)=> $record?->user_id),
-
-                        // Select::make('user_id')
-                        // ->label('Reporter')
-                        // ->searchable()
-                        // ->preload()
-                        // ->relationship('user','emp_id',function ($query){
-                        //     $query->where('dept_id',Auth::user()->dept_id);
-                        // })
-                        // ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->emp_id} ({$record->emp_name} {$record->last_name})")
-                        // ->required(),
-
-                        //->options(fn () => User::where('dept_id',Auth::user()?->dept_id)->pluck('emp_id', 'id'))
-                        //->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->emp_id} ({$record->emp_name} {$record->last_name})")
 
                     Select::make('dept_id')
                         ->label('Department')

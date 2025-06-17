@@ -331,8 +331,8 @@ class ViewCarReport extends ViewRecord
                         ->content(fn ($record) => optional ($record->Place)->place_name),
 
                     Placeholder::make('equipment')
-                    ->label('Equipment')
-                    ->content(fn($record)=>$record->equipment),
+                        ->label('Equipment')
+                        ->content(fn($record)=>$record->equipment),
 
                     Placeholder::make('car_desc')
                         ->label('Description')
@@ -347,20 +347,20 @@ class ViewCarReport extends ViewRecord
                         ->label('Hazard type')
                         ->content(fn ($record) => optional ($record->hazardType)->type_name ),
 
-                    Placeholder::make('status')
-                        ->label('Status')
-                        ->content(fn ($record) =>
-                    ucfirst(str_replace('_', ' ', $record->status))),
+                    // Placeholder::make('status')
+                    //     ->label('Status')
+                    //     ->content(fn ($record) =>
+                    // ucfirst(str_replace('_', ' ', $record->status))),
+
+                    Placeholder::make('responsible_dept_id')
+                        ->label('Reported to')
+                        ->content(fn ($record) => optional ($record->responsible)->dept_name ),
 
                     View::make('components.car-reports-view-image')
                         ->label('Before Image')
                         ->viewData([
                             'path' => $this->getRecord()->img_before,
                         ])->columnSpan(2),
-
-                    Placeholder::make('responsible_dept_id')
-                        ->label('Reported to')
-                        ->content(fn ($record) => optional ($record->responsible)->dept_name ),
 
                     Placeholder::make('reopen_car_reason')
                         ->label('Reason for reopening CAR')

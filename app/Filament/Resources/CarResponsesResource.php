@@ -66,26 +66,24 @@ class CarResponsesResource extends Resource
                     Select::make('car_id')
                         ->label('CAR No.')
                         ->options(function (){
-                                return Car_report::all()->mapWithKeys(fn ($car) => [$car->id => "{$car->car_no} ({$car->status})"]);
+                                $responsibleDept = Auth::user()->dept_id;
+                                return Car_report::where('responsible_dept_id',$responsibleDept)
+                                ->get()
+                                ->mapWithKeys(fn ($car) => [$car->id => "{$car->car_no} ({$car->status})"]);
                             })
                             ->searchable()
                             ->preload()
                             ->default(fn($record)=> $record?->car_id)
 
-                        ->reactive()
-                        ->required()
-                        ->afterStateUpdated(function ($state, callable $set){
-                            $car = Car_report::find($state);
-                            if($car){
-                                $set('temp_due_date', $car->car_date);
-                                $set('perm_due_date', $car->car_due_date);
-                            }
+                            ->reactive()
+                            ->required()
+                            ->afterStateUpdated(function ($state, callable $set){
+                                $car = Car_report::find($state);
+                                if($car){
+                                    $set('temp_due_date', $car->car_date);
+                                    $set('perm_due_date', $car->car_due_date);
+                                }
                         }),
-
-                        // Select::make('problem_id')
-                        // ->label('Problem ID')
-                        // ->relationship('problem', 'prob_id')
-                        // ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->prob_id} ({$record->status})"),
 
                         Hidden::make('status')
                         ->default('draft')

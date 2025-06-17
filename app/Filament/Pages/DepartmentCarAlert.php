@@ -145,10 +145,10 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
     protected function getTableBulkActions(): array
     {
         return [
-            DeleteBulkAction::make()
-                ->label('Delete Selected')
-                ->icon('heroicon-o-trash')
-                ->color('danger'),
+            // DeleteBulkAction::make()
+            //     ->label('Delete Selected')
+            //     ->icon('heroicon-o-trash')
+            //     ->color('danger'),
         ];
     }
 
