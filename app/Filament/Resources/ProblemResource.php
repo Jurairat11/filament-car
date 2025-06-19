@@ -8,6 +8,7 @@ use App\Models\Problem;
 use Filament\Forms\Form;
 use App\Models\Department;
 use Filament\Tables\Table;
+use App\Helpers\ImageHelper;
 use Filament\Facades\Filament;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
@@ -22,8 +23,10 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Forms\Components\DatePicker;
@@ -32,6 +35,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
+use App\Http\Controllers\ImageUploadController;
 use App\Filament\Resources\ProblemResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ProblemResource\RelationManagers;
@@ -39,6 +43,7 @@ use App\Filament\Resources\ProblemResource\Pages\EditProblem;
 use App\Filament\Resources\ProblemResource\Pages\ViewProblem;
 use App\Filament\Resources\ProblemResource\Pages\ListProblems;
 use App\Filament\Resources\ProblemResource\Pages\CreateProblem;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class ProblemResource extends Resource
 {
@@ -46,10 +51,6 @@ class ProblemResource extends Resource
     protected static ?string $navigationGroup = 'Car Responses';
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-exclamation-circle';
-
-    // public static function getEloquentQuery(): Builder{
-    //     return parent::getEloquentQuery()->with(['user']);
-    // }
 
     public static function form(Form $form): Form
     {
@@ -73,9 +74,7 @@ class ProblemResource extends Resource
                         Select::make('user_id')
                             ->label('Reporter')
                             ->options(function (){
-
                                 $deptID = Auth::user()->dept_id;
-
                                 return User::where('dept_id', $deptID)
                                         ->get()
                                         ->mapWithKeys(fn ($user)
@@ -112,13 +111,14 @@ class ProblemResource extends Resource
                         ->required(),
 
                         FileUpload::make('prob_img')
-                        ->label('Problem picture')
-                        ->image()
-                        ->downloadable()
-                        ->required()
-                        ->directory('form-attachments')
-                        ->visibility('public')
-                        ->columnSpanFull(),
+                            ->label('Problem picture')
+                            ->image()
+                            ->downloadable()
+                            ->required()
+                            ->directory('form-attachments')
+                            ->visibility('public')
+                            // ->disk('public')
+                            ->columnSpanFull(),
 
                         Textarea::make('prob_desc')
                             ->label('Description')
@@ -202,8 +202,6 @@ class ProblemResource extends Resource
                 })->columnSpan(2)->columns(2)
             ], layout: FiltersLayout::AboveContent)->filtersFormColumns(3)
             ->actions([
-                EditAction::make(),
-                ViewAction::make(),
                 Action::make('accept')
                     ->label('Accept')
                     ->icon('heroicon-o-check-circle')
@@ -267,7 +265,11 @@ class ProblemResource extends Resource
                             ->sendToDatabase($employee);
                     }
 
-                })
+                }),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                ])
 
             ])
             ->bulkActions([
@@ -319,6 +321,5 @@ class ProblemResource extends Resource
     {
         return 'New problem report';
     }
-
 
 }

@@ -82,22 +82,6 @@ class CarReportResource extends Resource
                     ->preload()
                     ->required(), // รองรับการโหลด option ใหม่
 
-                    // Forms\Components\Select::make('safety_dept')
-                    //         ->label('Safety Department')
-                    //         ->options(Dept::pluck('dept_name', 'dept_id'))
-                    //         ->reactive(),  // เมื่อเปลี่ยนแผนก จะ re-render
-
-                    //     Forms\Components\Select::make('section')
-                    //         ->label('Safety Section')
-                    //         ->options(function (callable $get) {
-                    //             $deptId = $get('safety_dept');
-                    //             return Section::where('dept_id', $deptId)
-                    //                         ->pluck('sec_name', 'sec_id');
-                    //         })
-                    //         ->required()
-                    //         ->disabled(fn (callable $get) => ! $get('safety_dept'))
-                    //         ->reactive(), // รองรับการโหลด option ใหม่
-
                     DatePicker::make('car_date')
                     ->label('Create date')
                     ->native(false)
@@ -113,6 +97,7 @@ class CarReportResource extends Resource
                     ->displayFormat('d/m/Y')
                     ->closeOnDateSelection()
                     ->required(),
+
             ])->columns(5),
 
             Section::make('Hazard Details')

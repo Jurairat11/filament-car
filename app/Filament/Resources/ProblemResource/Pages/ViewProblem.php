@@ -36,6 +36,14 @@ class ViewProblem extends ViewRecord
                     ->label('Reported Date')
                     ->content(fn ($record) => Carbon::parse($record->prob_date)->format('d/m/Y')),
 
+                Placeholder::make('title')
+                    ->label('Title')
+                    ->content(fn ($record) => $record->title),
+
+                Placeholder::make('place')
+                    ->label('Place')
+                    ->content(fn ($record) => $record->place),
+
                 Placeholder::make('prob_desc')
                     ->label('Description')
                     ->columnspan(2)
@@ -68,7 +76,7 @@ class ViewProblem extends ViewRecord
                 ])
                 ->columnSpanFull()
 
-            ])->columns(3),
+            ])->columns(4),
         ]);
     }
 }

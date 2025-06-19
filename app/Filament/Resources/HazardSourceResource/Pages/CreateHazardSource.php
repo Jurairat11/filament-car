@@ -10,5 +10,13 @@ class CreateHazardSource extends CreateRecord
 {
     protected static string $resource = HazardSourceResource::class;
     protected static ?string $title = 'Create Hazard Source';
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Hazard source created';
+    }
 }
 

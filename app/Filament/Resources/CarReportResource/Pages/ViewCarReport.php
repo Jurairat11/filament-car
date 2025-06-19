@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Problem;
 use Filament\Forms\Form;
+use GuzzleHttp\Client;
 use Illuminate\Support\Str;
 
 use App\Models\Car_responses;
@@ -18,6 +19,8 @@ use Filament\Resources\Pages\ViewRecord;
 use Filament\Forms\Components\Placeholder;
 use Filament\Actions\Action;
 use App\Filament\Resources\CarReportResource;
+use GuzzleHttp\Cookie\SessionCookieJar;
+use GuzzleHttp\Psr7\Request;
 
 class ViewCarReport extends ViewRecord
 {
@@ -243,7 +246,7 @@ class ViewCarReport extends ViewRecord
                 ->color('primary')
                 ->icon('heroicon-o-arrow-path')
                 ->visible(fn ($record) =>
-                Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status === 'reopened')
+                    Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status === 'reopened')
                 ->requiresConfirmation()
                 ->action(function () {
                     return redirect()->route('filament.admin.resources.car-reports.create', [
@@ -269,8 +272,63 @@ class ViewCarReport extends ViewRecord
                 Action::make('print_car')
                 ->label('Download CAR')
                 ->icon('heroicon-o-arrow-down-tray')
-                ->url(fn () => route('car.download', ['car_no' => $this->record->car_no]))
-                ->openUrlInNewTab(),
+                ->visible(fn ($record) =>
+                    Auth::user()?->hasAnyRole(['Admin', 'Safety']) && ($record->status === 'closed'|| $record->status === 'reopened'))
+                ->action(function () {
+                    // Notification::make()
+                    //     ->title('Downloading CAR')
+                    //     ->body('The CAR report is being downloaded.')
+                    //     ->success()
+                    //     ->send();
+
+                        $JASPER_SERVER = env('JASPER_SERVER', 'http://192.168.20.16:8080');
+                        $JASPER_USER = env('JASPER_USER', 'jasperadmin');
+                        $JASPER_PASSWORD = env('JASPER_PASSWORD', 'jasperadmin');
+
+                        try {
+                            session_start();
+                            $jar = new SessionCookieJar('CookieJar', true);
+                            $urlJasper = $JASPER_SERVER . "/jasperserver/rest_v2/login?j_username=" . $JASPER_USER . "&j_password=" . $JASPER_PASSWORD;
+                            $client = new Client(['cookies' => $jar]);
+                            $request = new Request('GET', $urlJasper, []);
+                            $response = $client->sendAsync($request)->wait();
+                            if ($response->getStatusCode() != 200) {
+                                return Notification::make()
+                                    ->danger()
+                                    ->title('เกิดข้อผิดพลาด')
+                                    ->body('ไม่สามารถเชื่อมต่อ Server Report ได้!')
+                                    ->send();
+                            }
+
+                            $urlReport = $JASPER_SERVER . "/jasperserver/rest_v2/reports/car_report/CarReport.pdf?ParmID=".$this->record->id;
+                            $client = new Client(['cookies' => $jar]);
+                            $request = new Request('GET', $urlReport);
+                            $response = $client->sendAsync($request)->wait();
+                        } catch (\Exception $e) {
+                            return Notification::make()
+                                ->danger()
+                                ->title('เกิดข้อผิดพลาด')
+                                ->body($e)
+                                ->send();
+                        }
+
+                        if ($response->getStatusCode() != 200) {
+                            return Notification::make()
+                                ->danger()
+                                ->title('เกิดข้อผิดพลาด')
+                                ->body('User นี้ไม่สามารถเชื่อมต่อ Server Report ได้!')
+                                ->send();
+                        }
+
+                        return response()->streamDownload(function () use ($response) {
+                            echo $response->getBody();
+                        }, "Car_Report_{$this->record->id}.pdf", [
+                            'Content-Type' => 'application/pdf',
+                            'Content-Disposition' => 'attachment; filename="Car_Report.pdf"',
+                        ]);
+
+                })
+
 
 
         ];

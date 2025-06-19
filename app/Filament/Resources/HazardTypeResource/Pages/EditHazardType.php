@@ -23,5 +23,9 @@ class EditHazardType extends EditRecord
     {
         return $this->getResource()::getUrl('index');
     }
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Hazard type updated';
+    }
 
 }

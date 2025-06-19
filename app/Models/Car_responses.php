@@ -24,7 +24,9 @@ class Car_responses extends Model
         'preventive',
         'status',
         'created_by',
-        'status_reply'
+        'status_reply',
+        'temp_responsible',
+        'perm_responsible',
 
     ];
 

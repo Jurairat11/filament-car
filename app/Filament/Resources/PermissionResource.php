@@ -28,7 +28,7 @@ class PermissionResource extends Resource
     {
         return $form
             ->schema([
-                Section::make()
+                Section::make('Create Permission')
                 ->schema([
                 TextInput::make('name')
                 ->label('Permission')

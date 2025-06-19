@@ -19,6 +19,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Forms\Components\TextInput;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Enums\FiltersLayout;
@@ -118,13 +119,15 @@ class CarResponsesResource extends Resource
                             ->disabled()
                             ->dehydrated(),
 
-                            Select::make('temp_responsible_id')
-                            ->label('Responsible')
-                            ->searchable()
-                            ->relationship('tempResponsible','emp_id',fn()=> User::where('dept_id',Auth::user()?->dept_id))
-                            // ->options(fn () => User::where('dept_id',Auth::user()?->dept_id)->pluck('emp_id', 'id'))
-                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->emp_id} ({$record->emp_name} {$record->last_name})")
-                            ->preload(),
+                            // Select::make('temp_responsible_id')
+                            // ->label('Responsible')
+                            // ->searchable()
+                            // ->relationship('tempResponsible','emp_id',fn()=> User::where('dept_id',Auth::user()?->dept_id))
+                            // ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->emp_id} ({$record->emp_name} {$record->last_name})")
+                            // ->preload(),
+                            TextInput::make('temp_responsible')
+                            ->label('Responsible person')
+                            ->placeholder('Enter responsible person first name and last name'),
 
                         ]),
                     Tabs\Tab::make('Permanent action')
@@ -140,15 +143,9 @@ class CarResponsesResource extends Resource
                             ->disabled()
                             ->dehydrated(true),
 
-                            //->getSearchResultsUsing(fn (string $search) => User::where('dept_id', Auth::user()->dept_id)->pluck('emp_id', 'emp_name')->toArray()),
-
-                            Select::make('perm_responsible_id')
-                            ->label('Responsible')
-                            ->searchable()
-                            ->relationship('permResponsible','emp_id',fn()=> User::where('dept_id',Auth::user()?->dept_id))
-                            // ->options(fn () => User::where('dept_id',Auth::user()?->dept_id)->pluck('emp_id', 'id'))
-                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->emp_id} ({$record->emp_name} {$record->last_name})")
-                            ->preload(),
+                            TextInput::make('perm_responsible')
+                            ->label('Responsible person')
+                            ->placeholder('Enter responsible person first name and last name'),
 
                             Textarea::make('preventive')
                             ->label('Preventive action')

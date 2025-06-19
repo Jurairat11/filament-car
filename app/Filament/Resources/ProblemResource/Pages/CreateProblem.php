@@ -2,10 +2,11 @@
 
 namespace App\Filament\Resources\ProblemResource\Pages;
 
-use App\Filament\Resources\ProblemResource;
-use illuminate\Support\Facades\Auth;
 use App\Models\Problem;
+use App\Helpers\ImageHelper;
+use illuminate\Support\Facades\Auth;
 use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Resources\ProblemResource;
 
 class CreateProblem extends CreateRecord
 {
@@ -41,6 +42,7 @@ class CreateProblem extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['prob_id'] = $this->generatedProbId ?? Problem::generateNextProbId();
+        //$data['prob_img'] = ImageHelper::convertToUrl($data['prob_img'] ?? null);
         return $data;
     }
 
