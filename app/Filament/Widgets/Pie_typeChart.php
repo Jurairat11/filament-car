@@ -108,8 +108,7 @@ class Pie_typeChart extends ApexChartWidget
     public static function canView(): bool
     {
         return Auth::user()?->hasAnyRole(['Safety', 'Admin']);
-        // $user = Auth::user();
-        // return in_array($user?->name, ['Admin','Safety']);
+
     }
 }
 

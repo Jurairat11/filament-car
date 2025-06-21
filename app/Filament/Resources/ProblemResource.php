@@ -35,7 +35,6 @@ use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
-use App\Http\Controllers\ImageUploadController;
 use App\Filament\Resources\ProblemResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ProblemResource\RelationManagers;
@@ -50,8 +49,7 @@ class ProblemResource extends Resource
     protected static ?string $model = Problem::class;
     protected static ?string $navigationGroup = 'Car Responses';
     protected static ?int $navigationSort = 1;
-    protected static ?string $navigationIcon = 'heroicon-o-exclamation-circle';
-
+    protected static ?string $navigationIcon = 'heroicon-o-megaphone';
     public static function form(Form $form): Form
     {
         return $form
@@ -104,24 +102,30 @@ class ProblemResource extends Resource
                     ->schema([
                         TextInput::make('title')
                         ->label('Title')
+                        ->placeholder('Short title of the problem')
                         ->required(),
 
                         TextInput::make('place')
                         ->label('Place')
+                        ->placeholder('Where the problem occurred')
                         ->required(),
 
+                        //filament default upload limit is 12MB
                         FileUpload::make('prob_img')
                             ->label('Problem picture')
+                            ->helperText('The maximum picture size is 5MB, .jpg')
                             ->image()
                             ->downloadable()
-                            ->required()
+                            ->acceptedFileTypes(['jpg'])
+                            ->maxSize(5120) // 5MB
                             ->directory('form-attachments')
                             ->visibility('public')
-                            // ->disk('public')
+                            ->required()
                             ->columnSpanFull(),
 
                         Textarea::make('prob_desc')
                             ->label('Description')
+                            ->placeholder('Describe the problem in detail')
                             ->autosize()
                             ->required()
                             ->columnSpanFull(),
@@ -143,13 +147,17 @@ class ProblemResource extends Resource
             ->defaultSort('created_at','desc')
             ->columns([
                 TextColumn::make('prob_id')
-                    ->label('ID'),
+                    ->label('Problem ID')
+                    ->searchable(),
+                ImageColumn::make('prob_img')
+                    ->label('Picture')
+                    ->square(),
+                TextColumn::make('title')
+                    ->label('Title'),
                 TextColumn::make('user.FullName')
                     ->label('Reporter'),
                 TextColumn::make('department.dept_name')
                     ->label('Department'),
-                ImageColumn::make('prob_img')
-                    ->label('Image'),
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()

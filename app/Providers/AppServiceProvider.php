@@ -32,5 +32,6 @@ class AppServiceProvider extends ServiceProvider
         Problem::observe(ProblemObserver::class);
         Car_responses::observe(Car_responsesObserver::class);
         Gate::policy(User::class, UserPolicy::class);
+
     }
 }

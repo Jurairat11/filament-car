@@ -20,7 +20,6 @@ class followCarTable extends BaseWidget
     protected static bool $isLazy = false;
     protected int | string | array $columnSpan = 'full';
     protected static ?string $heading = 'Following CAR Overview';
-
     public function table(Table $table): Table {
 
         return $table
@@ -79,14 +78,15 @@ class followCarTable extends BaseWidget
                     ->label('Temp. Status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                    'on_process' => 'warning',
+                    'on process' => 'warning',
                     'finished' => 'success',
                     })
                     ->formatStateUsing(fn (string $state) => match ($state) {
-                        'on_process' => 'on process',
+                        'on process' => 'on process',
                         'finished' => 'finished',
                         default => ucfirst($state),
                     }),
+
                 TextColumn::make('perm_desc')
                     ->label('Permanent C/M')
                     ->limit(20),
@@ -184,8 +184,6 @@ class followCarTable extends BaseWidget
         public static function canView(): bool
         {
             return Auth::user()->hasRole('User');
-            // $user = Auth::user();
-            // return in_array($user?->name, ['Admin','Safety']);
         }
     }
 

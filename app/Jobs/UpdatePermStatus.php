@@ -32,7 +32,8 @@ class UpdatePermStatus implements ShouldQueue
      */
     public function handle(): void
     {
-
+        // Update perm_status to 'finished' for all items where perm_due_date is less than or equal to now
+        // and perm_status is 'on process'
         $now = Carbon::now();
         $items = Car_responses::whereDate('perm_due_date', '<=', $now)
         ->where('perm_status','=', 'on process')
@@ -42,6 +43,8 @@ class UpdatePermStatus implements ShouldQueue
             $item->perm_status = 'finished';
             $item->save();
         }
+
+        $item = $items->first(); // Get the first item to use for notification
 
         //แจ้งเตือน
         $pending = Car_report::find($item->car_id);
@@ -63,6 +66,7 @@ class UpdatePermStatus implements ShouldQueue
                 'car_id' => $item->carReport->car_no ?? '-',
                 'cause' => $item->cause ?? '-',
                 'perm_desc' => $item->perm_desc ?? '-',
+                'temp_desc' => $item->temp_desc ?? '-',
                 'created_by' => $item->createdResponse->emp_id?? '-',
             ];
 
@@ -77,7 +81,7 @@ class UpdatePermStatus implements ShouldQueue
             $card  = new \Sebbmyr\Teams\Cards\CustomCard("พนักงาน " . Str::upper($data['created_by']), "หัวข้อ: " . $txtTitle);
             // add information
             $card->setColor('01BC36')
-                ->addFacts('รายละเอียด', ['เลขที่ CAR ' => $data['car_id'], 'ความไม่ปลอดภัย' => $data['cause'],
+                ->addFacts('รายละเอียด', ['เลขที่ CAR ' => $data['car_id'], 'ความไม่ปลอดภัย' => $data['cause'], 'มาตรการการแก้ไขทันที' => $data['temp_desc'],
                 'มาตรการการแก้ไขถาวร' => $data['perm_desc']])
                 ->addAction('Visit Issue', route('filament.admin.resources.car-responses.view', $item));
             // send card via connector

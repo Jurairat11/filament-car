@@ -35,9 +35,9 @@
             </div>
 
             <div>
-                <label for="lastname" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Last
+                <label for="last_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Last
                     Name</label>
-                <input id="lastname" name="last_name" type="text" required value="{{ old('lastname') }}"
+                <input id="last_name" name="last_name" type="text" required value="{{ old('last_name') }}"
                     class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:text-white">
             </div>
 
@@ -62,7 +62,7 @@
 
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-                <input id="email" name="email" type="email" required value="{{ old('email') }}"
+                <input id="email" name="email" type="email" value="{{ old('email') }}"
                     class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:text-white">
             </div>
 

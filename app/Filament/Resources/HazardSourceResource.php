@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\HazardSourceResource\Pages;
 use App\Filament\Resources\HazardSourceResource\RelationManagers;
 use App\Models\Hazard_source;
-use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -21,8 +20,7 @@ class HazardSourceResource extends Resource
     protected static ?string $navigationGroup = 'Car Report';
     protected static ?string $navigationLabel = 'Hazard Source';
     protected static ?string $pluralModelLabel = 'Hazard Source';
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-globe-alt';
 
     public static function form(Form $form): Form
     {
@@ -30,7 +28,8 @@ class HazardSourceResource extends Resource
             ->schema([
                 TextInput::make('source_name')
                     ->required()
-                    ->label('Source name'),
+                    ->label('Source name')
+                    ->placeholder('Enter hazard source name'),
             ]);
     }
 

@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\Problem;
 use Illuminate\Support\Str;
 use Filament\Notifications\Notification;
-use Filament\Notifications\Actions\Action;
 
 class ProblemObserver
 {
@@ -33,7 +32,9 @@ class ProblemObserver
         });
 
         $data = ['prob_id' => $problem->prob_id ?? '-',
-                'prob_desc'=> $problem->prob_desc ?? '-',
+                // 'prob_desc'=> $problem->prob_desc ?? '-',
+                'title' => $problem->title ?? '-',
+                'place' => $problem->place ?? '-',
                 'user_id' => $problem->user->emp_id];
 
                 $txtTitle = "รายงานปัญหาใหม่";
@@ -47,7 +48,8 @@ class ProblemObserver
         $card  = new \Sebbmyr\Teams\Cards\CustomCard("พนักงาน " . Str::upper($data['user_id']), "หัวข้อ: " . $txtTitle);
         // add information
         $card->setColor('01BC36')
-            ->addFacts('รายละเอียด', ['รหัสปัญหา ' => $data['prob_id'], 'เพิ่มเติม' => $data['prob_desc']])
+            ->addFacts('รายละเอียด', ['รหัสปัญหา ' => $data['prob_id'], 'ชื่อเรื่อง' => $data['title'],
+                'สถานที่' => $data['place']])
             ->addAction('Visit Issue', route('filament.admin.resources.problems.view', $problem));
         // send card via connector
         $connector->send($card);

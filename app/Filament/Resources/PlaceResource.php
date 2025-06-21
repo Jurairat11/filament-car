@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
 use Filament\Tables;
 use App\Models\Place;
 use Filament\Forms\Form;
@@ -10,7 +9,6 @@ use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\PlaceResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\PlaceResource\RelationManagers;
@@ -20,14 +18,14 @@ class PlaceResource extends Resource
     protected static ?string $model = Place::class;
     protected static ?string $navigationGroup = 'Car Report';
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('place_name')
                     ->required()
-                    ->label('Place name'),
+                    ->label('Place name')
+                    ->placeholder('Enter place name'),
             ]);
     }
 

@@ -201,7 +201,6 @@ class ViewCarReport extends ViewRecord
                                 ->title('Your issue has been solved')
                                 ->body("Your Problem ID: {$problem->prob_id} has been resolved.")
                                 ->sendToDatabase($employee);
-
                         }
                     }
 
@@ -271,6 +270,7 @@ class ViewCarReport extends ViewRecord
 
                 Action::make('print_car')
                 ->label('Download CAR')
+                ->color('info')
                 ->icon('heroicon-o-arrow-down-tray')
                 ->visible(fn ($record) =>
                     Auth::user()?->hasAnyRole(['Admin', 'Safety']) && ($record->status === 'closed'|| $record->status === 'reopened'))
@@ -326,11 +326,7 @@ class ViewCarReport extends ViewRecord
                             'Content-Type' => 'application/pdf',
                             'Content-Disposition' => 'attachment; filename="Car_Report.pdf"',
                         ]);
-
                 })
-
-
-
         ];
     }
 
@@ -339,12 +335,20 @@ class ViewCarReport extends ViewRecord
 
         return $form
             ->schema([
-                Section::make('Problem Details')
-                ->visible(fn($record) => $record->problem !== null)
+                Section::make('Problem Information')
+                ->visible(fn($record) => $record->problem !== null && Auth::user()?->hasAnyRole(['Admin', 'Safety']))
                 ->schema([
                     Placeholder::make('prob_id')
                         ->label('Problem ID')
                         ->content(fn ($record) => $record->problem?->prob_id),
+
+                    Placeholder::make('title')
+                        ->label('Title')
+                        ->content(fn ($record) => $record->problem?->title),
+
+                    Placeholder::make('place')
+                        ->label('Place')
+                        ->content(fn ($record) => $record->problem?->place),
 
                     Placeholder::make('user_id')
                         ->label('Reporter')
@@ -360,16 +364,39 @@ class ViewCarReport extends ViewRecord
                         ->columnSpanFull(),
                 ])
                 ->collapsed()
-                ->columns(3),
+                ->columns(5),
+
+                Section::make('Problem Information')
+                ->visible(fn($record) => $record->problem !== null && Auth::user()?->hasAnyRole(['User']))
+                ->schema([
+                    Placeholder::make('prob_id')
+                        ->label('Problem ID')
+                        ->content(fn ($record) => $record->problem?->prob_id),
+
+                    Placeholder::make('title')
+                        ->label('Title')
+                        ->content(fn ($record) => $record->problem?->title),
+
+                    Placeholder::make('place')
+                        ->label('Place')
+                        ->content(fn ($record) => $record->problem?->place),
+
+                    Placeholder::make('prob_desc')
+                        ->label('Problem Description')
+                        ->content(fn ($record) => $record->problem?->prob_desc),
+                ])
+                ->collapsed()
+                ->columns(4),
+
 
                 Section::make('CAR Information')
                 ->description(fn ($livewire) =>
                     'CAR No: ' . ($livewire->form->getRawState()['car_no'] ?? '')
                 )
                 ->schema([
-                    Placeholder::make('problem_id')
-                        ->label('Problem ID')
-                        ->content(fn($record)=>optional($record->problem)->prob_id),
+                    // Placeholder::make('problem_id')
+                    //     ->label('Problem ID')
+                    //     ->content(fn($record)=>optional($record->problem)->prob_id),
 
                     Placeholder::make('dept_id')
                         ->label('Department')
@@ -399,6 +426,10 @@ class ViewCarReport extends ViewRecord
                         ->label('Equipment')
                         ->content(fn($record)=>$record->equipment),
 
+                    Placeholder::make('responsible_dept_id')
+                        ->label('Reported to')
+                        ->content(fn ($record) => optional ($record->responsible)->dept_name ),
+
                     Placeholder::make('car_desc')
                         ->label('Description')
                         ->columnSpan(2)
@@ -417,10 +448,6 @@ class ViewCarReport extends ViewRecord
                     //     ->content(fn ($record) =>
                     // ucfirst(str_replace('_', ' ', $record->status))),
 
-                    Placeholder::make('responsible_dept_id')
-                        ->label('Reported to')
-                        ->content(fn ($record) => optional ($record->responsible)->dept_name ),
-
                     View::make('components.car-reports-view-image')
                         ->label('Before Image')
                         ->viewData([
@@ -433,7 +460,7 @@ class ViewCarReport extends ViewRecord
                         ->visible(fn ($record) => $record->status === 'reopened')
                         ->columns(2),
 
-                ])->columns('5'),
+                ])->columns('4'),
 
                 Section::make('CAR Responses')
                 ->visible(fn($record) => $record->carResponse !== null)
@@ -472,8 +499,7 @@ class ViewCarReport extends ViewRecord
 
                         Placeholder::make('temp_responsible')
                         ->label('Responsible')
-                        ->content(fn($record)=>optional($record->carResponse?->tempResponsible)->FullName ?
-                        ($record->carResponse?->tempResponsible)->FullName : ''),
+                        ->content(fn($record)=>$record->carResponse?->temp_responsible ? $record->carResponse?->temp_responsible : ''),
 
                         Placeholder::make('perm_desc')
                         ->label('Permanent action')
@@ -489,8 +515,7 @@ class ViewCarReport extends ViewRecord
 
                         Placeholder::make('perm_responsible')
                         ->label('Responsible')
-                        ->content(fn($record)=>optional($record->carResponse?->permResponsible)->FullName ?
-                        ($record->carResponse?->permResponsible)->FullName : ''),
+                        ->content(fn($record)=>$record->carResponse?->perm_responsible ? $record->carResponse?->perm_responsible : ''),
 
                         Placeholder::make('preventive')
                         ->label('Preventive action')

@@ -16,7 +16,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class Hazard_type_table extends BaseWidget
 {
-    protected static ?string $heading = 'Stop Type';
+    protected static ?string $heading = 'Hazard Type';
     protected static ?int $sort = 4;
     protected static bool $isLazy = false;
     protected int | string | array $columnSpan = 3;
@@ -32,7 +32,7 @@ class Hazard_type_table extends BaseWidget
 
         $total = $counts->sum('count');
 
-        return "Stop Type Total: {$total}";
+        return "Hazard Type Total: {$total}";
     }
     public function table(Table $table): Table
     {

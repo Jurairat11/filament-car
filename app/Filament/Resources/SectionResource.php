@@ -7,12 +7,10 @@ use App\Models\Sections;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
-use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\SectionResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\SectionResource\RelationManagers;
@@ -31,6 +29,7 @@ class SectionResource extends Resource
                 Section::make('Section Information')->schema([
                     Select::make('dept_id')
                         ->label('Department')
+                        ->placeholder('Select department')
                         ->relationship('department', 'dept_name')
                         ->searchable()
                         ->preload()

@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Illuminate\View\View;
-use App\Providers\RouteServiceProvider;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rules;
+use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Auth\Events\Registered;
 
 class RegisteredUserController extends Controller
 {
@@ -35,23 +34,26 @@ class RegisteredUserController extends Controller
             'last_name' => ['required', 'string','max:255'],
             'emp_id' => ['required', 'string', 'unique:users'],
             'dept_id' => ['required', 'exists:departments,dept_id'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['nullable','string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
+
+        $createRole = Role::firstOrCreate(['name' => 'User']);
 
         $user = User::create([
             'emp_name' => $request->emp_name,
             'last_name'=> $request->last_name,
             'emp_id'=> $request->emp_id,
             'dept_id'=> $request->dept_id,
-            'email' => $request->email,
+            'email' => $request->email ? $request->email : null,
             'password' => Hash::make($request->password),
         ]);
+        $user->assignRole($createRole);
 
         event(new Registered($user));
+        //Auth::login($user);
+        return redirect('/login');
 
-        Auth::login($user);
-
-        return redirect(RouteServiceProvider::HOME);
+        //return redirect(RouteServiceProvider::HOME);
     }
 }

@@ -78,11 +78,11 @@ class overviewTable extends BaseWidget
                     ->label('Temp. Status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                    'on_process' => 'warning',
+                    'on process' => 'warning',
                     'finished' => 'success',
                     })
                     ->formatStateUsing(fn (string $state) => match ($state) {
-                        'on_process' => 'on process',
+                        'on process' => 'on process',
                         'finished' => 'finished',
                         default => ucfirst($state),
                     }),
@@ -151,6 +151,17 @@ class overviewTable extends BaseWidget
 
                         return $indicators;
                 }),
+                        SelectFilter::make('car_reports.status')
+                        ->label('Status')
+                        ->options([
+                            'draft' => 'Draft',
+                            'reported' => 'Reported',
+                            'in_progress' => 'In progress',
+                            'pending_review' => 'Pending review',
+                            'reopened' => 'Reopened',
+                            'closed' => 'Closed',
+                        ])->indicator('Status'),
+
                         SelectFilter::make('status_reply')
                         ->label('Reply status')
                         ->options([
@@ -182,8 +193,6 @@ class overviewTable extends BaseWidget
     public static function canView(): bool
     {
         return Auth::user()?->hasAnyRole(['Safety', 'Admin']);
-        // $user = Auth::user();
-        // return in_array($user?->name, ['Admin','Safety']);
     }
 
 }

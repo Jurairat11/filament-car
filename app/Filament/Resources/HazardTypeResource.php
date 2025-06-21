@@ -11,7 +11,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -21,7 +20,7 @@ class HazardTypeResource extends Resource
     protected static ?string $navigationGroup = 'Car Report';
     protected static ?string $navigationLabel = 'Hazard Type';
     protected static ?string $pluralModelLabel = 'Hazard Type';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-stop';
 
     public static function form(Form $form): Form
     {
@@ -29,6 +28,7 @@ class HazardTypeResource extends Resource
             ->schema([
                 TextInput::make('type_name')
                     ->label('Type')
+                    ->placeholder('Enter hazard type name')
                     ->required(),
             ]);
     }

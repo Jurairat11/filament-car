@@ -2,28 +2,25 @@
 
 namespace App\Filament\Resources;
 
-use Carbon\Carbon;
-use App\Models\User;
 use Filament\Tables;
 use App\Models\Problem;
 use Filament\Forms\Set;
+use App\Models\Sections;
 use Filament\Forms\Form;
 use App\Models\Car_report;
+use App\Models\Department;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Tables\Filters\Filter;
-use Filament\Tables\Filters\Layout;
+use Filament\Forms\Components\Split;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
-use Filament\Tables\Filters\Indicator;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\ImageColumn;
-use Filament\Forms\Components\Split;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
@@ -39,12 +36,11 @@ class CarReportResource extends Resource
     protected static ?string $navigationLabel = 'Create CAR';
     protected static ?string $pluralModelLabel = 'Car Report';
     protected static ?string $navigationIcon = 'heroicon-o-document-plus';
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('CAR')->id('submit')
+                Section::make('CAR Information')->id('submit')
                 ->description(fn ($livewire) =>
                     'No: ' . ($livewire->form->getRawState()['car_no'] ?? '')
                 )
@@ -55,64 +51,80 @@ class CarReportResource extends Resource
                     // ->required(),
 
                     Select::make('problem_id')
-                    ->label('Problem ID')
-                    ->relationship('problem', 'prob_id')
-                    ->preload()
-                    ->searchable()
-                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->prob_id} ({$record->status})"),
+                        ->label('Problem ID')
+                        ->placeholder('Select problem ID')
+                        ->relationship('problem', 'prob_id',(fn() => Problem::where('status', '!=', 'new')))
+                        ->preload()
+                        ->searchable()
+                        ->required()
+                        ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->prob_id} ({$record->status})"),
 
                     Hidden::make('created_by')
-                    ->default(Auth::user()?->id)
-                    ->disabled()
-                    ->dehydrated()
-                    ->required(),
+                        ->default(Auth::user()?->id)
+                        ->disabled()
+                        ->dehydrated()
+                        ->required(),
 
                     Select::make('dept_id')
-                    ->label('Department')
-                    ->relationship('department','dept_name')
-                    ->searchable()
-                    ->preload()
-                    ->reactive()
-                    ->required(),
+                        ->label('Department')
+                        ->placeholder('Select department')
+                        ->searchable()
+                        ->preload()
+                        ->required()
+                        ->options(Department::pluck('dept_name', 'dept_id'))
+                        ->reactive()
+                        ->afterStateUpdated(fn ($state, callable $set) => $set('sec_id', null)),
 
                     Select::make('sec_id')
-                    ->label('Section')
-                    ->relationship('section','sec_name')
-                    ->searchable()
-                    ->preload()
-                    ->required(), // รองรับการโหลด option ใหม่
+                        ->label('Section')
+                        ->placeholder('Select section')
+                        ->searchable()
+                        ->preload()
+                        ->options(function (callable $get) {
+                            $deptId = $get('dept_id');
+                            if (!$deptId) {
+                                return [];
+                            }
+                            return Sections::where('dept_id', $deptId)->pluck('sec_name', 'sec_id');
+                        })
+                    ->required(),
 
                     DatePicker::make('car_date')
-                    ->label('Create date')
-                    ->native(false)
-                    ->displayFormat('d/m/Y')
-                    ->closeOnDateSelection()
-                    ->disabled()
-                    ->dehydrated()
-                    ->required(),
+                        ->label('Create date')
+                        ->native(false)
+                        ->displayFormat('d/m/Y')
+                        ->closeOnDateSelection()
+                        ->disabled()
+                        ->dehydrated()
+                        ->required(),
 
                     DatePicker::make('car_due_date')
-                    ->label('Car due date')
-                    ->native(false)
-                    ->displayFormat('d/m/Y')
-                    ->closeOnDateSelection()
-                    ->required(),
+                        ->label('Car due date')
+                        ->native(false)
+                        ->displayFormat('d/m/Y')
+                        ->placeholder('dd/mm/yyyy')
+                        ->closeOnDateSelection()
+                        ->required(),
 
             ])->columns(5),
 
-            Section::make('Hazard Details')
+            Section::make('CAR Details')
             ->schema([
                 Split::make([
                 Section::make()
                     ->schema([
                         Select::make('hazard_source_id')
                             ->label('Hazard source')
+                            ->placeholder('Select source')
                             ->relationship('hazardSource','source_name')
                             ->required(),
 
                         Select::make('place_id')
                             ->label('Place')
                             ->relationship('place','place_name')
+                            ->searchable()
+                            ->preload()
+                            ->placeholder('Select place')
                             ->createOptionForm([
                                 TextInput::make('place_name')
                                     ->label('Place name')
@@ -121,15 +133,18 @@ class CarReportResource extends Resource
 
                         TextInput::make('equipment')
                             ->label('Machine/Equipment')
+                            ->placeholder('Machine/Equipment')
                             ->required(),
 
                         Select::make('hazard_level_id')
                             ->label('Hazard level')
+                            ->placeholder('Select hazard level')
                             ->relationship('hazardLevel','level_name')
                             ->required(),
 
                         Select::make('hazard_type_id')
                             ->label('Hazard type')
+                            ->placeholder('Select hazard type')
                             ->relationship('hazardType','type_name')
                             ->createOptionForm([
                                 TextInput::make('type_name')
@@ -142,18 +157,25 @@ class CarReportResource extends Resource
                     ->schema([
                         Textarea::make('car_desc')
                             ->label('Description')
+                            ->placeholder('Describe the issue')
                             ->autosize()
                             ->required(),
 
                         FileUpload::make('img_before')
                             ->label('Picture before')
+                            ->helperText('The maximum picture size is 5MB, .jpg')
                             ->image()
-                            ->required()
+                            ->downloadable()
+                            ->acceptedFileTypes(['jpg'])
+                            ->maxSize(5120) // 5MB
                             ->directory('form-attachments')
-                            ->visibility('public'),
+                            ->visibility('public')
+                            ->required(),
 
                         Select::make('responsible_dept_id')
                             ->label('Reported to')
+                            ->placeholder('Select department')
+                            ->helperText('The department responsible for the issue')
                             ->searchable()
                             ->preload()
                             ->required()
@@ -198,7 +220,8 @@ class CarReportResource extends Resource
                 ->dateTime('d/m/Y'),
 
                 ImageColumn::make('img_before')
-                ->label('Picture before'),
+                ->label('Picture before')
+                ->square(),
 
                 TextColumn::make('hazardLevel.level_name')
                 ->label('Hazard level')
@@ -229,8 +252,9 @@ class CarReportResource extends Resource
                     'closed' => 'closed',
                     default => ucfirst($state),
                 }),
+
                 TextColumn::make('close_car_date')
-                ->label('Close date')
+                ->label('Closed date')
                 ->dateTime('d/m/Y')
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
@@ -259,15 +283,15 @@ class CarReportResource extends Resource
                 Filter::make('created_at')
                 ->form([
                     DatePicker::make('created_from')
-                    ->native(false)
-                    ->displayFormat('d/m/Y')
-                    ->placeholder('dd-mm-yyyy')
-                    ->closeOnDateSelection(),
+                        ->native(false)
+                        ->displayFormat('d/m/Y')
+                        ->placeholder('dd-mm-yyyy')
+                        ->closeOnDateSelection(),
                     DatePicker::make('created_until')
-                    ->native(false)
-                    ->displayFormat('d/m/Y')
-                    ->placeholder('dd-mm-yyyy')
-                    ->closeOnDateSelection(),
+                        ->native(false)
+                        ->displayFormat('d/m/Y')
+                        ->placeholder('dd-mm-yyyy')
+                        ->closeOnDateSelection(),
                 ])
                 ->query(function (Builder $query, array $data): Builder {
                     return $query

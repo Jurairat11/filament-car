@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+//use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Panel;
 use Filament\Models\Contracts\HasName;
 use Spatie\Permission\Traits\HasRoles;

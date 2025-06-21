@@ -18,63 +18,65 @@ class ViewProblem extends ViewRecord
         return $form
         ->schema([
 
-            Section::make('Problem Details')
+            Section::make('Problem Information')
             ->description(fn ($livewire) =>
                     'Problem ID: ' . ($livewire->form->getRawState()['prob_id'] ?? 'new')
                 )
 
             ->schema([
-                Placeholder::make('user_id')
-                    ->label('Employee ID')
-                    ->content(fn ($record) => optional($record->user)->FullName),
 
-                Placeholder::make('dept_id')
-                    ->label('Department')
-                    ->content(fn ($record) => optional($record->department)->dept_name),
+                Section::make('Reporter Information')
+                    ->description('Information about the person who reported the problem.')
+                    ->schema([
+                        Placeholder::make('user_id')
+                            ->label('Employee ID')
+                            ->content(fn ($record) => optional($record->user)->FullName),
 
-                Placeholder::make('prob_date')
-                    ->label('Reported Date')
-                    ->content(fn ($record) => Carbon::parse($record->prob_date)->format('d/m/Y')),
+                        Placeholder::make('dept_id')
+                            ->label('Department')
+                            ->content(fn ($record) => optional($record->department)->dept_name),
 
-                Placeholder::make('title')
-                    ->label('Title')
-                    ->content(fn ($record) => $record->title),
+                        Placeholder::make('prob_date')
+                            ->label('Reported Date')
+                            ->content(fn ($record) => Carbon::parse($record->prob_date)->format('d/m/Y')),
+                ])->columns(3),
 
-                Placeholder::make('place')
-                    ->label('Place')
-                    ->content(fn ($record) => $record->place),
+                Section::make('Problem Details')
+                    //->description('Details about the reported problem')
+                    ->description(fn ($livewire) =>
+                    'Status: ' . ucfirst(str_replace('_', ' ', $livewire->form->getRawState()['status'] ?? '')
+                ))
+                    ->schema([
 
-                Placeholder::make('prob_desc')
-                    ->label('Description')
-                    ->columnspan(2)
-                    ->content(fn ($record) => $record->prob_desc),
+                        Placeholder::make('title')
+                            ->label('Title')
+                            ->content(fn ($record) => $record->title),
 
-                Placeholder::make('status')
-                    ->label('Status')
-                    ->content(fn ($record) => match ($record->status) {
-                        'new' => 'New',
-                        'accepted' => 'Accepted',
-                        'reported' => 'Reported',
-                        'in_progress' => 'In progress',
-                        'pending_review' => 'Pending review',
-                        'dismissed' => 'Dismissed',
-                        'reopened' => 'Reopened',
-                        'closed' => 'Closed',
-                        default => 'Unknown',
-                    })
-                    ->extraAttributes(['class' => 'text-sm font-medium text-gray-800']),
+                        Placeholder::make('place')
+                            ->label('Place')
+                            ->content(fn ($record) => $record->place),
 
-                Placeholder::make('dismiss_reason')
-                    ->label('Reason for Dismissal')
-                    ->content(fn ($record) => $record->dismiss_reason ?? '-')
-                    ->visible(fn ($record) => $record->status === 'dismissed'),
+                        Placeholder::make('prob_desc')
+                            ->label('Description')
+                            // ->columnspan(2)
+                            ->content(fn ($record) => $record->prob_desc),
 
-                View::make('components.problem-view-image')
-                ->label('Before Image')
-                ->viewData([
-                    'path' => $this->getRecord()->prob_img,
-                ])
-                ->columnSpanFull()
+                        View::make('components.problem-view-image')
+                            ->label('Problem picture')
+                            ->viewData([
+                                'path' => $this->getRecord()->prob_img,
+                            ])
+                            ->columnSpanFull(),
+
+                        Placeholder::make('dismiss_reason')
+                            ->label('Reason for Dismissal')
+                            ->content(fn ($record) => $record->dismiss_reason ?? '-')
+                            ->visible(fn ($record) => $record->status === 'dismissed'),
+
+                ])->columns(3),
+
+
+
 
             ])->columns(4),
         ]);

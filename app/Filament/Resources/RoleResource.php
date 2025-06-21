@@ -32,12 +32,14 @@ class RoleResource extends Resource
                 ->schema([
                 TextInput::make('name')
                 ->label('Role')
+                ->placeholder('Enter role name')
                 ->unique(ignoreRecord:true),
                 Select::make('permissions')
+                ->placeholder('Select Permissions')
                 ->multiple()
                 ->relationship('permissions','name')
                 ->preload()
-                ])
+                ])->columns(2)
 
             ]);
     }

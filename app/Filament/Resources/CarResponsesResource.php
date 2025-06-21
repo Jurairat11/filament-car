@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Models\User;
 use Filament\Tables;
 use Filament\Forms\Form;
 use App\Models\Car_report;
@@ -18,7 +17,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\ImageColumn;
@@ -66,7 +64,12 @@ class CarResponsesResource extends Resource
                 ->schema([
                     Select::make('car_id')
                         ->label('CAR No.')
+                        ->placeholder('Select CAR No.')
                         ->options(function (){
+                            if(Auth::user()?->hasAnyRole(['Admin'])) {
+                                return Car_report::all()
+                                ->mapWithKeys(fn ($car) => [$car->id => "{$car->car_no} ({$car->status})"]);
+                            }
                                 $responsibleDept = Auth::user()->dept_id;
                                 return Car_report::where('responsible_dept_id',$responsibleDept)
                                 ->get()
@@ -97,8 +100,12 @@ class CarResponsesResource extends Resource
 
                         FileUpload::make('img_after')
                             ->label('Picture after')
+                            ->helperText('The maximum picture size is 5MB, .jpg')
                             ->image()
+                            ->downloadable()
+                            ->acceptedFileTypes(['jpg'])
                             ->required()
+                            ->maxSize(5120) // 5MB
                             ->directory('form-attachments')
                             ->visibility('public'),
 
@@ -119,12 +126,6 @@ class CarResponsesResource extends Resource
                             ->disabled()
                             ->dehydrated(),
 
-                            // Select::make('temp_responsible_id')
-                            // ->label('Responsible')
-                            // ->searchable()
-                            // ->relationship('tempResponsible','emp_id',fn()=> User::where('dept_id',Auth::user()?->dept_id))
-                            // ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->emp_id} ({$record->emp_name} {$record->last_name})")
-                            // ->preload(),
                             TextInput::make('temp_responsible')
                             ->label('Responsible person')
                             ->placeholder('Enter responsible person first name and last name'),
@@ -159,7 +160,6 @@ class CarResponsesResource extends Resource
 
                 Hidden::make('created_by')
                 ->label('Created by')
-                //->options(fn () => User::where('dept_id',Auth::user()?->dept_id)->pluck('emp_id', 'id'))
                 ->default(Auth::user()?->id)
                 ->disabled()
                 ->dehydrated()
@@ -173,11 +173,12 @@ class CarResponsesResource extends Resource
             ->defaultSort('created_at','desc')
             ->columns([
                 TextColumn::make('carReport.car_no')
-                ->label('CAR no.')
+                ->label('CAR No.')
                 ->searchable(),
 
                 ImageColumn::make('img_after')
-                ->label('Picture after'),
+                ->label('Picture after')
+                ->square(),
 
                 TextColumn::make('status')
                 ->label('Status')

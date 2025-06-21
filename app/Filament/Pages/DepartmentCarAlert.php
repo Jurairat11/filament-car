@@ -47,7 +47,8 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
             ->label('Due date'),
 
             ImageColumn::make('img_before')
-            ->label('Picture before'),
+            ->label('Picture before')
+            ->square(),
 
             TextColumn::make('hazardLevel.level_name')
                 ->label('Hazard level')
@@ -55,7 +56,7 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
                 // ->toggleable(isToggledHiddenByDefault: true),
 
             TextColumn::make('hazardType.type_name')
-                ->label('Stop type')
+                ->label('Hazard type')
                 ->searchable(),
                 // ->toggleable(isToggledHiddenByDefault: true),
 
@@ -100,10 +101,10 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
     {
         return [
             SelectFilter::make('responsible_id')
-            ->label('Department')
-            ->relationship('responsible', 'dept_name')
-            ->preload()
-            ->indicator('Department'),
+                ->label('Department')
+                ->relationship('responsible', 'dept_name')
+                ->preload()
+                ->indicator('Department'),
 
             SelectFilter::make('hazard_level_id')
                 ->label('Hazard level')
@@ -113,10 +114,10 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
                 ->default(request('hazard_level_id')),
 
             SelectFilter::make('hazard_type_id')
-                ->label('Stop type')
+                ->label('Hazard type')
                 ->relationship('hazardType', 'type_name')
                 ->preload()
-                ->indicator('Stop type')
+                ->indicator('Hazard type')
                 ->default(request('hazard_type_id')),
 
             SelectFilter::make('status')
@@ -128,13 +129,6 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
                     'reopened' => 'Reopened',
                     'closed' => 'Closed'
                 ])->indicator('status'),
-
-            // SelectFilter::make('status_reply')
-            // ->options([
-            //     'on_process' => 'On process',
-            //     'finished' => 'Finished',
-            //     'delay' => 'Delay',
-            // ])->indicator('Reply status')->default(request('status_reply'))
         ];
 
     }
@@ -189,7 +183,6 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
     // แสดง badge ตัวเลขการแจ้งเตือน reported ที่ตรงกับแผนกผู้ใช้
     public static function getNavigationBadge(): ?string
     {
-        // ตรวจสอบว่าผู้ใช้เป็นแผนกหรือไม่
         if (Auth::user()->hasRole('User')) {
 
              // นับเฉพาะที่เป็น reported และแผนกตรงกับผู้ใช้
@@ -198,7 +191,6 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
                 ->count();
         }
         return null;
-
     }
 
     public static function getNavigationBadgeTooltip(): ?string

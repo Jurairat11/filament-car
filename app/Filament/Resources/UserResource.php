@@ -49,6 +49,7 @@ class UserResource extends Resource
                 ->label('Department')
                 ->searchable()
                 ->preload()
+                ->placeholder('Select Department')
                 ->relationship('deptID','dept_name')
                 ->required(),
                 TextInput::make('email')
@@ -64,6 +65,7 @@ class UserResource extends Resource
                 ->dehydrated(fn (?string $state): bool => filled($state))
                 ->required(fn(Page $livewire)=>($livewire instanceof CreateUser)),
                 Select::make('roles')
+                ->placeholder('Select Role')
                 ->multiple()
                 ->relationship('roles', 'name')
                 ->preload()
@@ -80,6 +82,7 @@ class UserResource extends Resource
             }),
                 Select::make('permissions')
                 ->multiple()
+                ->placeholder('Select Permissions')
                 ->relationship('permissions','name')
                 ->preload()
 

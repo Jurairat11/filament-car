@@ -31,14 +31,6 @@ class AuthenticatedSessionController extends Controller
         'password' => ['required'],
     ]);
 
-    // $user = Auth::user();
-    // if ($user->hasRole('User')) {
-    //     return redirect()->route('filament.pages.general-user-dashboard');
-    // }
-
-    // return redirect()->intended(Filament::getUrl());
-
-
     if (! Auth::attempt(['emp_id' => $request->emp_id, 'password' => $request->password], $request->boolean('remember'))) {
         throw ValidationException::withMessages([
             'emp_id' => __('auth.failed'),
@@ -50,7 +42,6 @@ class AuthenticatedSessionController extends Controller
     return redirect()->intended(RouteServiceProvider::HOME);
 
 }
-
     /**
      * Destroy an authenticated session.
      */

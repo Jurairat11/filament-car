@@ -30,9 +30,11 @@ class DepartmentResource extends Resource
                 ->schema([
                     TextInput::make('dept_name')
                         ->label('Department name')
+                        ->placeholder('Enter department name')
                         ->required(),
                     TextInput::make('dept_code')
                         ->label('Department code')
+                        ->placeholder('Enter department code')
 
                 ])->columns(2),
             ]);

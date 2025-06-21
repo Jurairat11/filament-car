@@ -32,6 +32,7 @@ class PermissionResource extends Resource
                 ->schema([
                 TextInput::make('name')
                 ->label('Permission')
+                ->placeholder('Enter permission name')
                 ->unique(ignoreRecord:true)
                 ->required()
                 ])
