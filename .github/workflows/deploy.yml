@@ -15,4 +15,5 @@ jobs:
         run: |
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_ed25519
+          git config --local pull.ff false
           git pull origin main
