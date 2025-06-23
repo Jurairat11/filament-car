@@ -15,8 +15,8 @@ jobs:
         run: |
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_ed25519
-          git config --local pull.ff false
-          git pull origin main --autostash
+          git config
+          git pull origin main
           composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
           bun upgrade
           composer run build
