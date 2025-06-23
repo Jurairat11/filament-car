@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Car_report extends Model
 {
     use HasFactory;
+
     protected $primaryKey = 'id';
     protected $fillable = [
         'car_no',
