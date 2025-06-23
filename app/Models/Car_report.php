@@ -38,6 +38,7 @@ class Car_report extends Model
     public static function generateNextCarNo(): string
     {
         $year = now()->format('y'); // ปี พ.ศ. สั้น เช่น 25
+
         $prefix = "C-";
 
         // นับรายการในปีปัจจุบัน
@@ -103,10 +104,11 @@ class Car_report extends Model
     {
         return $this->belongsTo(Car_report::class, 'followed_car_id','id');
     }
-    public function children()
-    {
-        return $this->hasOne(Car_report::class, 'followed_car_id');
-    }
+    // public function children()
+    // {
+    //     return $this->hasOne(Car_report::class, 'followed_car_id');
+    // }
+
     public function hazardSource() {
         return $this->belongsTo(Hazard_source::class, 'hazard_source_id','id');
     }
