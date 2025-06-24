@@ -113,10 +113,10 @@ class ProblemResource extends Resource
                         //filament default upload limit is 12MB
                         FileUpload::make('prob_img')
                             ->label('Problem picture')
-                            ->helperText('The maximum picture size is 5MB, .jpg')
+                            ->helperText('The maximum picture size is 5MB')
                             ->image()
                             ->downloadable()
-                            ->acceptedFileTypes(['application/jpg'])
+                            //->acceptedFileTypes(['jpg'])
                             ->maxSize(5120) // 5MB
                             ->directory('form-attachments')
                             ->visibility('public')
