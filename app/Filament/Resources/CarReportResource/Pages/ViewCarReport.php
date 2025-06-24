@@ -443,11 +443,6 @@ class ViewCarReport extends ViewRecord
                         ->label('Hazard type')
                         ->content(fn ($record) => optional ($record->hazardType)->type_name ),
 
-                    // Placeholder::make('status')
-                    //     ->label('Status')
-                    //     ->content(fn ($record) =>
-                    // ucfirst(str_replace('_', ' ', $record->status))),
-
                     View::make('components.car-reports-view-image')
                         ->label('Before Image')
                         ->viewData([
