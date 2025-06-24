@@ -163,10 +163,10 @@ class CarReportResource extends Resource
 
                         FileUpload::make('img_before')
                             ->label('Picture before')
-                            ->helperText('The maximum picture size is 5MB, .jpg')
+                            ->helperText('The maximum picture size is 5MB')
                             ->image()
                             ->downloadable()
-                            ->acceptedFileTypes(['jpg'])
+                            //->acceptedFileTypes(['jpg'])
                             ->maxSize(5120) // 5MB
                             ->directory('form-attachments')
                             ->visibility('public')
