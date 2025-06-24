@@ -25,4 +25,9 @@ class EditCarReport extends EditRecord
     {
         return 'CAR updated';
     }
+
+    protected function mutateFormDataBeforeSave(array $data): array {
+        unset($data['img_before']);
+        return $data;
+    }
 }

@@ -27,4 +27,9 @@ class EditCarResponses extends EditRecord
     {
         return 'CAR response updated';
     }
+
+    protected function mutateFormDataBeforeSave(array $data): array {
+        unset($data['img_after']);
+        return $data;
+    }
 }
