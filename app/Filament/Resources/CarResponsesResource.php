@@ -100,10 +100,10 @@ class CarResponsesResource extends Resource
 
                         FileUpload::make('img_after')
                             ->label('Picture after')
-                            ->helperText('The maximum picture size is 5MB, .jpg')
+                            ->helperText('The maximum picture size is 5MB')
                             ->image()
                             ->downloadable()
-                            ->acceptedFileTypes(['jpg'])
+                            //->acceptedFileTypes(['jpg'])
                             ->required()
                             ->maxSize(5120) // 5MB
                             ->directory('form-attachments')

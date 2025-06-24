@@ -218,26 +218,26 @@ class ViewCarReport extends ViewRecord
                             ->sendToDatabase($user);
 
                     }
-                    $data = [
-                    'car_no' => $this->record->car_no ?? '-',
-                    'close_car_date' => $this->record->close_car_date ?? '-',
-                    'created_by' => $this->record->users->emp_id?? '-',
-            ];
-                    $txtTitle = "ปิดใบ CAR";
+                    // $data = [
+                    // 'car_no' => $this->record->car_no ?? '-',
+                    // 'close_car_date' => $this->record->close_car_date ?? '-',
+                    // 'created_by' => $this->record->users->emp_id?? '-',
+                    // ];
+                    // $txtTitle = "ปิดใบ CAR";
 
-                    // create connector instance
-                    $connector = new \Sebbmyr\Teams\TeamsConnector(env('MSTEAM_API'));
-                    // // create card
-                    // $card  = new \Sebbmyr\Teams\Cards\SimpleCard(['title' => $data['title'], 'text' => $data['description']]);
+                    // // create connector instance
+                    // $connector = new \Sebbmyr\Teams\TeamsConnector(env('MSTEAM_API'));
+                    // // // create card
+                    // // $card  = new \Sebbmyr\Teams\Cards\SimpleCard(['title' => $data['title'], 'text' => $data['description']]);
 
-                    // create a custom card
-                    $card  = new \Sebbmyr\Teams\Cards\CustomCard("พนักงาน " . Str::upper($data['created_by']), "หัวข้อ: " . $txtTitle);
-                    // add information
-                    $card->setColor('01BC36')
-                        ->addFacts('รายละเอียด', ['เลขที่ CAR ' => $data['car_no'], 'วันที่เสร็จสิ้น' => $data['close_car_date']->format('d/m/Y')])
-                        ->addAction('Visit Issue', route('filament.admin.resources.car-reports.view', $this->record));
-                    // send card via connector
-                    $connector->send($card);
+                    // // create a custom card
+                    // $card  = new \Sebbmyr\Teams\Cards\CustomCard("พนักงาน " . Str::upper($data['created_by']), "หัวข้อ: " . $txtTitle);
+                    // // add information
+                    // $card->setColor('01BC36')
+                    //     ->addFacts('รายละเอียด', ['เลขที่ CAR ' => $data['car_no'], 'วันที่เสร็จสิ้น' => $data['close_car_date']->format('d/m/Y')])
+                    //     ->addAction('Visit Issue', route('filament.admin.resources.car-reports.view', $this->record));
+                    // // send card via connector
+                    // $connector->send($card);
             }),
 
             Action::make('Reopen CAR')
