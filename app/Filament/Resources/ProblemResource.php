@@ -122,6 +122,7 @@ class ProblemResource extends Resource
                             ->visibility('public')
                             ->required()
                             ->columnSpanFull(),
+
                             //->getUploadedFileNameForStorageUsing(static fn (?Model $record) => "{$record->id}.jpg")
 
                         // FileUpload::make('prob_img')
