@@ -10,7 +10,6 @@ class EditCarReport extends EditRecord
 {
     protected static string $resource = CarReportResource::class;
     protected static ?string $title = 'Edit CAR Report';
-
     protected function getHeaderActions(): array
     {
         return [

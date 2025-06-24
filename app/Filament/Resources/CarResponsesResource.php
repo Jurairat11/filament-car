@@ -105,6 +105,7 @@ class CarResponsesResource extends Resource
                             ->downloadable()
                             //->acceptedFileTypes(['jpg'])
                             // ->required()
+                            ->previewURL(fn ($state)=> $state)
                             ->maxSize(5120) // 5MB
                             ->directory('form-attachments')
                             ->visibility('public'),

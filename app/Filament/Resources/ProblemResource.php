@@ -120,6 +120,7 @@ class ProblemResource extends Resource
                             ->maxSize(5120) // 5MB
                             ->directory('form-attachments')
                             ->visibility('public')
+                            ->previewURL(fn ($state)=> $state)
                             ->required()
                             ->columnSpanFull(),
 
