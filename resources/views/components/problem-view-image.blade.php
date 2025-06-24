@@ -3,7 +3,7 @@
         <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-gray-100">
             Problem Picture
         </label><br>
-        <img src="{{ asset('storage/form-attachments' . $path) }}" class="object-contain max-w-xs border rounded shadow md:max-w-sm"
+        <img src="{{ asset('storage/' . $path) }}" class="object-contain max-w-xs border rounded shadow md:max-w-sm"
             alt="Problem Picture">
     </div>
 @else

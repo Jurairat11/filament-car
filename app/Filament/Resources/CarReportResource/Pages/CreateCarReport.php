@@ -4,6 +4,7 @@ namespace App\Filament\Resources\CarReportResource\Pages;
 
 use Carbon\Carbon;
 use App\Models\Car_report;
+use App\Helpers\ImageHelper;
 use Illuminate\Support\Facades\Auth;
 use Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\CarReportResource;
@@ -43,6 +44,7 @@ class CreateCarReport extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['car_no'] = $this->generatedCarNo ?? Car_report::generateNextCarNo();
+        $data['img_before'] = ImageHelper::convertToUrl($data['img_before'] ?? null);
         return $data;
     }
 
@@ -76,4 +78,5 @@ class CreateCarReport extends CreateRecord
     {
         return 'CAR created';
     }
+
 }
