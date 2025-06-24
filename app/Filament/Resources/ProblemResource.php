@@ -117,12 +117,12 @@ class ProblemResource extends Resource
                             ->image()
                             ->downloadable()
                             //->acceptedFileTypes(['jpg'])
-                            ->maxSize(5120) // 5MB
-                            // ->directory('form-attachments')
-                            // ->visibility('public')
+                            //->maxSize(5120) // 5MB
+                            ->directory('form-attachments')
+                            ->visibility('public')
                             ->required()
-                            ->getUploadedFileNameForStorageUsing(static fn (?Model $record) => "{$record->id}.jpg")
                             ->columnSpanFull(),
+                            //->getUploadedFileNameForStorageUsing(static fn (?Model $record) => "{$record->id}.jpg")
 
                         Textarea::make('prob_desc')
                             ->label('Description')
