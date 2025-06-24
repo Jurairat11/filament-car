@@ -50,8 +50,9 @@ class AdminPanelProvider extends PanelProvider
             //     ->label('Emp ID:'. Auth::user()?->emp_id)
             //     ->visible(fn() => Auth::user()?->emp_id)
             // ])
-            ->brandName('CAR')
+            //->brandName('CAR')
             ->brandLogo(asset('images/logo.png'))
+            ->brandLogoHeight('3rem')
             ->colors([
                 'primary' => Color::Indigo,
             ])
