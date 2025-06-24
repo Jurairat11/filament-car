@@ -53,6 +53,8 @@ class ProblemObserver
             ->addAction('Visit Issue', route('filament.admin.resources.problems.view', $problem));
         // send card via connector
         $connector->send($card);
+
+        dd($connector);
     }
 
     /**
