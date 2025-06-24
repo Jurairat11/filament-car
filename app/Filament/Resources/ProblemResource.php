@@ -116,7 +116,7 @@ class ProblemResource extends Resource
                             ->helperText('The maximum picture size is 5MB, .jpg')
                             ->image()
                             ->downloadable()
-                            ->acceptedFileTypes(['jpg'])
+                            ->acceptedFileTypes(['application/jpg'])
                             ->maxSize(5120) // 5MB
                             ->directory('form-attachments')
                             ->visibility('public')
