@@ -54,7 +54,6 @@ class ProblemObserver
         // send card via connector
         $connector->send($card);
 
-        dd($connector);
     }
 
     /**
