@@ -15,7 +15,7 @@ class ImageHelper
         return $filename;
         }
 
-        $baseUrl = env('APP_FILE_URL', config('app.url'));
+        $baseUrl = env('APP_URL', config('app.url'));
         return $baseUrl . '/storage/' . $filename;
     }
 

@@ -120,9 +120,6 @@ class ProblemResource extends Resource
                             ->maxSize(5120) // 5MB
                             ->directory('form-attachments')
                             ->visibility('public')
-                            ->getUploadedFileNameForStorageUsing(
-                            fn (TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
-                                ->prepend('custom-prefix-'))
                             ->required()
                             ->columnSpanFull(),
 
