@@ -32,8 +32,6 @@ class AdminPanelProvider extends PanelProvider
     {
         //DatabaseNotifications::trigger('filament.notifications.database-notifications-trigger');
         DatabaseNotifications::pollingInterval(null);
-        //Log::info('User from filament',[Auth::user()]);
-        //dd(Auth::user());
 
         return $panel
             ->default()
@@ -53,6 +51,7 @@ class AdminPanelProvider extends PanelProvider
             //     ->visible(fn() => Auth::user()?->emp_id)
             // ])
             ->brandName('CAR')
+            ->brandLogo(asset('images/logo.png'))
             ->colors([
                 'primary' => Color::Indigo,
             ])
@@ -83,7 +82,7 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
-            FilamentApexChartsPlugin::make()
+                FilamentApexChartsPlugin::make()
             ]);
 
     }
