@@ -27,4 +27,9 @@ class EditProblem extends EditRecord
         return 'Problem updated';
     }
 
+    protected function mutateFormDataBeforeSave(array $data): array {
+    unset($data['prob_img']);
+    return $data;
+    }
+
 }
