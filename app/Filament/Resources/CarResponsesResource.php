@@ -130,7 +130,7 @@ class CarResponsesResource extends Resource
                             ->label('Responsible person')
                             ->placeholder('Enter responsible person first name and last name'),
 
-                        ])->activeTab(2),
+                        ]),
                     Tabs\Tab::make('Permanent action')
                         ->schema([
                             Textarea::make('perm_desc')
