@@ -13,27 +13,7 @@ class Car_responsesObserver
     public function created(Car_responses $car_responses): void
     {
 
-        // $data = [
-        //         'car_id' => $car_responses->carReport->car_no ?? '-',
-        //         'cause' => $car_responses->cause ?? '-',
-        //         'created_by' => $car_responses->createdResponse->emp_id?? '-',
-        //     ];
-
-        //     $txtTitle = "ใบ CAR ได้รับการตอบกลับแล้ว";
-
-        //     // create connector instance
-        //     $connector = new \Sebbmyr\Teams\TeamsConnector(env('MSTEAM_API'));
-        //     // // create card
-        //     // $card  = new \Sebbmyr\Teams\Cards\SimpleCard(['title' => $data['title'], 'text' => $data['description']]);
-
-        //     // create a custom card
-        //     $card  = new \Sebbmyr\Teams\Cards\CustomCard("พนักงาน " . Str::upper($data['created_by']), "หัวข้อ: " . $txtTitle);
-        //     // add information
-        //     $card->setColor('01BC36')
-        //         ->addFacts('รายละเอียด', ['เลขที่ CAR ' => $data['car_id'], 'สาเหตุ' => $data['cause']])
-        //         ->addAction('Visit Issue', route('filament.admin.resources.car-responses.view', $car_responses));
-        //     // send card via connector
-        //     $connector->send($card);
+        //
     }
 
     /**

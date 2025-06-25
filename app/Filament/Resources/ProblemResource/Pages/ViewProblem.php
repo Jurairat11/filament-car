@@ -64,7 +64,7 @@ class ViewProblem extends ViewRecord
                         View::make('components.problem-view-image')
                             ->label('Problem picture')
                             ->viewData([
-                                'path' => $this->getRecord()->prob_img,
+                                'path' => $this->getRecord()->prob_img_path,
                             ])
                             ->columnSpanFull(),
 
