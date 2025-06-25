@@ -9,7 +9,7 @@
 
 <body class="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
     <div class="w-full max-w-md p-8 bg-white shadow rounded-xl dark:bg-gray-800">
-        <img src="{{ asset('images/logo.png') }}" alt="She Logo" style="width: 150px; height: auto;">
+        <center><img src="{{ asset('images/logo.png') }}" alt="She Logo" style="width: 100px; height: auto;"></center><br>
         <h2 class="mb-6 text-2xl font-bold text-center text-gray-800 dark:text-white">
             Sign in to your account
         </h2>
