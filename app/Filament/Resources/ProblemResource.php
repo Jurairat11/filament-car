@@ -139,10 +139,13 @@ class ProblemResource extends Resource
                                 if ($state) {
                                     // เมื่อมีการอัปโหลดรูปใหม่
                                     // $set('img_before', url('storage/' . $state));
-                                    $set('prob_img', ImageHelper::convertToUrl('prob_img' ?? null))
-                                    ->save();
+                                    $set('prob_img', ImageHelper::convertToUrl('prob_img' ?? null));
+
                                 }
                             }),
+
+                        Hidden::make('prob_img')
+                        ->dehydrated(),
 
                         Textarea::make('prob_desc')
                             ->label('Description')
