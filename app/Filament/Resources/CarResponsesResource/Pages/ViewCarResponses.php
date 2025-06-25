@@ -69,16 +69,16 @@ class ViewCarResponses extends ViewRecord
                 //ucfirst(str_replace('_', ' ', $livewire->form->getRawState()['status'] ?? '')
                 ->schema([
 
-                    View::make('components.car-responses-view-image')
-                        ->label('After Image')
-                        ->viewData([
-                            'path' => $this->getRecord()->img_after_path,
-                        ])->columnSpan(1),
-
                     Placeholder::make('cause')
                         ->label('Cause')
                         ->columnSpan(2)
                         ->content(fn ($record) => $record->cause ),
+
+                    View::make('components.car-responses-view-image')
+                        ->label('After Image')
+                        ->viewData([
+                            'path' => $this->getRecord()->img_after_path,
+                        ])->columnSpan(2),
 
                     Placeholder::make('created_by')
                     ->label('Created by')
