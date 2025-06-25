@@ -135,7 +135,6 @@ class ProblemResource extends Resource
                             ->visibility('public')
                             ->required()
                             ->columnSpanFull()
-
                             // ->afterStateUpdated(function ($state, callable $set) {
                             //     if ($state) {
 
@@ -144,24 +143,14 @@ class ProblemResource extends Resource
                             //     }
                             // }),
 
-
                             ->afterStateUpdated(function ($state, callable $set) {
-                            if ($state) {
-                                // ค้นหาไฟล์จริงที่ prefix ตรงกับ $state
-                                $files = Storage::disk('public')->files('form-attachments');
-                                $realFile = collect($files)->first(function ($file) use ($state) {
-                                    return str_starts_with($file, $state);
-                                });
-                                if ($realFile) {
-                                    $filename = basename($realFile);
-                                    $set('prob_img', ImageHelper::convertToUrl($filename));
+                                if ($state) {
+                                    // $state คือ 'form-attachments/ชื่อไฟล์จริง.jpg'
+                                    $set('prob_img', ImageHelper::convertToUrl($state));
                                 } else {
                                     $set('prob_img', null);
                                 }
-                            } else {
-                                $set('prob_img', null);
-                            }
-                        }),
+                            }),
 
 
                             //https://jp.edi-vcst.in.th/storage/form-attachments/prob_img
