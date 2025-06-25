@@ -41,7 +41,7 @@
         </div>
 
         <button type="submit" class="w-full px-4 py-2 text-white transition bg-blue-600 rounded-md hover:bg-blue-700">
-            Email Password Reset Link
+            Password Reset Link
         </button>
 
         <div class="mt-4 text-sm text-center">
