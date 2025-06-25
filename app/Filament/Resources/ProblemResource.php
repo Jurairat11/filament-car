@@ -134,7 +134,7 @@ class ProblemResource extends Resource
                             ->directory('form-attachments')
                             ->visibility('public')
                             ->required()
-                            ->columnSpanFull()
+                            ->columnSpanFull(),
                             // ->afterStateUpdated(function ($state, callable $set) {
                             //     if ($state) {
 
@@ -143,14 +143,14 @@ class ProblemResource extends Resource
                             //     }
                             // }),
 
-                            ->afterStateUpdated(function ($state, callable $set) {
-                                if ($state) {
-                                    // $state คือ 'form-attachments/ชื่อไฟล์จริง.jpg'
-                                    $set('prob_img', ImageHelper::convertToUrl($state));
-                                } else {
-                                    $set('prob_img', null);
-                                }
-                            }),
+                            // ->afterStateUpdated(function ($state, callable $set) {
+                            //     if ($state) {
+                            //         // $state คือ 'form-attachments/ชื่อไฟล์จริง.jpg'
+                            //         $set('prob_img', ImageHelper::convertToUrl($state));
+                            //     } else {
+                            //         $set('prob_img', null);
+                            //     }
+                            // }),
 
 
                             //https://jp.edi-vcst.in.th/storage/form-attachments/prob_img
