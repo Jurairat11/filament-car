@@ -135,28 +135,36 @@ class ProblemResource extends Resource
                             ->visibility('public')
                             ->required()
                             ->columnSpanFull()
-                            ->afterStateUpdated(function ($state, callable $set) {
-                                if ($state) {
-
-                                    //$set('prob_img', url('storage/form-attachments/' . basename($state)));
-                                    $set('prob_img', ImageHelper::convertToURL('prob_img'));
-                                }
-                            }),
 
                             // ->afterStateUpdated(function ($state, callable $set) {
                             //     if ($state) {
-                            //         // $state = 'form-attachments/phpjckl5knhuefma3lfg5o'
-                            //         $files = \Storage::disk('public')->files('form-attachments');
-                            //         $realFile = collect($files)->first(function ($file) use ($state) {
-                            //             return str_starts_with($file, $state);
-                            //         });
-                            //         if ($realFile) {
-                            //             $set('prob_img', url('storage/' . $realFile));
-                            //         }
+
+                            //         //$set('prob_img', url('storage/form-attachments/' . basename($state)));
+                            //         $set('prob_img', ImageHelper::convertToURL('prob_img'));
                             //     }
                             // }),
 
 
+                            ->afterStateUpdated(function ($state, callable $set) {
+                            if ($state) {
+                                // ค้นหาไฟล์จริงที่ prefix ตรงกับ $state
+                                $files = Storage::disk('public')->files('form-attachments');
+                                $realFile = collect($files)->first(function ($file) use ($state) {
+                                    return str_starts_with($file, $state);
+                                });
+                                if ($realFile) {
+                                    $filename = basename($realFile);
+                                    $set('prob_img', ImageHelper::convertToUrl($filename));
+                                } else {
+                                    $set('prob_img', null);
+                                }
+                            } else {
+                                $set('prob_img', null);
+                            }
+                        }),
+
+
+                            //https://jp.edi-vcst.in.th/storage/form-attachments/prob_img
                             //https://jp.edi-vcst.in.th/storage/form-attachments/phpjckl5knhuefma3lfg5o
                             //https://jp.edi-vcst.in.th/storage/form-attachments/01JYGFJJAX0M28817HYWZ8FF6G.jpg
 
