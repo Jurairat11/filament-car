@@ -137,14 +137,15 @@ class ProblemResource extends Resource
                             ->columnSpanFull()
                             ->afterStateUpdated(function ($state, callable $set) {
                                 if ($state) {
-                                    // เมื่อมีการอัปโหลดรูปใหม่
-                                    // $set('img_before', url('storage/' . $state));
+
                                     $set('prob_img', ImageHelper::convertToUrl('prob_img' ?? null));
 
                                 }
                             }),
 
                         Hidden::make('prob_img')
+                        ->directory('from-attachments')
+                        ->visibility('public')
                         ->dehydrated(),
 
                         Textarea::make('prob_desc')
