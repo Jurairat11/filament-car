@@ -28,7 +28,7 @@ class EditProblem extends EditRecord
     }
 
     protected function mutateFormDataBeforeSave(array $data): array {
-        unset($data['prob_img']);
+            unset($data['prob_img']);
         return $data;
     }
 
