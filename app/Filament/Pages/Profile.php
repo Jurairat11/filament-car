@@ -28,8 +28,8 @@ class Profile extends EditProfile
                             ->directory('avatars')
                             ->moveFiles()
                             ->columnSpanFull()
-                            ->helperText('The maximum picture size is 5MB, .jpg')
-                            ->acceptedFileTypes(['jpg'])
+                            ->helperText('The maximum picture size is 5MB')
+                            //->acceptedFileTypes(['jpg'])
                             ->maxSize(5120) // 5MB
                             ->afterStateUpdated(function ($state) {
                                 if (! $state instanceof TemporaryUploadedFile) return;
