@@ -74,15 +74,15 @@ class ViewCarResponses extends ViewRecord
                         ->columnSpan(2)
                         ->content(fn ($record) => $record->cause ),
 
+                    Placeholder::make('created_by')
+                    ->label('Created by')
+                    ->content(fn($record)=>optional($record->createdResponse)->FullName),
+
                     View::make('components.car-responses-view-image')
                         ->label('After Image')
                         ->viewData([
                             'path' => $this->getRecord()->img_after_path,
-                        ])->columnSpan(2),
-
-                    Placeholder::make('created_by')
-                    ->label('Created by')
-                    ->content(fn($record)=>optional($record->createdResponse)->FullName),
+                        ])->columnSpan(1),
 
                 ])->columns(4),
 
