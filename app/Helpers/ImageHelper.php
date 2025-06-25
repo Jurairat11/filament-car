@@ -16,7 +16,7 @@ class ImageHelper
         }
 
         $baseUrl = env('APP_URL', config('app.url'));
-        return $baseUrl . '/storage/' . $filename;
+        return $baseUrl . '/storage/form-attachments/' . $filename;
     }
 
 }

@@ -137,21 +137,24 @@ class ProblemResource extends Resource
                             ->columnSpanFull()
                             ->afterStateUpdated(function ($state, callable $set) {
                                 if ($state) {
-                                    // $state = 'form-attachments/phpjckl5knhuefma3lfg5o'
-                                    $files = Storage::disk('public')->files('form-attachments');
-                                    $realFile = collect($files)->first(function ($file) use ($state) {
-                                        return str_starts_with($file, $state);
-                                    });
-                                    if ($realFile) {
-                                        $set('prob_img', url('storage/' . $realFile));
-                                    }
+
+                                    //$set('prob_img', url('storage/form-attachments/' . basename($state)));
+                                    $set('prob_img', ImageHelper::convertToURL('prob_img'));
                                 }
                             }),
 
-                            // if ($state) {
-
-                            //         $set('prob_img', url('storage/form-attachments/' . basename($state)));
+                            // ->afterStateUpdated(function ($state, callable $set) {
+                            //     if ($state) {
+                            //         // $state = 'form-attachments/phpjckl5knhuefma3lfg5o'
+                            //         $files = \Storage::disk('public')->files('form-attachments');
+                            //         $realFile = collect($files)->first(function ($file) use ($state) {
+                            //             return str_starts_with($file, $state);
+                            //         });
+                            //         if ($realFile) {
+                            //             $set('prob_img', url('storage/' . $realFile));
+                            //         }
                             //     }
+                            // }),
 
 
                             //https://jp.edi-vcst.in.th/storage/form-attachments/phpjckl5knhuefma3lfg5o
