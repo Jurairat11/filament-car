@@ -134,14 +134,14 @@ class ProblemResource extends Resource
                             ->directory('form-attachments')
                             ->visibility('public')
                             ->required()
-                            ->columnSpanFull()
-                            ->afterStateUpdated(function ($state, callable $set) {
-                                if ($state) {
-                                    // เมื่อมีการอัปโหลดรูปใหม่
-                                    $set('img_before', url('storage/' . $state));
-                                    $set('prob_img', ImageHelper::convertToUrl('prob_img' ?? null));
-                                }
-                            }),
+                            ->columnSpanFull(),
+                            // ->afterStateUpdated(function ($state, callable $set) {
+                            //     if ($state) {
+                            //         // เมื่อมีการอัปโหลดรูปใหม่
+                            //         // $set('img_before', url('storage/' . $state));
+                            //         //$set('prob_img', ImageHelper::convertToUrl('prob_img' ?? null));
+                            //     }
+                            // }),
 
                         Textarea::make('prob_desc')
                             ->label('Description')

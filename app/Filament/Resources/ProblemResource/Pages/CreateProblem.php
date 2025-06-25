@@ -42,7 +42,7 @@ class CreateProblem extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['prob_id'] = $this->generatedProbId ?? Problem::generateNextProbId();
-        //$data['prob_img'] = ImageHelper::convertToUrl($data['prob_img'] ?? null);
+        $data['prob_img'] = ImageHelper::convertToUrl($data['prob_img'] ?? null);
         return $data;
     }
 
