@@ -44,7 +44,7 @@ class CreateCarReport extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['car_no'] = $this->generatedCarNo ?? Car_report::generateNextCarNo();
-        $data['img_before'] = ImageHelper::convertToUrl($data['img_before'] ?? null);
+        $data['img_before'] = ImageHelper::convertToUrl($data['img_before_path'] ?? null);
         return $data;
     }
 

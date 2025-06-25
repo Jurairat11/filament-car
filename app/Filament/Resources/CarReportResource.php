@@ -161,7 +161,7 @@ class CarReportResource extends Resource
                             ->autosize()
                             ->required(),
 
-                        FileUpload::make('img_before')
+                        FileUpload::make('img_before_path')
                             ->label('Picture before')
                             ->helperText('The maximum picture size is 5MB')
                             ->image()
@@ -171,6 +171,9 @@ class CarReportResource extends Resource
                             ->directory('form-attachments')
                             ->visibility('public')
                             ->required(),
+
+                        Hidden::make('img_before')
+                        ->dehydrated(),
 
                         Select::make('responsible_dept_id')
                             ->label('Reported to')

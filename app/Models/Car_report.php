@@ -33,6 +33,7 @@ class Car_report extends Model
         'hazard_source_id',
         'car_delay',
         'reopen_car_reason',
+        'img_before_path'
     ];
 
     public static function generateNextCarNo(): string
