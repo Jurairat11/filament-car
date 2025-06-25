@@ -138,7 +138,7 @@ class ProblemResource extends Resource
                             ->afterStateUpdated(function ($state, callable $set) {
                                 if ($state) {
 
-                                    $set('prob_img', url('storage/' . basename($state)));
+                                    $set('prob_img', url('storage/form-attachments/' . basename($state)));
                                 }
                             }),
 
