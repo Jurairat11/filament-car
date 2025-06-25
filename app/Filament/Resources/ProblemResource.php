@@ -8,6 +8,7 @@ use App\Models\Problem;
 use Filament\Forms\Form;
 use App\Models\Department;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 use App\Helpers\ImageHelper;
 use Filament\Facades\Filament;
 use Filament\Resources\Resource;
@@ -288,6 +289,27 @@ class ProblemResource extends Resource
                             ->body("Problem ID: {$record->prob_id} was dismissed.\nReason: {$data['dismiss_reason']}")
                             ->sendToDatabase($employee);
                     }
+
+                    $data = ['prob_id' => $record->prob_id ?? '-',
+                    // 'prob_desc'=> $problem->prob_desc ?? '-',
+                    'dismiss_reason' => $record->dismiss_reason ?? '-',
+                    'user_id' => $record->user->emp_id];
+
+                    $txtTitle = "การรายงานปัญหาถูกปฏิเสธ";
+
+                    // create connector instance
+                    $connector = new \Sebbmyr\Teams\TeamsConnector(env('MSTEAM_API'));
+                    // // create card
+                    // $card  = new \Sebbmyr\Teams\Cards\SimpleCard(['title' => $data['title'], 'text' => $data['description']]);
+
+                    // create a custom card
+                    $card  = new \Sebbmyr\Teams\Cards\CustomCard("พนักงาน " . Str::upper($data['user_id']), "หัวข้อ: " . $txtTitle);
+                    // add information
+                    $card->setColor('01BC36')
+                        ->addFacts('รายละเอียด', ['รหัสปัญหา ' => $data['prob_id'], 'ปัญหาถูกปฏิเสธเพราะ' => $data['dismiss_reason']])
+                        ->addAction('Visit Issue', route('filament.admin.resources.problems.view', $record));
+                    // send card via connector
+                    $connector->send($card);
 
                 }),
                 ActionGroup::make([

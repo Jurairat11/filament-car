@@ -31,6 +31,7 @@ class ProblemObserver
                 ->sendToDatabase($user);
         });
 
+        // Role = Safety เปิดดูได้เท่านั้น
         $data = ['prob_id' => $problem->prob_id ?? '-',
                 // 'prob_desc'=> $problem->prob_desc ?? '-',
                 'title' => $problem->title ?? '-',
