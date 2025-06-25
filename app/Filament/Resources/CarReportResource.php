@@ -222,7 +222,7 @@ class CarReportResource extends Resource
                 ->sortable()
                 ->dateTime('d/m/Y'),
 
-                ImageColumn::make('img_before')
+                ImageColumn::make('img_before_path')
                 ->label('Picture before')
                 ->square(),
 
