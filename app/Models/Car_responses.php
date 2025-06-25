@@ -39,6 +39,7 @@ class Car_responses extends Model
         }
 
         return round( now()->diffInDays($this->perm_due_date, false));
+
     }
     public function carReport() {
         return $this->belongsTo(Car_report::class,'car_id','id');

@@ -449,7 +449,7 @@ class ViewCarReport extends ViewRecord
                         ])->columnSpan(2),
 
                     Placeholder::make('reopen_car_reason')
-                        ->label('Reason for reopening CAR')
+                        ->label('Cause for reopening CAR')
                         ->content(fn ($record) => $record->reopen_car_reason ?? '-')
                         ->visible(fn ($record) => $record->status === 'reopened')
                         ->columns(2),
