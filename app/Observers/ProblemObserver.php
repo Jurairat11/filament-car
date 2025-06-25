@@ -31,28 +31,28 @@ class ProblemObserver
                 ->sendToDatabase($user);
         });
 
-        // $data = ['prob_id' => $problem->prob_id ?? '-',
-        //         // 'prob_desc'=> $problem->prob_desc ?? '-',
-        //         'title' => $problem->title ?? '-',
-        //         'place' => $problem->place ?? '-',
-        //         'user_id' => $problem->user->emp_id];
+        $data = ['prob_id' => $problem->prob_id ?? '-',
+                // 'prob_desc'=> $problem->prob_desc ?? '-',
+                'title' => $problem->title ?? '-',
+                'place' => $problem->place ?? '-',
+                'user_id' => $problem->user->emp_id];
 
-        //         $txtTitle = "รายงานปัญหาใหม่";
+                $txtTitle = "รายงานปัญหาใหม่";
 
-        //  // create connector instance
-        // $connector = new \Sebbmyr\Teams\TeamsConnector(env('MSTEAM_API'));
-        // // // create card
-        // // $card  = new \Sebbmyr\Teams\Cards\SimpleCard(['title' => $data['title'], 'text' => $data['description']]);
+         // create connector instance
+        $connector = new \Sebbmyr\Teams\TeamsConnector(env('MSTEAM_API'));
+        // // create card
+        // $card  = new \Sebbmyr\Teams\Cards\SimpleCard(['title' => $data['title'], 'text' => $data['description']]);
 
-        // // create a custom card
-        // $card  = new \Sebbmyr\Teams\Cards\CustomCard("พนักงาน " . Str::upper($data['user_id']), "หัวข้อ: " . $txtTitle);
-        // // add information
-        // $card->setColor('01BC36')
-        //     ->addFacts('รายละเอียด', ['รหัสปัญหา ' => $data['prob_id'], 'ชื่อเรื่อง' => $data['title'],
-        //         'สถานที่' => $data['place']])
-        //     ->addAction('Visit Issue', route('filament.admin.resources.problems.view', $problem));
-        // // send card via connector
-        // $connector->send($card);
+        // create a custom card
+        $card  = new \Sebbmyr\Teams\Cards\CustomCard("พนักงาน " . Str::upper($data['user_id']), "หัวข้อ: " . $txtTitle);
+        // add information
+        $card->setColor('01BC36')
+            ->addFacts('รายละเอียด', ['รหัสปัญหา ' => $data['prob_id'], 'ชื่อเรื่อง' => $data['title'],
+                'สถานที่' => $data['place']])
+            ->addAction('Visit Issue', route('filament.admin.resources.problems.view', $problem));
+        // send card via connector
+        $connector->send($card);
 
     }
 
