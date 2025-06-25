@@ -135,27 +135,6 @@ class ProblemResource extends Resource
                             ->visibility('public')
                             ->required()
                             ->columnSpanFull(),
-                            // ->afterStateUpdated(function ($state, callable $set) {
-                            //     if ($state) {
-
-                            //         //$set('prob_img', url('storage/form-attachments/' . basename($state)));
-                            //         $set('prob_img', ImageHelper::convertToURL('prob_img'));
-                            //     }
-                            // }),
-
-                            // ->afterStateUpdated(function ($state, callable $set) {
-                            //     if ($state) {
-                            //         // $state คือ 'form-attachments/ชื่อไฟล์จริง.jpg'
-                            //         $set('prob_img', ImageHelper::convertToUrl($state));
-                            //     } else {
-                            //         $set('prob_img', null);
-                            //     }
-                            // }),
-
-
-                            //https://jp.edi-vcst.in.th/storage/form-attachments/prob_img
-                            //https://jp.edi-vcst.in.th/storage/form-attachments/phpjckl5knhuefma3lfg5o
-                            //https://jp.edi-vcst.in.th/storage/form-attachments/01JYGFJJAX0M28817HYWZ8FF6G.jpg
 
                         Hidden::make('prob_img')
                         ->dehydrated(),
