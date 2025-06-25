@@ -137,10 +137,25 @@ class ProblemResource extends Resource
                             ->columnSpanFull()
                             ->afterStateUpdated(function ($state, callable $set) {
                                 if ($state) {
-
-                                    $set('prob_img', url('storage/form-attachments/' . basename($state)));
+                                    // $state = 'form-attachments/phpjckl5knhuefma3lfg5o'
+                                    $files = Storage::disk('public')->files('form-attachments');
+                                    $realFile = collect($files)->first(function ($file) use ($state) {
+                                        return str_starts_with($file, $state);
+                                    });
+                                    if ($realFile) {
+                                        $set('prob_img', url('storage/' . $realFile));
+                                    }
                                 }
                             }),
+
+                            // if ($state) {
+
+                            //         $set('prob_img', url('storage/form-attachments/' . basename($state)));
+                            //     }
+
+
+                            //https://jp.edi-vcst.in.th/storage/form-attachments/phpjckl5knhuefma3lfg5o
+                            //https://jp.edi-vcst.in.th/storage/form-attachments/01JYGFJJAX0M28817HYWZ8FF6G.jpg
 
                         Hidden::make('prob_img')
                         ->dehydrated(),
