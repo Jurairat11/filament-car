@@ -62,4 +62,9 @@ class Profile extends EditProfile
                     ->columns(1),
             ]);
     }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }
