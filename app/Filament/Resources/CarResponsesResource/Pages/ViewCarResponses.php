@@ -76,6 +76,7 @@ class ViewCarResponses extends ViewRecord
 
                     Placeholder::make('created_by')
                     ->label('Created by')
+                    ->columnSpan(2)
                     ->content(fn($record)=>optional($record->createdResponse)->FullName),
 
                     View::make('components.car-responses-view-image')
