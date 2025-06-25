@@ -36,7 +36,7 @@ class CreateCarResponses extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['img_after'] = ImageHelper::convertToUrl($data['img_after'] ?? null);
+        $data['img_after'] = ImageHelper::convertToUrl($data['img_after_path'] ?? null);
         return $data;
     }
 

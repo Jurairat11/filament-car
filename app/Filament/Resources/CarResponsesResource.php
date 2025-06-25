@@ -98,7 +98,7 @@ class CarResponsesResource extends Resource
                         ->autosize()
                         ->required(),
 
-                        FileUpload::make('img_after')
+                        FileUpload::make('img_after_path')
                             ->label('Picture after')
                             ->helperText('The maximum picture size is 5MB')
                             ->image()
@@ -176,7 +176,7 @@ class CarResponsesResource extends Resource
                 ->label('CAR No.')
                 ->searchable(),
 
-                ImageColumn::make('img_after')
+                ImageColumn::make('img_after_path')
                 ->label('Picture after')
                 ->square(),
 

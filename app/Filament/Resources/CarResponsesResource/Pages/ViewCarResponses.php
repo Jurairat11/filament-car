@@ -72,7 +72,7 @@ class ViewCarResponses extends ViewRecord
                     View::make('components.car-responses-view-image')
                         ->label('After Image')
                         ->viewData([
-                            'path' => $this->getRecord()->img_after,
+                            'path' => $this->getRecord()->img_after_path,
                         ])->columnSpan(1),
 
                     Placeholder::make('cause')

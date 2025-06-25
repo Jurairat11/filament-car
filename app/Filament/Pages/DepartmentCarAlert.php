@@ -46,7 +46,7 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
             TextColumn::make('car_due_date')
             ->label('Due date'),
 
-            ImageColumn::make('img_before')
+            ImageColumn::make('img_before_path')
             ->label('Picture before')
             ->square(),
 

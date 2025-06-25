@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources\CarResponsesResource\Pages;
 
-use App\Filament\Resources\CarResponsesResource;
 use Filament\Actions;
+use App\Helpers\ImageHelper;
 use Filament\Resources\Pages\EditRecord;
+use App\Filament\Resources\CarResponsesResource;
 
 class EditCarResponses extends EditRecord
 {
@@ -29,7 +30,7 @@ class EditCarResponses extends EditRecord
     }
 
     protected function mutateFormDataBeforeSave(array $data): array {
-        unset($data['img_after']);
+        $data['img_after'] = ImageHelper::convertToUrl($data['img_after_path'] ?? null);
         return $data;
     }
 }
