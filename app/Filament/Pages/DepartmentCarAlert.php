@@ -153,8 +153,7 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
             ->label('View')
             ->icon('heroicon-m-eye')
             ->color('gray')
-            ->url(fn ($record) => route('filament.admin.resources.car-reports.view', ['record' => $record]))
-            ->openUrlInNewTab(),
+            ->url(fn ($record) => route('filament.admin.resources.car-reports.view', ['record' => $record])),
 
             Action::make('accept')
             ->label('Acknowledge')
