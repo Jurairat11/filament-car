@@ -462,7 +462,7 @@ class ViewCarReport extends ViewRecord
                     View::make('components.car-responses-view-image')
                         ->label('After Image')
                         ->viewData([
-                            'path' => $this->getRecord()->carResponse?->img_after,
+                            'path' => $this->getRecord()->carResponse?->img_after_path,
                         ])
                         ->columnSpanFull(),
 
