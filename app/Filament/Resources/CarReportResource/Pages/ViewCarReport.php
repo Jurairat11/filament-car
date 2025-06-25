@@ -147,7 +147,7 @@ class ViewCarReport extends ViewRecord
                     'car_desc'             => $this->record->car_desc,
                     'hazard_level_id'      => $this->record->hazard_level_id,
                     'hazard_type_id'       => $this->record->hazard_type_id,
-                    'img_before'           => $this->record->img_before,
+                    'img_before_path'      => $this->record->img_before_path,
                     'responsible_dept_id'  => $this->record->responsible_dept_id,
                     'created_by'           => $this->record->created_by,
                     'parent_car_id'        => $this->record->id, //ชี้กลับไปยัง CAR แม่
