@@ -111,26 +111,37 @@ class ProblemResource extends Resource
                         ->required(),
 
                         //filament default upload limit is 12MB
-                        FileUpload::make('prob_img')
+                        // FileUpload::make('prob_img')
+                        //     ->label('Problem picture')
+                        //     ->helperText('The maximum picture size is 5MB')
+                        //     ->image()
+                        //     ->downloadable()
+                        //     //->acceptedFileTypes(['jpg'])
+                        //     ->maxSize(5120) // 5MB
+                        //     ->directory('form-attachments')
+                        //     ->visibility('public')
+                        //     ->required()
+                        //     ->columnSpanFull(),
+
+                            //->getUploadedFileNameForStorageUsing(static fn (?Model $record) => "{$record->id}.jpg")
+
+                        FileUpload::make('prob_img_path')
                             ->label('Problem picture')
-                            ->helperText('The maximum picture size is 5MB')
                             ->image()
+                            ->helperText('The maximum picture size is 5MB')
                             ->downloadable()
-                            //->acceptedFileTypes(['jpg'])
                             ->maxSize(5120) // 5MB
                             ->directory('form-attachments')
                             ->visibility('public')
                             ->required()
-                            ->columnSpanFull(),
-
-                            //->getUploadedFileNameForStorageUsing(static fn (?Model $record) => "{$record->id}.jpg")
-
-                        // FileUpload::make('prob_img')
-                        // ->label('Problem picture')
-                        // ->getUploadedFileNameForStorageUsing(
-                        //     fn (TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
-                        //         ->prepend('custom-prefix-'),
-                        // ),
+                            ->columnSpanFull()
+                            ->afterStateUpdated(function ($state, callable $set) {
+                                if ($state) {
+                                    // เมื่อมีการอัปโหลดรูปใหม่
+                                    $set('img_before', url('storage/' . $state));
+                                    $set('prob_img', ImageHelper::convertToUrl('prob_img' ?? null));
+                                }
+                            }),
 
                         Textarea::make('prob_desc')
                             ->label('Description')

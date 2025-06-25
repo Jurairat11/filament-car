@@ -20,7 +20,8 @@ use Illuminate\Database\Eloquent\Model;
         'user_id',
         'dept_id',
         'title',
-        'place'
+        'place',
+        'prob_img_path'
     ];
 
     public static function generateNextProbId(): string
@@ -41,6 +42,13 @@ use Illuminate\Database\Eloquent\Model;
         $nextNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
 
         return "P-{$nextNumber}/{$year}";
+    }
+
+    public function setImgBeforePathAttribute($value)
+    {
+        // เซ็ต path และเซ็ต URL เต็มให้ prob_img ด้วย
+        $this->attributes['prob_img_path'] = $value;
+        //$this->attributes['prob_img'] = url('storage/' . $value);
     }
 
     public function department() {
