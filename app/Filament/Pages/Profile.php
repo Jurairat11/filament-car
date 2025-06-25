@@ -63,8 +63,4 @@ class Profile extends EditProfile
             ]);
     }
 
-    protected function getRedirectUrl(): string
-    {
-        return $this->getResource()::getUrl('index');
-    }
 }
