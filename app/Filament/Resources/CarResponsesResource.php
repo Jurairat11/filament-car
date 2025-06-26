@@ -132,6 +132,7 @@ class CarResponsesResource extends Resource
 
                         ]),
                     Tabs\Tab::make('Permanent action')
+                        ->disabled()
                         ->schema([
                             Textarea::make('perm_desc')
                             ->label('Permanent action')
