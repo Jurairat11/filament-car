@@ -105,9 +105,9 @@ class ViewCarResponses extends ViewRecord
                                     : ''),
 
                         Placeholder::make('temp_responsible')
-                        ->label('Responsible')
-                        ->content(fn($record)=>optional($record->tempResponsible)->FullName ?
-                        ($record->tempResponsible)->FullName : ''),
+                            ->label('Permanent C/M')
+                            ->columnSpan(2)
+                            ->content(fn($record)=>$record->temp_responsible ? $record->temp_responsible : ''),
 
                     ])->columns(4),
 
@@ -130,9 +130,9 @@ class ViewCarResponses extends ViewRecord
                                         : '-'),
 
                             Placeholder::make('perm_responsible')
-                            ->label('Responsible')
-                            ->content(fn($record)=>optional($record->permResponsible)->FullName ?
-                            ($record->permResponsible)->FullName : ''),
+                            ->label('Permanent C/M')
+                            ->columnSpan(2)
+                            ->content(fn($record)=>$record->perm_responsible ? $record->perm_responsible : ''),
 
                     ])->columns(4),
 
