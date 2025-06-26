@@ -105,7 +105,7 @@ class ViewCarResponses extends ViewRecord
                                     : ''),
 
                         Placeholder::make('temp_responsible')
-                            ->label('Responsible')
+                            ->label('Responsible person')
                             ->content(fn($record)=>$record->temp_responsible ? $record->temp_responsible : ''),
 
                     ])->columns(4),
@@ -129,7 +129,7 @@ class ViewCarResponses extends ViewRecord
                                         : '-'),
 
                             Placeholder::make('perm_responsible')
-                            ->label('Responsible')
+                            ->label('Responsible person')
                             ->content(fn($record)=>$record->perm_responsible ? $record->perm_responsible : ''),
 
                     ])->columns(4),
