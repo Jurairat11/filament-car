@@ -18,6 +18,6 @@ class GetAvatarProvider implements AvatarProvider
 
     protected function getDefaultAvatar(Model $record): string
     {
-        return 'https://ui-avatars.com/api/?name=' . urlencode($record->name) . '&color=FFFFFF&background=111827';
+        return 'https://ui-avatars.com/api/?name=' . urlencode($record->name) . '&color=FFFFFF&background=00bfff';
     }
 }
