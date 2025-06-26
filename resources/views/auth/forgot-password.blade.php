@@ -27,17 +27,17 @@
         @endif
 
         <div class="mb-4">
-            <label for="input_type" class="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-                Email/Employee ID
+            <label for="email" class="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+                Email
             </label>
-            <input type="text" name="input_type" id="input_type" required autofocus
+            <input type="email" name="email" id="email" required autofocus
                 class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
             @error('email')
                 <div class="mt-1 text-sm text-red-500">{{ $message }}</div>
             @enderror
-            @error('emp_id')
+            {{-- @error('emp_id')
                 <div class="mt-1 text-sm text-red-500">{{ $message }}</div>
-            @enderror
+            @enderror --}}
         </div>
 
         <button type="submit" class="w-full px-4 py-2 text-white transition bg-blue-600 rounded-md hover:bg-blue-700">

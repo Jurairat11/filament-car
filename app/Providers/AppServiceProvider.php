@@ -37,9 +37,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(User::class, UserPolicy::class);
         URL::forceScheme('https');
 
-        ResetPassword::createUrlUsing(function (User $user, string $token) {
-        return 'https://jp.edi-vcst.in.th/reset-password/'.$token;
-    });
+    //     ResetPassword::createUrlUsing(function (User $user, string $token) {
+    //     return 'https://jp.edi-vcst.in.th/reset-password/'.$token;
+    // });
 
     }
 }
