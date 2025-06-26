@@ -34,7 +34,7 @@ class DelayStatus implements ShouldQueue
 
     public function handle(): void
     {
-        Log::info("Cron is working fine...");
+        //Log::info("Cron is working fine...");
 
         // Get only records that are not finished (to limit the result set)
         $now = Carbon::now();

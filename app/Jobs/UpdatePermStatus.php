@@ -33,7 +33,7 @@ class UpdatePermStatus implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::info("Cron is working fine...");
+        // Log::info("Cron is working fine...");
 
         // Update perm_status to 'finished' for all items where perm_due_date is less than or equal to now
         // and perm_status is 'on process'
