@@ -133,17 +133,6 @@ class CarResponsesResource extends Resource
 
                         ]),
                     Tabs\Tab::make('Permanent action')
-                        ->tabs(function ($get){
-                            if($get ('temp_decs') !== null) {
-                                return [
-
-                                ];
-                            }
-                            return [
-                            /* other tabs */
-                                ];
-                            })
-
                         ->schema([
                             Textarea::make('perm_desc')
                             ->label('Permanent action')
