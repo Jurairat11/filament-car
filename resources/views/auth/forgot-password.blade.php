@@ -12,9 +12,9 @@
         class="w-full max-w-md p-6 bg-white shadow rounded-xl dark:bg-gray-800">
         @csrf
 
-        <h2 class="mb-6 text-xl font-bold text-center text-gray-800 dark:text-white">
+        {{-- <h2 class="mb-6 text-xl font-bold text-center text-gray-800 dark:text-white">
             Forgot your password?
-        </h2>
+        </h2> --}}
 
         <p class="mb-6 text-sm text-center text-gray-600 dark:text-gray-400">
             No problem. Just enter your email address and we'll send you a reset link.
