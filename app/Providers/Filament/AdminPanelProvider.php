@@ -45,11 +45,11 @@ class AdminPanelProvider extends PanelProvider
                 DatabaseNotifications::class, // ให้ Bell icon ทำงาน
             ])
             ->authGuard('web')
-            // ->userMenuItems([
-            // 'profile' => MenuItem::make()
-            //     ->label('Emp ID:'. Auth::user()?->emp_id)
-            //     ->visible(fn() => Auth::user()?->emp_id)
-            // ])
+            ->userMenuItems([
+            'profile' => MenuItem::make()
+                ->label('Emp ID:'. Auth::user()?->emp_id)
+                ->visible(fn() => Auth::user()?->emp_id)
+            ])
             //->brandName('CAR')
             ->brandLogo(asset('images/logo.png'))
             ->brandLogoHeight('3rem')
