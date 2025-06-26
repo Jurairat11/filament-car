@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use Filament\Tables;
+use Filament\Forms\Get;
 use Filament\Forms\Form;
 use App\Models\Car_report;
 use Filament\Tables\Table;
@@ -114,6 +115,7 @@ class CarResponsesResource extends Resource
                 Tabs::make('Tabs')
                 ->tabs([
                     Tabs\Tab::make('Temporary action')
+                    ->live()
                         ->schema([
                             Textarea::make('temp_desc')
                             ->label('Temporary action')
@@ -132,7 +134,7 @@ class CarResponsesResource extends Resource
 
                         ]),
                     Tabs\Tab::make('Permanent action')
-                        ->disabled()
+                        ->disabled(fn (Get $get): bool => $get('temp_desc'))
                         ->schema([
                             Textarea::make('perm_desc')
                             ->label('Permanent action')
