@@ -50,6 +50,18 @@ class Car_responsesObserver
 
     public function saving(Car_responses $car_responses): void
     {
+        /**
+     * การอัปเดตสถานะของ car responses
+     * temporary(ชั่วคราว) user ต้องตอบกลับใบ car ทันที
+     * - temp status -> on process เมื่อ user ยังไม่ได้ใส่ข้อมูล temp desc แล้วกดบันทึก
+     * - temp status -> finished เมื่อ user ใส่ข้อมูล temp desc แล้วกดบันทึก
+     * permanent (ถาวร) user ต้องตอบกลับใบ car ตาม hazard level
+     * level A ภายใน 3 วัน
+     * level B ภายใน 5 วัน
+     * level C ภายใน 7 วัน
+     * - perm status -> on process เมื่อ user ใส่ข้อมูล perm desc, วันที่ today (lte less than equal) perm due date หรือ status reply = delay
+     *
+     */
 
         if (!$car_responses->temp_desc && !$car_responses->temp_status){
             $car_responses->temp_status = 'on process';

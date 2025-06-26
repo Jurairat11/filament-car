@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Car_report;
 use Illuminate\Support\Str;
 use App\Models\Car_responses;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use Filament\Notifications\Notification;
 use Illuminate\Queue\InteractsWithQueue;
@@ -32,6 +33,8 @@ class UpdatePermStatus implements ShouldQueue
      */
     public function handle(): void
     {
+        Log::info("Cron is working fine...");
+
         // Update perm_status to 'finished' for all items where perm_due_date is less than or equal to now
         // and perm_status is 'on process'
         $now = Carbon::now();
