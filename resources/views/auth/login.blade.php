@@ -49,9 +49,9 @@
                     Don't have an account?
                 </a>
 
-                <a href="{{ route('password.request') }}" class="text-sm text-blue-600 hover:underline">
+                {{-- <a href="{{ route('password.request') }}" class="text-sm text-blue-600 hover:underline">
                     Forgot your password?
-                </a>
+                </a> --}}
             </div>
             <div class="flex justify-end mt-4">
                 <button type="submit"
