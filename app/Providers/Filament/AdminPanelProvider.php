@@ -47,7 +47,7 @@ class AdminPanelProvider extends PanelProvider
             ->authGuard('web')
             ->userMenuItems([
             'profile' => MenuItem::make()
-                ->label('Emp ID:'. Auth::user()?->emp_id)
+                ->label(fn () => 'Emp ID: ' . (Auth::user()?->emp_id ?? '-'))
                 ->visible(fn() => Auth::user()?->emp_id)
             ])
             //->brandName('CAR')
