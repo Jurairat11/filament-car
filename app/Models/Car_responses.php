@@ -31,14 +31,29 @@ class Car_responses extends Model
 
     ];
 
+    // public function getDaysPermAttribute()
+    // {
+
+    //     if ($this->perm_status === 'finished') {
+    //         return null;
+    //     }
+
+    //     return round( now()->diffInDays($this->perm_due_date, false));
+    // }
+
     public function getDaysPermAttribute()
     {
-
         if ($this->perm_status === 'finished') {
             return null;
         }
 
-        return round( now()->diffInDays($this->perm_due_date, false));
+        $days = round(now()->diffInDays($this->perm_due_date, false));
+
+        if ($days === 0) {
+            return 'due today';
+        }
+
+        return $days;
     }
     public function carReport() {
         return $this->belongsTo(Car_report::class,'car_id','id');
