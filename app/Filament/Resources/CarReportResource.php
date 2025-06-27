@@ -146,7 +146,7 @@ class CarReportResource extends Resource
                             ->afterStateUpdated(function ($state, callable $set) {
                                 // Hazard_level model has a 'due_days' field
                                 $hazardLevel = Hazard_level::find($state);
-
+                                dd($hazardLevel);
                                 if ($hazardLevel && $hazardLevel->due_days) {
                                     $currentDate = now();
                                     $newDueDate = $currentDate->copy()->addDays($hazardLevel->due_days);
