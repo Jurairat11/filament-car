@@ -16,13 +16,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        $this->call(PermissionTableSeeder::class);
-        $this->call(HazardTypeTableSeeder::class);
-        $this->call(HazardLevelTableSeeder::class);
+        // $this->call(PermissionTableSeeder::class);
+        // $this->call(HazardTypeTableSeeder::class);
+        // $this->call(HazardLevelTableSeeder::class);
         //User::factory(10)->create();
 
         //$adminRole = Role::firstOrCreate(['name' => 'Admin']);
-        // $safetyRole = Role::firstOrCreate(['name' => 'Safety']);
+        $safetyRole = Role::firstOrCreate(['name' => 'Safety']);
 
         // $user1 = User::factory()->create([
         //     'emp_id' => '3051',
@@ -34,15 +34,15 @@ class DatabaseSeeder extends Seeder
         // ]);
         // $user1->assignRole($adminRole);
 
-        // $user2 = User::factory()->create([
-        //     'emp_id' => '2412',
-        //     'emp_name' => 'Jennie',
-        //     'last_name' => 'Kim',
-        //     'email' => 'jennie01@example.com',
-        //     'dept_id' => 2,
-        //     'password' => Hash::make('she1234'),
-        // ]);
-        // $user2->assignRole($safetyRole);
+        $user2 = User::factory()->create([
+            'emp_id' => '2412',
+            'emp_name' => 'Jennie',
+            'last_name' => 'Kim',
+            'email' => 'jennie01@example.com',
+            'dept_id' => 2,
+            'password' => Hash::make('she1234'),
+        ]);
+        $user2->assignRole($safetyRole);
 
     }
 }
