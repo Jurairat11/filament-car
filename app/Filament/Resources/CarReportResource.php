@@ -159,8 +159,7 @@ class CarReportResource extends Resource
                                 // $date = $date->addDays($daysToAdd);
 
                                 //addDays(5)
-                            })
-                            ->required(),
+                            }),
 
                         Select::make('hazard_type_id')
                             ->label('Hazard type')
