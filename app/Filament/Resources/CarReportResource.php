@@ -143,10 +143,11 @@ class CarReportResource extends Resource
                             ->helperText(new HtmlString('<strong style="color:red;">*ระดับ A = 3 วัน, ระดับ B = 5 วัน และระดับ C = 7 วัน</strong>'))
                             ->placeholder('Select hazard level')
                             ->relationship('hazardLevel','level_name')
+                            ->reactive()
                             ->afterStateUpdated(function ($state, callable $set) {
                                 // Hazard_level model has a 'due_days' field
                                 $hazardLevel = Hazard_level::find($state);
-                                dd($hazardLevel);
+
                                 if ($hazardLevel && $hazardLevel->due_days) {
                                     $currentDate = now();
                                     $newDueDate = $currentDate->copy()->addDays($hazardLevel->due_days);
