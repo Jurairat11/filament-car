@@ -83,18 +83,13 @@ class ProblemResource extends Resource
                             ->searchable()
                             ->default(fn($record)=> $record?->user_id),
 
-                    // Select::make('dept_id')
-                    //     ->label('Department')
-                    //     ->searchable()
-                    //     ->preload()
-                    //     ->reactive()
-                    //     ->required()
-                    //     ->options(fn () => Department::all()->pluck('dept_name', 'dept_id'))
-                    //     ->default(fn () => Auth::user()?->dept_id),
-
-                    Placeholder::make('dept_id')
+                    Select::make('dept_id')
                         ->label('Department')
-                        ->content(fn (Problem $record): string => $record->dept_id),
+                        ->disabled()
+                        ->reactive()
+                        ->required()
+                        ->options(fn () => Department::all()->pluck('dept_name', 'dept_id'))
+                        ->default(fn () => Auth::user()?->dept_id),
 
                     DatePicker::make('prob_date')
                         ->label('Report date')
