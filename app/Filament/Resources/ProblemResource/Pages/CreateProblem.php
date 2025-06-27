@@ -32,7 +32,7 @@ class CreateProblem extends CreateRecord
         $this->form->fill([
             'prob_id' => $this->generatedProbId,
             'user_id' => Auth::user()?->id,
-            //'dept_id' => Auth::user()?->dept_id,
+            'dept_id' => Auth::user()?->dept_id,
             'prob_date' => now(),
             'status' => 'new'
         ]);
