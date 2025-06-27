@@ -87,6 +87,8 @@ class CarResponsesResource extends Resource
                                 if($car){
                                     $set('temp_due_date', $car->car_date);
                                     $set('perm_due_date', $car->car_due_date);
+
+                                    dd($car->car_due_date);
                                 }
                         }),
 
