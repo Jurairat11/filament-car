@@ -88,7 +88,7 @@ class CarResponsesResource extends Resource
                                     $set('temp_due_date', $car->car_date);
                                     $set('perm_due_date', $car->car_due_date);
 
-                                    dd($car->car_due_date);
+                                    //dd($car->car_due_date); "2025-02-07"
                                 }
                         }),
 
@@ -144,6 +144,7 @@ class CarResponsesResource extends Resource
                             ->label('Due date')
                             ->native(false)
                             ->displayFormat('d/m/Y')
+                            ->format('d/m/Y')
                             ->disabled()
                             ->dehydrated(true),
 
