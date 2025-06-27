@@ -144,7 +144,7 @@ class CarResponsesResource extends Resource
                             ->label('Due date')
                             ->native(false)
                             ->displayFormat('d/m/Y')
-                            ->format('d/m/Y')
+                            // ->format('d/m/Y')
                             ->disabled()
                             ->dehydrated(true),
 
