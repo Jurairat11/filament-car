@@ -94,7 +94,7 @@ class ProblemResource extends Resource
 
                     Placeholder::make('dept_id')
                         ->label('Department')
-                        ->content(fn (Problem $record): string => $record->department->dept_id),
+                        ->content(fn (Department $record): string => $record->department->dept_id),
 
                     DatePicker::make('prob_date')
                         ->label('Report date')
