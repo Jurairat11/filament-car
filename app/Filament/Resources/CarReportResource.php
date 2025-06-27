@@ -105,7 +105,7 @@ class CarReportResource extends Resource
                         ->displayFormat('d/m/Y')
                         ->placeholder('dd/mm/yyyy')
                         ->closeOnDateSelection()
-                        ->disabled()
+                        //->disabled()
                         ->dehydrated(),
 
             ])->columns(5),
