@@ -39,6 +39,7 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
     protected function getTableColumns(): array
     {
         return [
+
             TextColumn::make('car_no')
             ->label('CAR no.')
             ->searchable(),
@@ -94,7 +95,6 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
             TextColumn::make('responsible.dept_name')
                 ->label('Reported to')
                 ->searchable(),
-
         ];
     }
     protected function getTableFilters(): array
@@ -149,14 +149,9 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
     protected function getTableActions(): array
     {
         return [
-            Action::make('view')
-            ->label('View')
-            ->icon('heroicon-m-eye')
-            ->color('gray')
-            ->url(fn ($record) => route('filament.admin.resources.car-reports.view', ['record' => $record])),
-
-            Action::make('accept')
+            Action::make('acknowledge')
             ->label('Acknowledge')
+            ->tooltip('Acknowledge car report')
             ->icon('heroicon-o-check-circle')
             ->color('success')
             ->requiresConfirmation()
@@ -176,6 +171,12 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
                             ->sendToDatabase($user)
                     );
             }),
+
+            Action::make('view')
+            ->label('View')
+            ->icon('heroicon-m-eye')
+            ->color('gray')
+            ->url(fn ($record) => route('filament.admin.resources.car-reports.view', ['record' => $record])),
         ];
     }
 
