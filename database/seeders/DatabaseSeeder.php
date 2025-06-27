@@ -15,30 +15,34 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
+        $this->call(PermissionTableSeeder::class);
+        $this->call(HazardTypeTableSeeder::class);
+        $this->call(HazardLevelTableSeeder::class);
         //User::factory(10)->create();
 
-        $adminRole = Role::firstOrCreate(['name' => 'Admin']);
-        $safetyRole = Role::firstOrCreate(['name' => 'Safety']);
+        //$adminRole = Role::firstOrCreate(['name' => 'Admin']);
+        // $safetyRole = Role::firstOrCreate(['name' => 'Safety']);
 
-        $user1 = User::factory()->create([
-            'emp_id' => '3052',
-            'emp_name' => 'Jurairat',
-            'last_name' => 'Phoempanyasap',
-            'email' => 'jurai11j0@gmail.com',
-            'dept_id' => 1,
-            'password' => Hash::make('admin@vcs'),
-        ]);
-        $user1->assignRole($adminRole);
+        // $user1 = User::factory()->create([
+        //     'emp_id' => '3051',
+        //     'emp_name' => 'Jurairat',
+        //     'last_name' => 'Phoempanyasap',
+        //     'email' => 'test@gmail.com',
+        //     'dept_id' => 1,
+        //     'password' => Hash::make('admin@vcs'),
+        // ]);
+        // $user1->assignRole($adminRole);
 
-        $user2 = User::factory()->create([
-            'emp_id' => '2412',
-            'emp_name' => 'Jennie',
-            'last_name' => 'Kim',
-            'email' => 'jennie01@example.com',
-            'dept_id' => 2,
-            'password' => Hash::make('she1234'),
-        ]);
-        $user2->assignRole($safetyRole);
+        // $user2 = User::factory()->create([
+        //     'emp_id' => '2412',
+        //     'emp_name' => 'Jennie',
+        //     'last_name' => 'Kim',
+        //     'email' => 'jennie01@example.com',
+        //     'dept_id' => 2,
+        //     'password' => Hash::make('she1234'),
+        // ]);
+        // $user2->assignRole($safetyRole);
 
     }
 }

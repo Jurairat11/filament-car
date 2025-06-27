@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use App\Helpers\ImageHelper;
 use Filament\Facades\Filament;
 use Filament\Resources\Resource;
+use Illuminate\Support\HtmlString;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Split;
@@ -85,6 +86,7 @@ class ProblemResource extends Resource
 
                     Select::make('dept_id')
                         ->label('Department')
+                        ->helperText(new HtmlString('<style="color:red;"*เลือกแผนกของผู้รายงานปัญหา</style>'))
                         ->disabled()
                         ->reactive()
                         ->required()
@@ -129,7 +131,7 @@ class ProblemResource extends Resource
                         //     ->required()
                         //     ->columnSpanFull(),
 
-                            //->getUploadedFileNameForStorageUsing(static fn (?Model $record) => "{$record->id}.jpg")
+                        //->getUploadedFileNameForStorageUsing(static fn (?Model $record) => "{$record->id}.jpg")
 
                         FileUpload::make('prob_img_path')
                             ->label('Problem picture')

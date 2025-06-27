@@ -5,12 +5,13 @@ namespace App\Filament\Resources;
 use Filament\Tables;
 use App\Models\Problem;
 use App\Models\Sections;
-use App\Models\Hazard_level;
 use Filament\Forms\Form;
 use App\Models\Car_report;
 use App\Models\Department;
 use Filament\Tables\Table;
+use App\Models\Hazard_level;
 use Filament\Resources\Resource;
+use Illuminate\Support\HtmlString;
 use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Split;
 use Illuminate\Support\Facades\Auth;
@@ -140,10 +141,11 @@ class CarReportResource extends Resource
 
                         Select::make('hazard_level_id')
                             ->label('Hazard level')
+                            ->helperText(new HtmlString('<strong style="color:red;">*ระดับ A = 3 วัน, ระดับ B = 5 วัน และระดับ C = 7 วัน</strong>'))
                             ->placeholder('Select hazard level')
                             ->relationship('hazardLevel','level_name')
                             ->afterStateUpdated(function ($state, callable $set) {
-                                // Assume Hazard_level model has a 'due_days' field
+                                // Hazard_level model has a 'due_days' field
                                 $hazardLevel = Hazard_level::find($state);
 
                                 if ($hazardLevel && $hazardLevel->due_days) {
@@ -164,10 +166,11 @@ class CarReportResource extends Resource
                             ->label('Hazard type')
                             ->placeholder('Select hazard type')
                             ->relationship('hazardType','type_name')
-                            ->createOptionForm([
-                                TextInput::make('type_name')
-                                    ->label('Hazard type')
-                            ])
+                            // ปิด กดเพิ่ม hazard type
+                            // ->createOptionForm([
+                            //     TextInput::make('type_name')
+                            //         ->label('Hazard type')
+                            // ])
                             ->required(),
 
                     ]),

@@ -58,16 +58,16 @@ class CreateCarReport extends CreateRecord
                 ]);
         }
 
-         $hazard = $this->record->hazardLevel; // ความสัมพันธ์ hazard_level_id -> hazardLevel
+        //$hazard = $this->record->hazardLevel; // ความสัมพันธ์ hazard_level_id -> hazardLevel
 
-        if ($hazard) {
-            $carDate = Carbon::parse($this->record->car_date);
-            $dueDate = $carDate->copy()->addDays($hazard->due_days);
-            $this->record->update([
-                'car_due_date' => $dueDate,
-                'car_delay' => $hazard->due_days,
-            ]);
-        }
+        // if ($hazard) {
+        //     $carDate = Carbon::parse($this->record->car_date);
+        //     $dueDate = $carDate->copy()->addDays($hazard->due_days);
+        //     $this->record->update([
+        //         'car_due_date' => $dueDate,
+        //         'car_delay' => $hazard->due_days,
+        //     ]);
+        // }
     }
 
     protected function getRedirectUrl(): string
