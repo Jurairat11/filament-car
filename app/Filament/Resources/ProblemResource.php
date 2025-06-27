@@ -34,6 +34,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\Placeholder;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use App\Filament\Resources\ProblemResource\Pages;
@@ -82,14 +83,18 @@ class ProblemResource extends Resource
                             ->searchable()
                             ->default(fn($record)=> $record?->user_id),
 
-                    Select::make('dept_id')
-                        ->label('Department')
-                        ->searchable()
-                        ->preload()
-                        ->reactive()
-                        ->required()
-                        ->options(fn () => Department::all()->pluck('dept_name', 'dept_id'))
-                        ->default(fn () => Auth::user()?->dept_id),
+                    // Select::make('dept_id')
+                    //     ->label('Department')
+                    //     ->searchable()
+                    //     ->preload()
+                    //     ->reactive()
+                    //     ->required()
+                    //     ->options(fn () => Department::all()->pluck('dept_name', 'dept_id'))
+                    //     ->default(fn () => Auth::user()?->dept_id),
+
+                    Placeholder::make('dept_id')
+                    ->label('Department')
+                    ->default(fn()=>Auth::user()?->dept_id),
 
                     DatePicker::make('prob_date')
                         ->label('Report date')
@@ -315,6 +320,7 @@ class ProblemResource extends Resource
                 ActionGroup::make([
                     ViewAction::make(),
                     EditAction::make(),
+                    // DeleteAction::make()
                 ])
 
             ])
