@@ -94,7 +94,7 @@ class ProblemResource extends Resource
 
                     Placeholder::make('dept_id')
                     ->label('Department')
-                    ->default(fn()=>Auth::user()?->dept_id),
+                    ->default(Auth::user()?->dept_id),
 
                     DatePicker::make('prob_date')
                         ->label('Report date')
