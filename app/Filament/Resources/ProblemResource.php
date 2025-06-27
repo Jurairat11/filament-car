@@ -93,8 +93,8 @@ class ProblemResource extends Resource
                     //     ->default(fn () => Auth::user()?->dept_id),
 
                     Placeholder::make('dept_id')
-                    ->label('Department')
-                    ->default(Auth::user()?->dept_id),
+                        ->label('Department')
+                        ->content(fn (Problem $record): string => $record->department->dept_id),
 
                     DatePicker::make('prob_date')
                         ->label('Report date')
