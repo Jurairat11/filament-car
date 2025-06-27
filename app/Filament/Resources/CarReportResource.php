@@ -152,7 +152,7 @@ class CarReportResource extends Resource
                                 if ($hazardLevel && $hazardLevel->due_days) {
                                     $currentDate = now();
                                     $newDueDate = $currentDate->copy()->addDays($hazardLevel->due_days);
-                                    $set('car_due_date', $newDueDate->format('d/m/Y'));
+                                    $set('car_due_date', $newDueDate->format('Y/m/d'));
 
                                     //dd($newDueDate);
                                 }
