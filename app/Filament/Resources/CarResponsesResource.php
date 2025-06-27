@@ -240,7 +240,6 @@ class CarResponsesResource extends Resource
                 TextColumn::make('perm_due_date')
                     ->label('Perm due date')
                     ->timezone('Asia/Bangkok')
-                    ->format('d/m/Y')
                     ->dateTime('d/m/Y'),
 
                 TextColumn::make('days_perm')
