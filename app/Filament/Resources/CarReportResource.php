@@ -103,9 +103,10 @@ class CarReportResource extends Resource
                         ->label('Car due date')
                         ->native(false)
                         ->displayFormat('d/m/Y')
+                        ->format('d/m/Y')
                         ->placeholder('dd/mm/yyyy')
                         ->closeOnDateSelection()
-                        //->disabled()
+                        ->disabled()
                         ->dehydrated(),
 
             ])->columns(5),
