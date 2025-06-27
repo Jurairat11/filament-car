@@ -86,7 +86,7 @@ class ProblemResource extends Resource
 
                     Select::make('dept_id')
                         ->label('Department')
-                        ->helperText(new HtmlString('<p style="color:red;"*เลือกแผนกของผู้รายงานปัญหา</p>'))
+                        ->helperText(new HtmlString('<strong style="color:red;"*เลือกแผนกของผู้รายงานปัญหา</strong>'))
                         ->disabled()
                         ->reactive()
                         ->required()
