@@ -4,8 +4,8 @@ namespace App\Filament\Resources;
 
 use Filament\Tables;
 use App\Models\Problem;
-use Filament\Forms\Set;
 use App\Models\Sections;
+use App\Models\Hazard_level;
 use Filament\Forms\Form;
 use App\Models\Car_report;
 use App\Models\Department;
@@ -140,6 +140,21 @@ class CarReportResource extends Resource
                             ->label('Hazard level')
                             ->placeholder('Select hazard level')
                             ->relationship('hazardLevel','level_name')
+                            ->afterStateUpdated(function ($state, callable $set) {
+                                $dueDays = Car_report::find($state);
+
+                                if($dueDays){
+                                    // $set('car_due_date', addDays($dueDays));
+
+                                }
+                                dd($dueDays);
+
+                                // $date =2024-08-08;
+                                // $daysToAdd = 5;
+                                // $date = $date->addDays($daysToAdd);
+
+                                //addDays(5)
+                            })
                             ->required(),
 
                         Select::make('hazard_type_id')
