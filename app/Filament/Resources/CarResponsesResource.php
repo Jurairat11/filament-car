@@ -317,7 +317,7 @@ class CarResponsesResource extends Resource
                         );
                 })->columnSpan(2)->columns(2)
             ],layout: FiltersLayout::AboveContent)->filtersFormColumns(4)
-
+            ->recordAction('edit')
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
