@@ -106,8 +106,7 @@ class CarReportResource extends Resource
                         ->placeholder('dd/mm/yyyy')
                         ->closeOnDateSelection()
                         ->disabled()
-                        ->dehydrated()
-                        ->required(),
+                        ->dehydrated(),
 
             ])->columns(5),
 
@@ -159,7 +158,8 @@ class CarReportResource extends Resource
                                 // $date = $date->addDays($daysToAdd);
 
                                 //addDays(5)
-                            }),
+                            })
+                            ->required(),
 
                         Select::make('hazard_type_id')
                             ->label('Hazard type')
