@@ -240,6 +240,7 @@ class CarResponsesResource extends Resource
                 TextColumn::make('perm_due_date')
                     ->label('Perm due date')
                     ->timezone('Asia/Bangkok')
+                    ->format('d/m/Y')
                     ->dateTime('d/m/Y'),
 
                 TextColumn::make('days_perm')
@@ -317,6 +318,7 @@ class CarResponsesResource extends Resource
                         );
                 })->columnSpan(2)->columns(2)
             ],layout: FiltersLayout::AboveContent)->filtersFormColumns(4)
+            //edit click
             ->recordAction('edit')
             ->recordUrl(null)
             ->actions([
