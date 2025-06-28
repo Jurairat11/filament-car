@@ -407,8 +407,7 @@ class CarReportResource extends Resource
 
     public static function shouldRegisterNavigation(): bool
     {
-    return Auth::user()?->role !== 'User'; // ซ่อนเมนูจาก sidebar
+    return Auth::check() && Auth::user()?->role !== 'User'; // ซ่อนเมนูจาก sidebar
     }
-
 
 }
