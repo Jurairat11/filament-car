@@ -405,9 +405,4 @@ class CarReportResource extends Resource
             return 'Pending review CAR';
     }
 
-    public static function shouldRegisterNavigation(): bool
-    {
-    return in_array(Auth::check() && Auth::user()?->role, ['Admin','Safety']); // ซ่อนเมนูจาก sidebar
-    }
-
 }

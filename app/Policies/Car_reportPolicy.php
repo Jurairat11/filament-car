@@ -13,7 +13,7 @@ class Car_reportPolicy
      */
     public function viewAny(User $user): bool
     {
-        if($user->hasPermissionTo('View Any Car Report')){
+        if($user->hasPermissionTo('View Car Report')){
             return true;
         }
         return false;
