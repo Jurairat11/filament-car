@@ -391,19 +391,24 @@ class CarReportResource extends Resource
         ];
     }
     public static function getNavigationBadge(): ?string
-        {
+    {
 
             if (Auth::user()->hasRole('Safety')) {
             return (string) static::$model::where('status', 'pending_review')->count();
             }
             return null;
 
-        }
+    }
 
     public static function getNavigationBadgeTooltip(): ?string
-        {
+    {
             return 'Pending review CAR';
-        }
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+    return Auth::user()?->role !== 'User'; // ซ่อนเมนูจาก sidebar
+    }
 
 
 }
