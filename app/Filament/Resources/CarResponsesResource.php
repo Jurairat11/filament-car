@@ -321,7 +321,7 @@ class CarResponsesResource extends Resource
                 })->columnSpan(2)->columns(2)
             ],layout: FiltersLayout::AboveContent)->filtersFormColumns(4)
             //edit click
-            ->recordAction('edit')
+            ->recordAction('edit')->modalHeading('Edit Car responses')
             ->recordUrl(null)
             ->actions([
                 Tables\Actions\ActionGroup::make([
