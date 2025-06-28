@@ -321,12 +321,12 @@ class CarResponsesResource extends Resource
                 })->columnSpan(2)->columns(2)
             ],layout: FiltersLayout::AboveContent)->filtersFormColumns(4)
             //edit click
-            ->recordAction('edit')->modalHeading('Edit Car responses')
+            ->recordAction('edit')
             ->recordUrl(null)
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\EditAction::make()->modalHeading(fn ($record) => 'Edit Car responses'),
                     Tables\Actions\DeleteAction::make(),
                 ])->label('Actions')->dropdownPlacement('top-start'),
 
