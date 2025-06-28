@@ -13,10 +13,12 @@ class Car_reportPolicy
      */
     public function viewAny(User $user): bool
     {
-        if($user->hasPermissionTo('View Car Report')){
-            return true;
-        }
-        return false;
+        // if($user->hasPermissionTo('View Car Report')){
+        //     return true;
+        // }
+        // return false;
+         // ปิด access สำหรับ role 'user'
+        return $user->role !== 'User';
     }
 
     /**
