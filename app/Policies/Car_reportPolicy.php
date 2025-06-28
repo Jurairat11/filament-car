@@ -18,7 +18,7 @@ class Car_reportPolicy
         // }
         // return false;
          // ปิด access สำหรับ role 'user'
-        return $user->role !== 'User';
+        return $user->role === 'User';
     }
 
     /**
