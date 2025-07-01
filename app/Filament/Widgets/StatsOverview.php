@@ -14,7 +14,7 @@ class StatsOverview extends BaseWidget
 {
     protected function getColumns(): int
     {
-        return 3;
+        return 4;
     }
     protected static bool $isLazy = false;
 
