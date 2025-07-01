@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 
-class ViewCarReport extends Page
+class ViewCarReportCustom extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static string $view = 'filament.pages.view-car-report';

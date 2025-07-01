@@ -184,7 +184,7 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
             ->icon('heroicon-m-eye')
             ->color('gray')
             ->url(fn ($record) => route('infolists.components.view-car-details', ['record' => $record]))
-            ->visible(Auth::user()?->role === 'User')
+            ->visible(Auth::user()?->hasRole('User'))
         ];
     }
 
