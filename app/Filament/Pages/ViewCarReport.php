@@ -2,9 +2,10 @@
 
 namespace App\Filament\Pages;
 
-use Filament\Pages\Page;
 use App\Models\Problem;
+use Filament\Pages\Page;
 use Filament\Infolists\Infolist;
+use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Placeholder;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
@@ -52,6 +53,11 @@ class ViewCarReport extends Page
                 ->columns(5),
         ]);
 }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+    return in_array(Auth::check() && Auth::user()?->role, ['Admin','Safety']); // ซ่อนเมนูจาก sidebar
+    }
 
 
 }
