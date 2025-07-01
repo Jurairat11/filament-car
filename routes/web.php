@@ -49,7 +49,5 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/filament/pages/view-car-report/{record}', [ViewCarReport::class, 'show'])
-    ->name('filament.pages.view-car-report');
 
 require __DIR__.'/auth.php';
