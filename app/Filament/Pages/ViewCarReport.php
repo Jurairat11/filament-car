@@ -24,30 +24,30 @@ class ViewCarReport extends Page
         ->schema([
             Section::make('Problem Information')
                 ->schema([
-                    Placeholder::make('prob_id')
-                        ->label('Problem ID')
-                        ->content(fn ($record) => $record?->prob_id),
+                    // Placeholder::make('prob_id')
+                    //     ->label('Problem ID')
+                    //     ->content(fn ($record) => $record?->prob_id),
 
-                    Placeholder::make('title')
-                        ->label('Title')
-                        ->content(fn ($record) => $record?->title),
+                    // Placeholder::make('title')
+                    //     ->label('Title')
+                    //     ->content(fn ($record) => $record?->title),
 
-                    Placeholder::make('place')
-                        ->label('Place')
-                        ->content(fn ($record) => $record?->place),
+                    // Placeholder::make('place')
+                    //     ->label('Place')
+                    //     ->content(fn ($record) => $record?->place),
 
-                    Placeholder::make('user_id')
-                        ->label('Reporter')
-                        ->content(fn ($record) => optional($record?->user)->FullName),
+                    // Placeholder::make('user_id')
+                    //     ->label('Reporter')
+                    //     ->content(fn ($record) => optional($record?->user)->FullName),
 
-                    Placeholder::make('dept_id')
-                        ->label('Department')
-                        ->content(fn ($record) => optional($record?->department)->dept_name),
+                    // Placeholder::make('dept_id')
+                    //     ->label('Department')
+                    //     ->content(fn ($record) => optional($record?->department)->dept_name),
 
-                    Placeholder::make('prob_desc')
-                        ->label('Problem Description')
-                        ->content(fn ($record) => $record?->prob_desc)
-                        ->columnSpanFull(),
+                    // Placeholder::make('prob_desc')
+                    //     ->label('Problem Description')
+                    //     ->content(fn ($record) => $record?->prob_desc)
+                    //     ->columnSpanFull(),
                 ])
                 ->collapsed()
                 ->columns(5),
