@@ -106,7 +106,7 @@ class StatsOverview extends BaseWidget
         ->count()
         )
         ->description('Number of delay car report.')
-        ->descriptionIcon('heroicon-m-clock', IconPosition::Before)
+        ->descriptionIcon('heroicon-m-exclamation-triangle', IconPosition::Before)
         ->chart([7, 2, 10, 3, 15, 4, 17])
         ->color('danger'),
         ];
