@@ -26,6 +26,7 @@ class StatsOverview extends BaseWidget
         // $active = $this->filters['active'];
         $dept = $this->filters['dept_id'];
 
+
         return [
         Stat::make('Total Hazard',
         Car_report::when(
@@ -89,20 +90,21 @@ class StatsOverview extends BaseWidget
         ->chart([7, 2, 10, 3, 15, 4, 17])
         ->color('warning'),
 
-        Stat::make('CAR Delay',Car_responses::when(
+        Stat::make('CAR Delay', Car_responses::when(
         $start,
-        fn ($query)=> $query->whereDate('created_at', '>',$start)
+        fn ($query) => $query->whereDate('created_at', '>', $start)
         )
         ->when(
-        $end,
-        fn($query)=> $query->whereDate('created_at','<',$end)
+            $end,
+            fn ($query) => $query->whereDate('created_at', '<', $end)
         )
         ->when(
             $dept,
-            fn($query)=> $query->where('responsible_dept_id',$dept)
+            fn ($query) => $query->whereHas('carReport', function ($q) use ($dept) {
+                $q->where('responsible_dept_id', $dept);
+            })
         )
         ->where('status_reply', 'delay')
-        // ->where('responsible_dept_id', $dept)
         ->count()
         )
         ->description('Number of delay car report.')
