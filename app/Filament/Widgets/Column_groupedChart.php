@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Car_report;
+use App\Models\Car_responses;
 use Illuminate\Support\Facades\Auth;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
@@ -61,6 +62,7 @@ class Column_groupedChart extends ApexChartWidget
         $seriesData = array_fill_keys($categories, 0);
         $closedData = array_fill_keys($categories, 0);
         $inprogressData = array_fill_keys($categories, 0);
+        $delayData = array_fill_keys($categories, 0);
 
         // Query counts grouped by month
         $data = Car_report::when(
@@ -132,6 +134,31 @@ class Column_groupedChart extends ApexChartWidget
             $inprogressData[$item->month] = $item->total;
         }
 
+        // status_reply delay
+        $data = Car_responses::when(
+            $start,
+            fn($query)=> $query->whereDate('created_at', '>',$start)
+        )
+        ->when(
+            $end,
+            fn($query)=> $query->whereDate('created_at','<',$end)
+        )
+        ->when(
+            $dept,
+            fn ($query) => $query->whereHas('carReport', function ($q) use ($dept) {
+                $q->where('responsible_dept_id', $dept);
+            })
+        )
+        ->selectRaw("to_char(created_at,'MM') as month, COUNT(*) as total")
+        ->where('status_reply', 'delay')
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get();
+
+        foreach ($data as $item) {
+            $delayData[$item->month] = $item->total;
+        }
+
         // Return the chart options
         return [
             'chart' => [
@@ -150,7 +177,11 @@ class Column_groupedChart extends ApexChartWidget
                 [
                     'name' => 'In Progress',
                     'data' => array_values($inprogressData),
-                ]
+                ],
+                [
+                    'name' => 'Delay',
+                    'data' => array_values($delayData),
+                ],
             ],
             'xaxis' => [
                 'categories' => array_map(function ($month) use ($monthName) {
@@ -175,7 +206,7 @@ class Column_groupedChart extends ApexChartWidget
                             'stepSize' => 2,
                         ],
             ],
-            'colors' => [ '#3b82f6','#10b981','#f59e0b']
+            'colors' => [ '#3b82f6','#10b981','#f59e0b','#ef4444']
 
         ];
     }
