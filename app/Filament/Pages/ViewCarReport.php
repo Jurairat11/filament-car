@@ -14,10 +14,10 @@ class ViewCarReport extends Page
 
     use InteractsWithRecord;
 
-    public function mount(int | string $record): void
-    {
-        $this->record = $this->problem($record);
-    }
+    // public function mount(int | string $record): void
+    // {
+    //     $this->record = $this->problem($record);
+    // }
 
 
 
