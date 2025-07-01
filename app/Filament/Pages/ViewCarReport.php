@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use Filament\Pages\Page;
+use App\Models\Problem;
 use Filament\Infolists\Infolist;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Placeholder;
@@ -13,6 +14,8 @@ class ViewCarReport extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static string $view = 'filament.pages.view-car-report';
+
+    public Problem $problem;
 
     public static function infolist(Infolist $infolist)
     {
