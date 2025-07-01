@@ -72,4 +72,10 @@ class Dashboard extends \Filament\Pages\Dashboard
         return 'heroicon-o-chart-bar-square'; // Replace with your desired icon
     }
 
+    public function getTitle(): string
+    {
+        $date = now()->format('d/m/Y');
+        return "Hazard Identification and Countermeasure Status Dashboard as of {$date}";
+    }
+
 }
