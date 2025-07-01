@@ -176,7 +176,7 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
             ->label('View')
             ->icon('heroicon-m-eye')
             ->color('gray')
-            ->url(fn ($record) => route('filament.admin.resources.car-reports.view', ['record' => $record])),
+            ->url(fn ($record) => route('filament.pages.view-car-report', ['record' => $record])),
         ];
     }
 
