@@ -24,6 +24,7 @@ class ViewCarReport extends Page
         ->schema([
             Section::make('Problem Information')
                 ->schema([
+                    TextEntry::make('prob_id'),
                     // Placeholder::make('prob_id')
                     //     ->label('Problem ID')
                     //     ->content(fn ($record) => $record?->prob_id),
