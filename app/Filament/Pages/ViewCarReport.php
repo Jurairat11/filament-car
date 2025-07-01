@@ -56,7 +56,7 @@ class ViewCarReport extends Page
 
     public static function shouldRegisterNavigation(): bool
     {
-    return in_array(Auth::check() && Auth::user()?->role, ['Admin','Safety']); // ซ่อนเมนูจาก sidebar
+    return Auth::check() && Auth::user()?->role = 'Safety'; // ซ่อนเมนูจาก sidebar
     }
 
 
