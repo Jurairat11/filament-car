@@ -299,7 +299,7 @@ class ViewCarReport extends ViewRecord
                                     ->send();
                             }
 
-                            $urlReport = $JASPER_SERVER . "/jasperserver/rest_v2/reports/car_report/CarReport.pdf?ParmID=".$this->record->id;
+                            $urlReport = $JASPER_SERVER . "/jasperserver/rest_v2/reports/car/Safety_Car_Report.pdf?ParmID=".$this->record->id;
                             $client = new Client(['cookies' => $jar]);
                             $request = new Request('GET', $urlReport);
                             $response = $client->sendAsync($request)->wait();
