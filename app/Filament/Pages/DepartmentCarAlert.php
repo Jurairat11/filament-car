@@ -178,13 +178,13 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
             ->url(fn ($record) => route('filament.admin.resources.car-reports.view', ['record' => $record]))
             ->visible(Auth::user()?->hasAnyRole(['Admin','Safety'])),
 
-            Action::make('view')
-            ->label('View')
-            ->icon('heroicon-m-eye')
-            ->color('gray')
-            //->url(fn ($record) => route('', ['record' => $record]))
-            ->url(fn ($record) => route('filament.admin.pages.view-car-report-custom', ['record' => $record->id]))
-            ->visible(Auth::user()?->hasRole('User'))
+            // Action::make('view')
+            // ->label('View')
+            // ->icon('heroicon-m-eye')
+            // ->color('gray')
+            // //->url(fn ($record) => route('', ['record' => $record]))
+            // ->url(fn ($record) => route('filament.admin.pages.view-car-report-custom', ['record' => $record->id]))
+            // ->visible(Auth::user()?->hasRole('User'))
         ];
     }
 
