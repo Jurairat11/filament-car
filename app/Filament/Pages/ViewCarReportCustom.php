@@ -5,15 +5,12 @@ namespace App\Filament\Pages;
 use Filament\Pages\Page;
 use App\Models\Car_report;
 use Illuminate\Support\Facades\Auth;
-use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 
 class ViewCarReportCustom extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static string $view = 'filament.pages.view-car-report-custom';
     public ?Car_report $record = null;
-
-    use InteractsWithRecord;
 
     // public function mount($record): void
     // {
