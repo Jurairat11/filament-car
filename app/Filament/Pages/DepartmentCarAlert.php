@@ -15,7 +15,6 @@ use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\DeleteBulkAction;
 
-
 class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
 {
     use Tables\Concerns\InteractsWithTable;
@@ -184,6 +183,7 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
             ->icon('heroicon-m-eye')
             ->color('gray')
             //->url(fn ($record) => route('', ['record' => $record]))
+            ->url(fn ($record) => route('filament.admin.pages.view-car-report-custom', ['record' => $record->id]))
             ->visible(Auth::user()?->hasRole('User'))
         ];
     }
