@@ -25,7 +25,6 @@
                 <dd class="text-sm text-gray-900">{{ $this->record->car_due_date->format('d/m/Y') }}</dd>
             </div> --}}
 
-
         {{-- </dl>
     </x-filament::card>
 </x-filament::page> --}}
