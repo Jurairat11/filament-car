@@ -21,6 +21,12 @@ class Hazard_source_table extends BaseWidget
     protected static bool $isLazy = false;
     protected int | string | array $columnSpan = 3;
 
+    public function getTableRecordKey($record): string
+    {
+    // ใช้ hazard_source_id เป็น key (ต้องแน่ใจว่าไม่เป็น null)
+    return (string) ($record->hazard_source_id ?? $record->id ?? uniqid());
+    }
+
     protected function getTableHeading(): ?string
     {
         $counts = Car_report::query()
