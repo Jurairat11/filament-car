@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Car_report;
+use App\Models\Car_responses;
 use Illuminate\Support\Facades\Auth;
 use Filament\Support\Enums\IconPosition;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -64,6 +65,26 @@ class UserStatsOverview extends BaseWidget
                 ->descriptionIcon('heroicon-m-clock', IconPosition::Before)
                 ->chart([7, 2, 10, 3, 15, 4, 17])
                 ->color('warning'),
+
+            // delay status
+            Stat::make('Delay CAR',
+            Car_responses::when(
+                $start,
+                    fn ($query)=> $query->whereDate('created_at', '>',$start)
+                ->when(
+                $end,
+                fn($query)=> $query->whereDate('created_at','<',$end)
+            ))
+            ->where('status_reply','delay')
+            ->where('status_reply', 'delay')
+            ->whereHas('carReport', function ($q) {
+                $q->where('responsible_dept_id', Auth::user()->dept_id);
+            })
+            ->count())
+            ->description('Number of delay car report.')
+                ->descriptionIcon('heroicon-m-exclamation-triangle', IconPosition::Before)
+                ->chart([7, 2, 10, 3, 15, 4, 17])
+                ->color('danger'),
         ];
     }
 
