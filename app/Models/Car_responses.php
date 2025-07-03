@@ -49,7 +49,7 @@ class Car_responses extends Model
 
         $days = round(now()->diffInDays($this->perm_due_date, false));
 
-        if ($days === 0) {
+        if ($days === -0) {
             return 'Due today';
         }
 
