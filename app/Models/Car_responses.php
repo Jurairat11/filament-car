@@ -52,7 +52,7 @@ class Car_responses extends Model
         //dd($days);
 
         if ($days === -0.0) {
-            return 'Due today';
+            return 0;
         }
 
         return $days;
