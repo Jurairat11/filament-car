@@ -36,14 +36,23 @@ class ViewCarReportCustom extends Page implements HasForms
     public function form( Form $form): Form {
         return $form->schema([
             Section::make('CAR Information')
+            ->description(fn ($livewire) =>
+                    'CAR No: ' . ($livewire->form->getRawState()['car_no'] ?? '')
+                )
             ->schema([
-                Placeholder::make('car_no')
-                    ->label('Car No.')
-                    ->content(fn () => $this->car_report->car_no ?? '-'),
+                // Placeholder::make('car_no')
+                //     ->label('Car No.')
+                //     ->content(fn () => $this->car_report->car_no ?? '-'),
 
-                // Placeholder::make('car_date')
-                //     ->label('Create Date')
-                //     ->content(fn () => optional($this->car_report->created_at)?->format('d/m/Y H:i') ?? '-'),
+                Placeholder::make('car_date')
+                    ->label('Create Date')
+                    ->content(fn () => optional($this->car_report->car_date)?->format('d/m/Y') ?? '-'),
+
+                Placeholder::make('car_due_date')
+                    ->label('Due date')
+                    ->content(fn () => optional($this->car_report->created_at)?->format('d/m/Y') ?? '-'),
+
+                Placeholder::make('d')
 
                 // Placeholder::make('status')
                 //     ->label('Status')
