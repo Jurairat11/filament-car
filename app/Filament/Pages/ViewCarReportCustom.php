@@ -105,7 +105,8 @@ class ViewCarReportCustom extends Page implements HasForms
                         ->columns(2),
 
 
-            ])->collapsed(),
+            ])->columns(4)
+            ->collapsed(),
 
         ]);
 
