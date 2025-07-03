@@ -25,7 +25,8 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
     protected static string $view = 'filament.pages.department-car-alert';
     protected function getTableQuery(): Builder
     {
-        $query = Car_report::query()->latest();
+        $query = Car_report::query()->latest()
+        ->whereNot('status','draft');
 
         // Add your existing role logic if needed
         if (Auth::user()?->hasRole('User')) {
