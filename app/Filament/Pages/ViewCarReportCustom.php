@@ -38,33 +38,31 @@ class ViewCarReportCustom extends Page implements HasForms
     public function form( Form $form): Form {
         return $form->schema([
             Section::make('CAR Information')
-            // ->description(fn ($livewire) =>
-            //         'CAR No: ' . ($livewire->form->getRawState()['car_no'] ?? '')
-            //     )
+            ->description(fn () => 'CAR No: ' . ($this->car_report->car_no ?? '-'))
             ->schema([
-                Placeholder::make('car_no')
-                    ->label('Car No.')
-                    ->content(fn () => $this->car_report->car_no ?? '-'),
+                    // Placeholder::make('car_no')
+                    //     ->label('Car No.')
+                    //     ->content(fn () => $this->car_report->car_no ?? '-'),
 
-                Placeholder::make('dept_id')
-                    ->label('Department')
-                    ->content(fn () => optional ($this->car_report->department)->dept_name ),
+                    Placeholder::make('dept_id')
+                        ->label('Department')
+                        ->content(fn () => optional ($this->car_report->department)->dept_name ),
 
-                Placeholder::make('sec_id')
-                    ->label('Section')
-                    ->content(fn()=>optional($this->car_report->section)->sec_name),
+                    Placeholder::make('sec_id')
+                        ->label('Section')
+                        ->content(fn()=>optional($this->car_report->section)->sec_name),
 
-                Placeholder::make('car_date')
-                    ->label('Create Date')
-                    ->content(fn()=>Carbon::parse($this->car_report->car_date)->format('d/m/Y') ?? '-'),
+                    Placeholder::make('car_date')
+                        ->label('Create Date')
+                        ->content(fn()=>Carbon::parse($this->car_report->car_date)->format('d/m/Y') ?? '-'),
 
-                Placeholder::make('car_due_date')
-                    ->label('Due date')
-                    ->content(fn()=>Carbon::parse($this->car_report->car_due_date)->format('d/m/Y') ?? '-'),
+                    Placeholder::make('car_due_date')
+                        ->label('Due date')
+                        ->content(fn()=>Carbon::parse($this->car_report->car_due_date)->format('d/m/Y') ?? '-'),
 
-                Placeholder::make('hazard_source_id')
-                        ->label('Hazard source')
-                        ->content(fn () => optional ($this->car_report->hazardSource)->source_name),
+                    Placeholder::make('hazard_source_id')
+                            ->label('Hazard source')
+                            ->content(fn () => optional ($this->car_report->hazardSource)->source_name),
 
                     Placeholder::make('place_id')
                         ->label('Place')
