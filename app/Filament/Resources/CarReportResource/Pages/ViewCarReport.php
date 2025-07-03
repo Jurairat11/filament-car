@@ -130,7 +130,7 @@ class ViewCarReport extends ViewRecord
                         ->iconColor('warning')
                         ->icon('heroicon-o-exclamation-triangle')
                         ->title('P-CAR reopened')
-                        ->body("The resolution for CAR no: {$this->record->car_no} was not accepted. A new P-CAR will be created.")
+                        ->body("The resolution for CAR no: {$this->record->car_no} was not accepted. A new CAR will be created.")
                         ->sendToDatabase($user);
                 }
 
