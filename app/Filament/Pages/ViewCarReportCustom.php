@@ -2,13 +2,14 @@
 
 namespace App\Filament\Pages;
 
+use Carbon\Carbon;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
 use App\Models\Car_report;
-use Filament\Forms\Components\Placeholder;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Concerns\InteractsWithForms;
 
 class ViewCarReportCustom extends Page implements HasForms
@@ -46,7 +47,7 @@ class ViewCarReportCustom extends Page implements HasForms
 
                 Placeholder::make('car_date')
                     ->label('Create Date')
-                    ->content(fn () => optional($this->car_report->car_date)?->format('d/m/Y') ?? '-'),
+                    ->content(fn()=>Carbon::parse($this->car_report->car_date)->format('d/m/Y') ?? '-'),
 
                 Placeholder::make('car_due_date')
                     ->label('Due date')
