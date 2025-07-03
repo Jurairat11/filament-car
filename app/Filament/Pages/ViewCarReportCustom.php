@@ -114,7 +114,7 @@ class ViewCarReportCustom extends Page implements HasForms
     protected function getHeaderActions(): array
     {
         return [
-            Action::make()
+            Action::make('Back')
             ->label('Back')
         ];
     }
