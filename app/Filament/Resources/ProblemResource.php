@@ -319,11 +319,11 @@ class ProblemResource extends Resource
                     $connector->send($card);
 
                 }),
-                ActionGroup::make([
+
                     ViewAction::make(),
                     EditAction::make(),
                     // DeleteAction::make()
-                ])
+
 
             ])
             ->bulkActions([
