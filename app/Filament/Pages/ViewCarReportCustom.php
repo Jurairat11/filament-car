@@ -116,7 +116,7 @@ class ViewCarReportCustom extends Page implements HasForms
         return [
             Action::make('Back')
             ->color('info')
-            ->url('filament.admin.pages.department-car-alert')
+            ->url(route('filament.admin.pages.department-car-alert'))
         ];
     }
 
