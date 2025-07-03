@@ -51,7 +51,7 @@ class ViewCarReportCustom extends Page implements HasForms
 
                 Placeholder::make('car_due_date')
                     ->label('Due date')
-                    ->content(fn()=>Carbon::parse($this->car_report->car_due_date)->format('d/m/Y') ?? '-'),,
+                    ->content(fn()=>Carbon::parse($this->car_report->car_due_date)->format('d/m/Y') ?? '-'),
 
                 Placeholder::make('d')
 
