@@ -12,6 +12,7 @@ use Filament\Support\Colors\Color;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Filament\Http\Middleware\Authenticate;
+use App\Filament\Pages\ViewCarReportCustom;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -84,6 +85,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentApexChartsPlugin::make()
+            ])
+            ->pages([
+                ViewCarReportCustom::class,
             ]);
 
     }
