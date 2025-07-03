@@ -15,6 +15,7 @@ class ViewCarReportCustom extends Page implements HasForms
     public ?array $data = [];
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static string $view = 'filament.pages.view-car-report-custom';
+    protected static ?string $title = 'View Car Report';
     //public ?Car_report $record = null;
 
     // public function mount($record): void
@@ -27,10 +28,6 @@ class ViewCarReportCustom extends Page implements HasForms
     //     $this->record = $this->Car_report($record);
     // }
 
-    public function getTitle(): string
-    {
-        return 'View Car Report';
-    }
     // public static function shouldRegisterNavigation(): bool
     // {
     //     return Auth::check() && Auth::user()?->role === 'Safety'; // ซ่อนเมนูจาก sidebar
