@@ -21,15 +21,15 @@ class ViewCarReportCustom extends Page implements HasForms
     protected static ?string $title = 'View Car Report';
     public Car_report $car_report;
 
-    public function mount($record): void
+    // public function mount($record): void
+    // {
+    //     $this->car_report = Car_report::findOrFail($record);
+    // }
+
+    public function mount(int | string $record): void
     {
         $this->car_report = Car_report::findOrFail($record);
     }
-
-    // public function mount(int | string $record): void
-    // {
-    //     $this->record = $this->Car_report($record);
-    // }
 
     public function form( Form $form): Form {
         return $form->schema([
@@ -39,9 +39,9 @@ class ViewCarReportCustom extends Page implements HasForms
                     ->label('Car No.')
                     ->content(fn () => $this->car_report->car_no ?? '-'),
 
-                Placeholder::make('car_date')
-                    ->label('Create Date')
-                    ->content(fn () => optional($this->car_report->created_at)?->format('d/m/Y H:i') ?? '-'),
+                // Placeholder::make('car_date')
+                //     ->label('Create Date')
+                //     ->content(fn () => optional($this->car_report->created_at)?->format('d/m/Y H:i') ?? '-'),
 
                 // Placeholder::make('status')
                 //     ->label('Status')
