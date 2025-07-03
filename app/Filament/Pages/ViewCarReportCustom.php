@@ -16,12 +16,13 @@ class ViewCarReportCustom extends Page implements HasForms
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static string $view = 'filament.pages.view-car-report-custom';
     protected static ?string $title = 'View Car Report';
-    //public ?Car_report $record = null;
 
-    // public function mount($record): void
-    // {
-    //     $this->record = Car_report::findOrFail($record);
-    // }
+    public ?Car_report $record = null;
+
+    public function mount($record): void
+    {
+        $this->record = Car_report::findOrFail($record);
+    }
 
     // public function mount(int | string $record): void
     // {
