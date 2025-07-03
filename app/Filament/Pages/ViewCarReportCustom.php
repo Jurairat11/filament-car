@@ -2,11 +2,13 @@
 
 namespace App\Filament\Pages;
 
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
 use Filament\Pages\Page;
 use App\Models\Car_report;
 use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Concerns\InteractsWithForms;
 
 class ViewCarReportCustom extends Page implements HasForms
 {
@@ -27,6 +29,17 @@ class ViewCarReportCustom extends Page implements HasForms
     // {
     //     $this->record = $this->Car_report($record);
     // }
+
+    public function form( Form $form): Form {
+        return $form->schema([
+            Section::make('CAR Information')
+            ->schema([
+
+            ])->collapsed(),
+
+        ]);
+
+    }
 
     // public static function shouldRegisterNavigation(): bool
     // {
