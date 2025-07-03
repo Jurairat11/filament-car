@@ -57,7 +57,6 @@ class Car_responses extends Model
 
         return $days;
 
-
     }
     public function carReport() {
         return $this->belongsTo(Car_report::class,'car_id','id');
