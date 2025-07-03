@@ -329,7 +329,9 @@ class ProblemResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                ])->visible(fn ($record) =>
+                        Auth::user()?->hasAnyRole(['Admin', 'Safety'])
+                ),
             ]);
     }
 
