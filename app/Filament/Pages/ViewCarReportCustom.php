@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Concerns\InteractsWithForms;
 
 class ViewCarReportCustom extends Page implements HasForms
@@ -108,6 +109,14 @@ class ViewCarReportCustom extends Page implements HasForms
 
         ]);
 
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make()
+            ->label('Back')
+        ];
     }
 
     public static function shouldRegisterNavigation(): bool
