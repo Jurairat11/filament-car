@@ -183,7 +183,7 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
             ->icon('heroicon-m-eye')
             ->color('gray')
             //->url(fn ($record) => route('', ['record' => $record]))
-            ->url(fn ($record) => route('filament.admin.pages.view-car-report-custom', ['record' => $record->id]))
+            ->url(fn ($record) => route('filament.admin.pages.view-car-report-custom.{record}', ['record' => $record->id]))
             ->visible(Auth::user()?->hasRole('User'))
         ];
     }
