@@ -173,15 +173,21 @@ class ProblemResource extends Resource
                 TextColumn::make('prob_id')
                     ->label('Problem ID')
                     ->searchable(),
+
                 ImageColumn::make('prob_img_path')
                     ->label('Picture')
                     ->square(),
+
                 TextColumn::make('title')
                     ->label('Title'),
+
                 TextColumn::make('user.FullName')
                     ->label('Reporter'),
+
                 TextColumn::make('department.dept_name')
-                    ->label('Department'),
+                    ->label('Department')
+                    ->searchable(),
+
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()
@@ -200,6 +206,7 @@ class ProblemResource extends Resource
                         'closed' => 'closed',
                         default => ucfirst($state),
                     }),
+
                 TextColumn::make('created_at')
                     ->label('Created At')
                     ->sortable()
@@ -323,7 +330,6 @@ class ProblemResource extends Resource
                     ViewAction::make(),
                     EditAction::make(),
                     // DeleteAction::make()
-
 
             ])
             ->bulkActions([
