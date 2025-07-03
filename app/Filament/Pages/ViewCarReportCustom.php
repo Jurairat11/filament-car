@@ -94,7 +94,8 @@ class ViewCarReportCustom extends Page implements HasForms
                     View::make('components.car-reports-view-image')
                         ->label('Before Image')
                         ->viewData([
-                            'path' => $this->getRecord()->img_before_path,
+                            //'path' => $this->getRecord()->img_before_path,
+                            'path' => $this->car_report->img_before_path,
                         ])->columnSpan(2),
 
                     Placeholder::make('reopen_car_reason')
