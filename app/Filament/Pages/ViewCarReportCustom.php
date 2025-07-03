@@ -39,13 +39,13 @@ class ViewCarReportCustom extends Page implements HasForms
                     ->label('Car No.')
                     ->content(fn () => $this->car_report->car_no ?? '-'),
 
-                Placeholder::make('report_date')
-                    ->label('Report Date')
+                Placeholder::make('car_date')
+                    ->label('Create Date')
                     ->content(fn () => optional($this->car_report->created_at)?->format('d/m/Y H:i') ?? '-'),
 
-                Placeholder::make('status')
-                    ->label('Status')
-                    ->content(fn () => $this->car_report->status ?? '-'),
+                // Placeholder::make('status')
+                //     ->label('Status')
+                //     ->content(fn () => $this->car_report->status ?? '-'),
 
             ])->collapsed(),
 
