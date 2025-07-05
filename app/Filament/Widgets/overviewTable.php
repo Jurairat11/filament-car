@@ -18,7 +18,7 @@ class overviewTable extends BaseWidget
 {
     protected int | string | array $columnSpan = 'full';
     protected static ?string $heading = 'Overview';
-    protected static ?int $sort = 7;
+    protected static ?int $sort = 9;
     protected static bool $isLazy = false;
     public function table(Table $table): Table
     {

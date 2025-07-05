@@ -19,7 +19,7 @@ class Hazard_source_table extends BaseWidget
     protected static ?string $heading = 'Hazard Source';
     protected static ?int $sort = 3;
     protected static bool $isLazy = false;
-    protected int | string | array $columnSpan = 3;
+    protected int | string | array $columnSpan = 4;
 
     public function getTableRecordKey($record): string
     {

@@ -20,7 +20,7 @@ class Hazard_rank_b extends BaseWidget
     use InteractsWithPageFilters;
     protected static ?string $heading = 'Rank B';
     protected static ?string $description = 'Injury (Disability, Loss of Organ and Absent)';
-    protected static ?int $sort = 6;
+    protected static ?int $sort = 7;
     protected static bool $isLazy = false;
     protected int | string | array $columnSpan = 2;
     protected function getTableHeading(): ?string

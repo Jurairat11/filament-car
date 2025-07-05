@@ -18,7 +18,7 @@ class Hazard_rank_a extends BaseWidget
 {
     protected static ?string $heading = 'Rank A';
     protected static ?string $maxHeight = '300px';
-    protected static ?int $sort = 5;
+    protected static ?int $sort = 6;
     protected int | string | array $columnSpan = 2;
     protected static bool $isLazy = false;
 

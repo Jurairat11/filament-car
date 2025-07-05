@@ -17,7 +17,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 class Hazard_type_table extends BaseWidget
 {
     protected static ?string $heading = 'Hazard Type';
-    protected static ?int $sort = 4;
+    protected static ?int $sort = 5;
     protected static bool $isLazy = false;
     protected int | string | array $columnSpan = 3;
     protected function getTableHeading(): ?string

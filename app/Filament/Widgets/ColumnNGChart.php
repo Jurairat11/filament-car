@@ -31,6 +31,9 @@ class ColumnNGChart extends ApexChartWidget
      */
 
     protected static bool $isLazy = false;
+    protected int | string | array $columnSpan = 3;
+    protected static ?int $sort = 3;
+
     protected function getOptions(): array
     {
 
@@ -45,6 +48,8 @@ class ColumnNGChart extends ApexChartWidget
     // เตรียม labels (ชื่อแผนก) และ values (จำนวน)
     $categories = $departments->map(fn($dept) => $dept->dept_name)->toArray();
     $values = $departments->map(fn($dept) => $closedCounts[$dept->dept_id] ?? 0)->toArray();
+
+
 
     return [
         'chart' => [

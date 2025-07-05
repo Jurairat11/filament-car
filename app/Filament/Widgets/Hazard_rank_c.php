@@ -18,7 +18,7 @@ class Hazard_rank_c extends BaseWidget
 {
     protected static ?string $heading = 'Rank C';
     protected static ?string $description = 'little injury (no absent)';
-    protected static ?int $sort = 7;
+    protected static ?int $sort = 8;
     protected int | string | array $columnSpan = 2;
     protected static bool $isLazy = false;
     protected function getTableHeading(): ?string
