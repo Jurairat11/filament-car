@@ -31,7 +31,7 @@ class ColumnNGChart extends ApexChartWidget
      */
 
     protected static bool $isLazy = false;
-    protected int | string | array $columnSpan = 3;
+    protected int | string | array $columnSpanFull;
     protected static ?int $sort = 3;
 
     protected function getOptions(): array
