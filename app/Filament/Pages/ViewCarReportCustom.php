@@ -103,7 +103,6 @@ class ViewCarReportCustom extends Page implements HasForms
                         ->visible(fn () => $this->car_report->status === 'reopened')
                         ->columns(2),
 
-
             ])->columns(4)
             //->collapsed(),
 
