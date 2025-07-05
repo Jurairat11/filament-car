@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Car_report;
+use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
@@ -33,44 +34,47 @@ class ColumnNGChart extends ApexChartWidget
     protected function getOptions(): array
     {
 
-        $data = Car_report::selectRaw('dept_id, COUNT(*) as total')
+    $departments = Department::orderBy('dept_name')->get();
+
+    // ดึงจำนวน car report ที่ status = closed group by dept_id
+    $closedCounts = Car_report::selectRaw('dept_id, COUNT(*) as total')
+        ->where('status', 'closed')
         ->groupBy('dept_id')
-        ->with('department')
-        ->get();
+        ->pluck('total', 'dept_id');
 
-        // เตรียม labels (ชื่อแผนก) และ values (จำนวน)
-        $categories = $data->map(fn($item) => optional($item->department)->dept_name ?? 'Unknown')->toArray();
-        $values = $data->map(fn($item) => $item->total)->toArray();
+    // เตรียม labels (ชื่อแผนก) และ values (จำนวน)
+    $categories = $departments->map(fn($dept) => $dept->dept_name)->toArray();
+    $values = $departments->map(fn($dept) => $closedCounts[$dept->dept_id] ?? 0)->toArray();
 
-        return [
-                'chart' => [
-                'type' => 'bar',
-                'height' => 300,
+    return [
+        'chart' => [
+            'type' => 'bar',
+            'height' => 300,
+        ],
+        'series' => [
+            [
+                'name' => 'CAR Report (Closed)',
+                'data' => $values,
             ],
-            'series' => [
-                [
-                    'name' => 'จำนวนปัญหา',
-                    'data' => $values,
+        ],
+        'xaxis' => [
+            'categories' => $categories,
+            'labels' => [
+                'style' => [
+                    'fontFamily' => 'inherit',
                 ],
             ],
-            'xaxis' => [
-                'categories' => $categories,
-                'labels' => [
-                    'style' => [
-                        'fontFamily' => 'inherit',
-                    ],
+        ],
+        'yaxis' => [
+            'labels' => [
+                'style' => [
+                    'fontFamily' => 'inherit',
                 ],
             ],
-            'yaxis' => [
-                'labels' => [
-                    'style' => [
-                        'fontFamily' => 'inherit',
-                    ],
-                ],
-            ],
-            'colors' => ['#f59e0b'],
-        ];
-    }
+        ],
+        'colors' => ['#f59e0b'],
+    ];
+}
 
     public static function canView(): bool
     {
