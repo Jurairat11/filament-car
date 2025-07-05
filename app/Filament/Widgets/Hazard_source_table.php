@@ -17,9 +17,9 @@ use Filament\Widgets\TableWidget as BaseWidget;
 class Hazard_source_table extends BaseWidget
 {
     protected static ?string $heading = 'Hazard Source';
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 4;
     protected static bool $isLazy = false;
-    protected int | string | array $columnSpan = 4;
+    protected int | string | array $columnSpan = 3;
 
     public function getTableRecordKey($record): string
     {
