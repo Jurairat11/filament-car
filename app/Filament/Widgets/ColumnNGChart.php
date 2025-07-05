@@ -33,11 +33,14 @@ class ColumnNGChart extends ApexChartWidget
     protected static bool $isLazy = false;
     protected int | string | array $columnSpan = 'full';
     protected static ?int $sort = 3;
-
     protected function getOptions(): array
-    {
-
+{
     $departments = Department::orderBy('dept_name')->get();
+
+    // ดึงจำนวน car report ทั้งหมด group by dept_id
+    $totalCounts = Car_report::selectRaw('dept_id, COUNT(*) as total')
+        ->groupBy('dept_id')
+        ->pluck('total', 'dept_id');
 
     // ดึงจำนวน car report ที่ status = closed group by dept_id
     $closedCounts = Car_report::selectRaw('dept_id, COUNT(*) as total')
@@ -47,9 +50,8 @@ class ColumnNGChart extends ApexChartWidget
 
     // เตรียม labels (ชื่อแผนก) และ values (จำนวน)
     $categories = $departments->map(fn($dept) => $dept->dept_name)->toArray();
-    $values = $departments->map(fn($dept) => $closedCounts[$dept->dept_id] ?? 0)->toArray();
-
-
+    $totalValues = $departments->map(fn($dept) => $totalCounts[$dept->dept_id] ?? 0)->toArray();
+    $closedValues = $departments->map(fn($dept) => $closedCounts[$dept->dept_id] ?? 0)->toArray();
 
     return [
         'chart' => [
@@ -58,8 +60,12 @@ class ColumnNGChart extends ApexChartWidget
         ],
         'series' => [
             [
+                'name' => 'Total CAR Report',
+                'data' => $totalValues,
+            ],
+            [
                 'name' => 'CAR Report (Closed)',
-                'data' => $values,
+                'data' => $closedValues,
             ],
         ],
         'xaxis' => [
@@ -77,7 +83,7 @@ class ColumnNGChart extends ApexChartWidget
                 ],
             ],
         ],
-        'colors' => ['#f59e0b'],
+        'colors' => ['#2563eb', '#f59e0b'], // สามารถเปลี่ยนสีได้ตามต้องการ
     ];
 }
 
