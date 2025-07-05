@@ -60,11 +60,11 @@ class ColumnNGChart extends ApexChartWidget
         ],
         'series' => [
             [
-                'name' => 'Total CAR Report',
+                'name' => 'Total',
                 'data' => $totalValues,
             ],
             [
-                'name' => 'CAR Report (Closed)',
+                'name' => 'Completed',
                 'data' => $closedValues,
             ],
         ],
@@ -75,6 +75,12 @@ class ColumnNGChart extends ApexChartWidget
                     'fontFamily' => 'inherit',
                 ],
             ],
+            'beginAtZero' => true,
+                        'min' => 0,
+                        'max' => 50,
+                        'ticks' => [
+                            'stepSize' => 2,
+                        ],
         ],
         'yaxis' => [
             'labels' => [
@@ -83,7 +89,7 @@ class ColumnNGChart extends ApexChartWidget
                 ],
             ],
         ],
-        'colors' => ['#2563eb', '#f59e0b'], // สามารถเปลี่ยนสีได้ตามต้องการ
+        'colors' => ['#3b82f6', '#10b981'], // สามารถเปลี่ยนสีได้ตามต้องการ
     ];
 }
 
