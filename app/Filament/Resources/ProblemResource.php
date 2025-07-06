@@ -151,7 +151,6 @@ class ProblemResource extends Resource
                             ->label('Description')
                             ->placeholder('Describe the problem in detail')
                             ->autosize()
-                            ->required()
                             ->columnSpanFull(),
 
                             ])->columns(2),
