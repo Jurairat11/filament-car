@@ -67,7 +67,8 @@ class CarReportResource extends Resource
                     ->searchable()
                     ->preload()
                     ->nullable()
-                    ->helperText('เลือกปัญหา (ถ้ามี)'),
+                    // ->helperText('เลือกปัญหา (ถ้ามี)')
+                    ->helperText(new HtmlString('<strong style="color:red;">*เลือกปัญหา (ถ้ามี)</strong>')),
 
                     Hidden::make('created_by')
                         ->default(Auth::user()?->id)
