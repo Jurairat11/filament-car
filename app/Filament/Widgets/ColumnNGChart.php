@@ -38,15 +38,15 @@ class ColumnNGChart extends ApexChartWidget
     $departments = Department::orderBy('dept_name')->get();
 
     // ดึงจำนวน car report ทั้งหมด group by dept_id
-    $totalCounts = Car_report::selectRaw('dept_id, COUNT(*) as total')
-        ->groupBy('dept_id')
-        ->pluck('total', 'dept_id');
+    $totalCounts = Car_report::selectRaw('responsible_dept_id, COUNT(*) as total')
+        ->groupBy('responsible_dept_id')
+        ->pluck('total', 'responsible_dept_id');
 
     // ดึงจำนวน car report ที่ status = closed group by dept_id
-    $closedCounts = Car_report::selectRaw('dept_id, COUNT(*) as total')
+    $closedCounts = Car_report::selectRaw('responsible_dept_id, COUNT(*) as total')
         ->where('status', 'closed')
-        ->groupBy('dept_id')
-        ->pluck('total', 'dept_id');
+        ->groupBy('responsible_dept_id')
+        ->pluck('total', 'responsible_dept_id');
 
     // เตรียม labels (ชื่อแผนก) และ values (จำนวน)
     $categories = $departments->map(fn($dept) => $dept->dept_name)->toArray();

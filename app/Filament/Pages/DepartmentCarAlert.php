@@ -155,6 +155,9 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
             ->icon('heroicon-o-check-circle')
             ->color('success')
             ->requiresConfirmation()
+            ->modalHeading('Acknowledge CAR')
+            ->modalDescription('Your department has acknowledged the car report.')
+            ->modalSubmitActionLabel('OK')
             ->visible(fn (Car_report $record) => $record->status === 'reported' && $record->responsible_dept_id === Auth::user()->dept_id)
             ->action(function (Car_report $record) {
                 // อัปเดตสถานะ
