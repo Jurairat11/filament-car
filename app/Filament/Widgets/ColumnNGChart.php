@@ -75,12 +75,6 @@ class ColumnNGChart extends ApexChartWidget
                     'fontFamily' => 'inherit',
                 ],
             ],
-            'beginAtZero' => true,
-                        'min' => 0,
-                        'max' => 10,
-                        'ticks' => [
-                            'stepSize' => 2,
-                        ],
         ],
         'yaxis' => [
             'labels' => [
@@ -88,6 +82,12 @@ class ColumnNGChart extends ApexChartWidget
                     'fontFamily' => 'inherit',
                 ],
             ],
+            'beginAtZero' => true,
+                        'min' => 0,
+                        'max' => 10,
+                        'ticks' => [
+                            'stepSize' => 2,
+                        ],
         ],
         'colors' => ['#3b82f6', '#10b981'], // สามารถเปลี่ยนสีได้ตามต้องการ
     ];

@@ -98,7 +98,7 @@ class CarReportResource extends Resource
                             }
                             return Sections::where('dept_id', $deptId)->pluck('sec_name', 'sec_id');
                         })
-                    ->required(),
+                        ->required(),
 
                     DatePicker::make('car_date')
                         ->label('Create date')
