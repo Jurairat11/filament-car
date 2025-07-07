@@ -170,7 +170,7 @@ class followCarTable extends BaseWidget
                         'status_reply' => $record->status_reply
                     ])
                 )
-                ->visible(fn(Car_report $record) =>  $record->status === 'reopened')
+                ->visible(fn(Car_responses $record) =>  $record->temp_desc !== null )
                 ->icon('heroicon-m-eye')
                 ->color('primary')
                 ->openUrlInNewTab()
