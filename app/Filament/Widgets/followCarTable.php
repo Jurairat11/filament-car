@@ -170,8 +170,7 @@ class followCarTable extends BaseWidget
                         'status_reply' => $record->status_reply
                     ])
                 )
-                ->visible(fn(Car_report $record) =>  $record->status === 'reopened'
-                && $record->status === 'in_progress' && $record->status === 'pending_review' && $record->status === 'closed')
+                ->visible(fn(Car_responses $car_responses) =>  $car_responses->temp_desc !== null)
                 ->icon('heroicon-m-eye')
                 ->color('primary')
                 ->openUrlInNewTab()
