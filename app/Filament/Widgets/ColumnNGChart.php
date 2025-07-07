@@ -84,7 +84,7 @@ class ColumnNGChart extends ApexChartWidget
             ],
             'beginAtZero' => true,
                         'min' => 0,
-                        'max' => 10,
+                        'max' => 30,
                         'ticks' => [
                             'stepSize' => 2,
                         ],
