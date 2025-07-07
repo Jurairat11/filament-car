@@ -171,7 +171,7 @@ class followCarTable extends BaseWidget
                     ])
                 )
                 ->visible(function(Car_responses $car_responses) {
-                    $car_responses->status === 'draft';
+                    $car_responses->temp_desc !== null;
 
                 })
                 ->icon('heroicon-m-eye')
