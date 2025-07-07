@@ -51,14 +51,23 @@ class CarReportResource extends Resource
                     // ->options(fn() => Problem::where('status','!=','closed')->pluck('prob_id', 'id'))
                     // ->required(),
 
+                    // Select::make('problem_id')
+                    //     ->label('Problem ID')
+                    //     ->placeholder('Select problem ID')
+                    //     ->relationship('problem', 'prob_id',(fn() => Problem::where('status', '!=', 'new')))
+                    //     ->preload()
+                    //     ->searchable()
+                    //     ->required()
+                    //     ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->prob_id} ({$record->status})"),
+
                     Select::make('problem_id')
-                        ->label('Problem ID')
-                        ->placeholder('Select problem ID')
-                        ->relationship('problem', 'prob_id',(fn() => Problem::where('status', '!=', 'new')))
-                        ->preload()
-                        ->searchable()
-                        ->required()
-                        ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->prob_id} ({$record->status})"),
+                    ->label('Problem ID')
+                    ->relationship('problem', 'prob_id')
+                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->prob_id} ({$record->status})")
+                    ->searchable()
+                    ->preload()
+                    ->nullable()
+                    ->helperText('เลือกปัญหา (ถ้ามี)'),
 
                     Hidden::make('created_by')
                         ->default(Auth::user()?->id)
