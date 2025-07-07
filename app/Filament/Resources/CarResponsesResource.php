@@ -333,7 +333,13 @@ class CarResponsesResource extends Resource
                 ->requiresConfirmation()
                 ->visible(fn ($record) =>
                         Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status_reply === 'on process'
-            ),
+            )
+                ->action(function($record, array $data) {
+                        $record->update([
+                            'perm_status' => 'finished',
+                            'status_reply' => 'finished'
+                        ]);
+                    }),
 
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
