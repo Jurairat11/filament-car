@@ -5,6 +5,7 @@ namespace App\Filament\Widgets;
 use Carbon\Carbon;
 use Filament\Tables;
 use App\Models\Car_report;
+use App\Models\Car_responses;
 use Filament\Tables\Table;
 use Filament\Tables\Filters\Filter;
 use Illuminate\Support\Facades\Auth;
@@ -169,6 +170,7 @@ class followCarTable extends BaseWidget
                         'status_reply' => $record->status_reply
                     ])
                 )
+                ->visible(fn (Car_responses $record) => $record->status === 'draft')
                 ->icon('heroicon-m-eye')
                 ->color('primary')
                 ->openUrlInNewTab()
