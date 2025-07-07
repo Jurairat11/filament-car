@@ -10,6 +10,7 @@ use Filament\Tables\Table;
 use App\Models\Car_responses;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Tabs;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Split;
 use Illuminate\Support\Facades\Auth;
@@ -323,7 +324,17 @@ class CarResponsesResource extends Resource
             //edit click
             ->recordAction('edit')
             ->recordUrl(null)
+
             ->actions([
+                Action::make('finished')
+                ->label('Finish')
+                ->color('success')
+                ->icon('heroicon-o-check-circle')
+                ->requiresConfirmation()
+                ->visible(fn ($record) =>
+                        Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status_reply === 'on process'
+            ),
+
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make()->modalHeading(fn ($record) => 'Edit Car responses'),
