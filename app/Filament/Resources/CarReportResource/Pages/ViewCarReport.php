@@ -32,6 +32,9 @@ class ViewCarReport extends ViewRecord
             ->icon('heroicon-o-paper-airplane')
             ->color('success')
             ->requiresConfirmation()
+            ->modalHeading("Report CAR")
+            ->modalDescription('You are about to report the car issue to the responsible department.')
+            ->modalSubmitActionLabel('OK')
             ->visible(fn ($record) =>
                         Auth::user()?->hasAnyRole(['Safety','Admin']) && $record->status === 'draft'
                     )
@@ -88,6 +91,9 @@ class ViewCarReport extends ViewRecord
             ->icon('heroicon-o-arrow-path')
             ->color('warning')
             ->requiresConfirmation()
+            ->modalHeading("Reopen CAR")
+            ->modalDescription('You are about to reopen the car report.')
+            ->modalSubmitActionLabel('OK')
             ->form([
                 Textarea::make('reopen_car_reason')
                         ->label('Reason for reopening CAR')
@@ -159,6 +165,9 @@ class ViewCarReport extends ViewRecord
             ->icon('heroicon-o-check-circle')
             ->color('success')
             ->requiresConfirmation()
+            ->modalHeading("Close CAR")
+            ->modalDescription('You are about to close the car report.')
+            ->modalSubmitActionLabel('OK')
             ->visible(fn ($record) =>
                 Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status === 'pending_review')
                 ->action(function () {
@@ -246,6 +255,10 @@ class ViewCarReport extends ViewRecord
                 ->visible(fn ($record) =>
                     Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status === 'reopened')
                 ->requiresConfirmation()
+                ->modalHeading("Reopen CAR")
+                ->modalDescription('You are about to reopen the car report.')
+                ->modalSubmitActionLabel('OK')
+                ->disabled(fn ($record) => $record->followed_car_id !== null)
                 ->action(function () {
                     return redirect()->route('filament.admin.resources.car-reports.create', [
                         'problem_id'          => $this->record->problem_id, //เก็บ problem_id ของอันก่อนหน้า เพื่อสร้าง CAR ใหม่
@@ -264,6 +277,7 @@ class ViewCarReport extends ViewRecord
                         'responsible_dept_id' => $this->record->responsible_dept_id,
                         'parent_car_id'       => $this->record->id,
                     ]);
+
 
                 }),
 

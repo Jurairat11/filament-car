@@ -331,6 +331,9 @@ class CarResponsesResource extends Resource
                 ->color('success')
                 ->icon('heroicon-o-check-circle')
                 ->requiresConfirmation()
+                ->modalHeading("Checked the car report.")
+                ->modalDescription('The car responses have been checked.')
+                ->modalSubmitActionLabel('OK')
                 ->visible(fn ($record) =>
                         Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status_reply === 'on process'
             )

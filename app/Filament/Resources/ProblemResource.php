@@ -245,6 +245,9 @@ class ProblemResource extends Resource
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->requiresConfirmation()
+                    ->modalHeading('Accept Problem')
+                    ->modalDescription('You are about to accept this problem report.')
+                    ->modalSubmitActionLabel('OK')
                     ->visible(fn ($record) =>
                         Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status === 'new'
                     )
@@ -275,6 +278,9 @@ class ProblemResource extends Resource
                     ->icon('heroicon-o-x-circle')
                     ->color('danger')
                     ->requiresConfirmation()
+                    ->modalHeading('Dismiss Problem')
+                    ->modalDescription('You are about to dismiss this problem report.')
+                    ->modalSubmitActionLabel('OK')
                     ->form([
                 Textarea::make('dismiss_reason')
                         ->label('Reason for dismissal')
