@@ -170,8 +170,8 @@ class followCarTable extends BaseWidget
                         'status_reply' => $record->status_reply
                     ])
                 )
-                ->visible(function(Car_responses $car_responses) {
-                    $car_responses->status === 'reopened';
+                ->visible(function(Car_report $car_report) {
+                    $car_report->status === 'reopened';
 
                 })
                 ->icon('heroicon-m-eye')
