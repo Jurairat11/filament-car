@@ -171,7 +171,7 @@ class followCarTable extends BaseWidget
                     ])
                 )
                 ->visible(function(Car_responses $car_responses) {
-                    $car_responses->temp_desc !== null;
+                    $car_responses->status === 'reopened';
 
                 })
                 ->icon('heroicon-m-eye')
