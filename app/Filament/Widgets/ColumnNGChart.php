@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Car_report;
+use App\Models\Car_responses;
 use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
@@ -48,10 +49,26 @@ class ColumnNGChart extends ApexChartWidget
         ->groupBy('responsible_dept_id')
         ->pluck('total', 'responsible_dept_id');
 
+    $onProcessCounts = Car_report::selectRaw('responsible_dept_id, COUNT(*) as total')
+        ->whereNot('status', 'closed')
+        ->groupBy('responsible_dept_id')
+        ->pluck('total', 'responsible_dept_id');
+
+    $delayCounts = Car_responses::where('status_reply', 'delay')
+        ->whereHas('carReport') // ตรวจสอบว่ามีความสัมพันธ์
+        ->join('car_reports', 'car_responses.car_report_id', '=', 'car_reports.id')
+        ->selectRaw('car_reports.responsible_dept_id, COUNT(*) as total')
+        ->groupBy('car_reports.responsible_dept_id')
+        ->pluck('total', 'car_reports.responsible_dept_id');
+
+
+
     // เตรียม labels (ชื่อแผนก) และ values (จำนวน)
     $categories = $departments->map(fn($dept) => $dept->dept_name)->toArray();
     $totalValues = $departments->map(fn($dept) => $totalCounts[$dept->dept_id] ?? 0)->toArray();
     $closedValues = $departments->map(fn($dept) => $closedCounts[$dept->dept_id] ?? 0)->toArray();
+    $onProcessValues = $departments->map(fn($dept) => $onProcessCounts[$dept->dept_id] ?? 0)->toArray();
+    $delayValues = $departments->map(fn($dept) => $delayCounts[$dept->dept_id] ?? 0)->toArray();
 
     return [
         'chart' => [
@@ -66,6 +83,14 @@ class ColumnNGChart extends ApexChartWidget
             [
                 'name' => 'Completed',
                 'data' => $closedValues,
+            ],
+            [
+                'name' => 'On Process',
+                'data' => $onProcessValues,
+            ],
+            [
+                'name' => 'Delay',
+                'data' => $delayValues,
             ],
         ],
         'xaxis' => [
@@ -89,7 +114,7 @@ class ColumnNGChart extends ApexChartWidget
                             'stepSize' => 2,
                         ],
         ],
-        'colors' => ['#3b82f6', '#10b981'], // สามารถเปลี่ยนสีได้ตามต้องการ
+        'colors' => ['#3b82f6', '#10b981', '#f59e0b','#ef4444'], // สามารถเปลี่ยนสีได้ตามต้องการ
     ];
 }
 

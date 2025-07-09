@@ -69,7 +69,7 @@ class StatsOverview extends BaseWidget
         ->chart([7, 2, 10, 3, 15, 4, 17])
         ->color('success'),
 
-        Stat::make('CAR In progress',Car_report::when(
+        Stat::make('CAR On progress',Car_report::when(
         $start,
         fn ($query)=> $query->whereDate('created_at', '>',$start)
         )
