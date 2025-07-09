@@ -44,7 +44,7 @@ class StatsOverview extends BaseWidget
         //->where('responsible_dept_id', $dept)
         ->count()
         )
-        ->description('Total created car report.')
+        ->description('Total created CAR report.')
         ->descriptionIcon('heroicon-m-document-text', IconPosition::Before)
         ->chart([7, 2, 10, 3, 15, 4, 17])
         ->color('info'),
@@ -64,7 +64,7 @@ class StatsOverview extends BaseWidget
         ->where('status', 'closed')
         ->count()
         )
-        ->description('Number of closed car report.')
+        ->description('Number of closed CAR report.')
         ->descriptionIcon('heroicon-m-check-circle', IconPosition::Before)
         ->chart([7, 2, 10, 3, 15, 4, 17])
         ->color('success'),
@@ -85,7 +85,7 @@ class StatsOverview extends BaseWidget
         // ->where('responsible_dept_id', $dept)
         ->count()
         )
-        ->description('Number of in progress car report.')
+        ->description('Number of on progress CAR report.')
         ->descriptionIcon('heroicon-m-clock', IconPosition::Before)
         ->chart([7, 2, 10, 3, 15, 4, 17])
         ->color('warning'),
@@ -107,7 +107,7 @@ class StatsOverview extends BaseWidget
         ->where('status_reply', 'delay')
         ->count()
         )
-        ->description('Number of delay car report.')
+        ->description('Number of delay CAR report.')
         ->descriptionIcon('heroicon-m-exclamation-triangle', IconPosition::Before)
         ->chart([7, 2, 10, 3, 15, 4, 17])
         ->color('danger'),
