@@ -56,7 +56,7 @@ class ColumnNGChart extends ApexChartWidget
 
     $delayCounts = Car_responses::where('status_reply', 'delay')
         ->whereHas('carReport') // ตรวจสอบว่ามีความสัมพันธ์
-        ->join('car_reports', 'car_responses.car_report_id', '=', 'car_reports.id')
+        ->join('car_reports', 'car_responses.car_id', '=', 'car_reports.id')
         ->selectRaw('car_reports.responsible_dept_id, COUNT(*) as total')
         ->groupBy('car_reports.responsible_dept_id')
         ->pluck('total', 'car_reports.responsible_dept_id');
