@@ -175,7 +175,7 @@ class Column_groupedChart extends ApexChartWidget
                     'data' => array_values($closedData),
                 ],
                 [
-                    'name' => 'On Progress',
+                    'name' => 'On Process',
                     'data' => array_values($inprogressData),
                 ],
                 [
