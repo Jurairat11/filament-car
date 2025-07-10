@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Widgets\Hazard_rank_a;
 use Filament\Forms\Form;
 use App\Models\Department;
 use Filament\Forms\Components\Tabs;
@@ -77,5 +78,13 @@ class Dashboard extends \Filament\Pages\Dashboard
         $date = now()->format('d/m/Y');
         return "Hazard Identification and Countermeasure Status Dashboard as of {$date}";
     }
+
+    public function getWidgets(): array
+    {
+        return [
+            Hazard_rank_a::class,
+        ];
+    }
+
 
 }
