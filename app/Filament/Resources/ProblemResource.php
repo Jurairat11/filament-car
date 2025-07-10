@@ -33,6 +33,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\Placeholder;
@@ -334,7 +335,7 @@ class ProblemResource extends Resource
 
                     ViewAction::make(),
                     EditAction::make(),
-                    // DeleteAction::make()
+                    DeleteAction::make()->visible(Auth::user()->hasRole('Admin'))
 
             ])
             ->bulkActions([

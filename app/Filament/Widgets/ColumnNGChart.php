@@ -63,7 +63,6 @@ class ColumnNGChart extends ApexChartWidget
         ->groupBy('car_reports.responsible_dept_id')
         ->pluck('total', 'car_reports.responsible_dept_id');
 
-
     // เตรียม labels (ชื่อแผนก) และ values (จำนวน)
     $categories = $departments->map(fn($dept) => $dept->dept_name)->toArray();
     $totalValues = $departments->map(fn($dept) => $totalCounts[$dept->dept_id] ?? 0)->toArray();
