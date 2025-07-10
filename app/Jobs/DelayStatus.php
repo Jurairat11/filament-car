@@ -38,7 +38,7 @@ class DelayStatus implements ShouldQueue
 
         // Get only records that are not finished (to limit the result set)
         $now = Carbon::now();
-        $items = Car_responses::whereDate('perm_due_date', '<=', $now)
+        $items = Car_responses::whereDate('perm_due_date', '<', $now)
         ->where('status_reply', '=', 'on process')
         ->get();
 
