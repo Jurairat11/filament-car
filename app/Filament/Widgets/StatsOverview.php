@@ -85,7 +85,7 @@ class StatsOverview extends BaseWidget
         // ->where('responsible_dept_id', $dept)
         ->count()
         )
-        ->description('Number of on progress CAR report.')
+        ->description('Number of on process CAR report.')
         ->descriptionIcon('heroicon-m-clock', IconPosition::Before)
         ->chart([7, 2, 10, 3, 15, 4, 17])
         ->color('warning'),
