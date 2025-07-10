@@ -36,7 +36,9 @@ class ColumnNGChart extends ApexChartWidget
     protected static ?int $sort = 3;
     protected function getOptions(): array
 {
-    $departments = Department::orderBy('dept_name')->get();
+    $departments = Department::orderBy('dept_name')
+    ->whereNot('dept_name','IT')
+    ->get();
 
     // ดึงจำนวน car report ทั้งหมด group by dept_id
     $totalCounts = Car_report::selectRaw('responsible_dept_id, COUNT(*) as total')
@@ -60,7 +62,6 @@ class ColumnNGChart extends ApexChartWidget
         ->selectRaw('car_reports.responsible_dept_id, COUNT(*) as total')
         ->groupBy('car_reports.responsible_dept_id')
         ->pluck('total', 'car_reports.responsible_dept_id');
-
 
 
     // เตรียม labels (ชื่อแผนก) และ values (จำนวน)
