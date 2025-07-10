@@ -24,7 +24,7 @@ class CreateCarReport extends CreateRecord
             'car_no' => $this->generatedCarNo,
             'status' => 'draft',
             'problem_id'        => request()->get('problem_id'),
-            'dept_id'           => Auth::user()?->dept_id,
+            'dept_id'           => request()->get('dept_id'),
             'sec_id'            => request()->get('sec_id'),
             'car_date'          => now(),
             'car_due_date'      => now(),
