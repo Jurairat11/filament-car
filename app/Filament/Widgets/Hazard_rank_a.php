@@ -132,3 +132,32 @@ class Hazard_rank_a extends BaseWidget
 }
 // $user = Auth::user();
 //         return in_array($user?->name, ['Admin','Safety']);
+
+
+// ->model(Car_report::class)
+// ->records(function () {
+//     $statuses = ['on process', 'finished', 'delay'];
+
+//     // default counts
+//     $defaultCounts = collect($statuses)->mapWithKeys(fn ($status) => [
+//         $status => 0
+//     ]);
+
+//     // get actual data
+//     $actualCounts = Car_report::query()
+//         ->join('car_responses','car_responses.car_id','=','car_reports.id')
+//         ->where('car_reports.hazard_level_id', '1')
+//         ->selectRaw('car_responses.status_reply, COUNT(*) as count')
+//         ->groupBy('car_responses.status_reply')
+//         ->pluck('count', 'car_responses.status_reply');
+
+//     // merge actual with defaults
+//     $merged = $defaultCounts->merge($actualCounts);
+
+//     // return records as collection of objects for the table
+//     return $merged->map(fn ($count, $status) => (object)[
+//         'status_reply' => $status,
+//         'count' => $count,
+//     ]);
+// })
+
