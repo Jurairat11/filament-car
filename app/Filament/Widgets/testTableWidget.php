@@ -21,7 +21,6 @@ class testTableWidget extends BaseWidget
     protected static ?int $sort = 6;
     protected int | string | array $columnSpan = 2;
     protected static bool $isLazy = false;
-
     protected function getTableHeading(): ?string
     {
         $counts = Car_report::query()
@@ -38,50 +37,47 @@ class testTableWidget extends BaseWidget
     }
 
     public function table(Table $table): Table
-    {
-        return $table
-            ->paginated(false)
-            ->emptyStateHeading('No data available')
-            ->emptyStateDescription('No data available for this rank.')
-            ->emptyStateIcon('heroicon-o-bookmark')
-            ->model(Car_report::class)
-            ->records(function () {
-                $statuses = ['on process', 'finished', 'delay'];
+{
+    return $table
+        ->paginated(false)
+        ->emptyStateHeading('No data available')
+        ->emptyStateDescription('No data available for this rank.')
+        ->emptyStateIcon('heroicon-o-bookmark')
+        ->query(
+            Car_report::query()
+                ->fromRaw('(
+                    SELECT "on process" as status_reply, COUNT(*) as count
+                    FROM car_reports
+                    JOIN car_responses ON car_responses.car_id = car_reports.id
+                    WHERE car_reports.hazard_level_id = 1 AND car_responses.status_reply = "on process"
 
-                $defaultCounts = collect($statuses)->mapWithKeys(fn ($status) => [
-                    $status => 0
-                ]);
+                    UNION ALL
 
-                $query = Car_report::query()
-                    ->join('car_responses', 'car_responses.car_id', '=', 'car_reports.id')
-                    ->where('car_reports.hazard_level_id', '1');
+                    SELECT "finished" as status_reply, COUNT(*) as count
+                    FROM car_reports
+                    JOIN car_responses ON car_responses.car_id = car_reports.id
+                    WHERE car_reports.hazard_level_id = 1 AND car_responses.status_reply = "finished"
 
-                // Apply filters manually if needed from the table state (optional)
+                    UNION ALL
 
-                $actualCounts = $query
-                    ->selectRaw('car_responses.status_reply, COUNT(*) as count')
-                    ->groupBy('car_responses.status_reply')
-                    ->pluck('count', 'car_responses.status_reply');
-
-                $merged = $defaultCounts->merge($actualCounts);
-
-                return $merged->map(fn ($count, $status) => (object)[
-                    'status_reply' => $status,
-                    'count' => $count,
-                ]);
-            })
-            ->columns([
-                TextColumn::make('status_reply')
-                    ->label('Status')
-                    ->formatStateUsing(fn (string $state) => match ($state) {
-                        'on process' => 'On process',
-                        'finished' => 'Finished',
-                        'delay' => 'Delay',
-                        default => ucfirst($state)
-                    }),
-                TextColumn::make('count')
-                    ->label('Count')
-            ])
+                    SELECT "delay" as status_reply, COUNT(*) as count
+                    FROM car_reports
+                    JOIN car_responses ON car_responses.car_id = car_reports.id
+                    WHERE car_reports.hazard_level_id = 1 AND car_responses.status_reply = "delay"
+                ) as sub')
+        )
+        ->columns([
+            TextColumn::make('status_reply')
+                ->label('Status')
+                ->formatStateUsing(fn (string $state) => match ($state) {
+                    'on process' => 'On process',
+                    'finished' => 'Finished',
+                    'delay' => 'Delay',
+                    default => ucfirst($state)
+                }),
+            TextColumn::make('count')
+                ->label('Count')
+        ])
             ->filters([
                 Filter::make('car_responses.created_at')
                     ->form([
