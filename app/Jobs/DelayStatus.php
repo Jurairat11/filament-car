@@ -50,6 +50,7 @@ class DelayStatus implements ShouldQueue
                 $item->save();
             }
         }
+            $item = $items->first(); // Get the first item to use for notification
 
             $report = Car_report::find($item->car_id);
 
