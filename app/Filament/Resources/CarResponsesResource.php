@@ -326,8 +326,8 @@ class CarResponsesResource extends Resource
             ->recordUrl(null)
 
             ->actions([
-                Action::make('done')
-                ->label('Done')
+                Action::make('checked')
+                ->label('Check')
                 ->color('success')
                 ->icon('heroicon-o-check-circle')
                 ->requiresConfirmation()
