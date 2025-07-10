@@ -79,12 +79,6 @@ class Dashboard extends \Filament\Pages\Dashboard
         return "Hazard Identification and Countermeasure Status Dashboard as of {$date}";
     }
 
-    public function getWidgets(): array
-    {
-        return [
-            Hazard_rank_a::class,
-        ];
-    }
 
 
 }
