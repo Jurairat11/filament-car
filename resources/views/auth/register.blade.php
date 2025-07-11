@@ -29,28 +29,28 @@
 
             <div>
                 <label for="emp_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">First
-                    Name</label>
+                    Name<span class="text-red-500">*</span></label>
                 <input id="emp_name" name="emp_name" type="text" required value="{{ old('emp_name') }}"
                     class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:text-white">
             </div>
 
             <div>
                 <label for="last_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Last
-                    Name</label>
+                    Name<span class="text-red-500">*</span></label>
                 <input id="last_name" name="last_name" type="text" required value="{{ old('last_name') }}"
                     class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:text-white">
             </div>
 
             <div>
                 <label for="emp_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Employee
-                    ID</label>
+                    ID<span class="text-red-500">*</span></label>
                 <input id="emp_id" name="emp_id" type="text" required value="{{ old('emp_id') }}"
                     class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:text-white">
             </div>
 
             <div>
                 <label for="dept_id"
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Department</label>
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Department<span class="text-red-500">*</span></label>
                 <select id="dept_id" name="dept_id" required
                     class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:text-white">
                     <option value="">Select Department</option>
@@ -68,14 +68,14 @@
 
             <div>
                 <label for="password"
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password<span class="text-red-500">*</span></label>
                 <input id="password" name="password" type="password" required
                     class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:text-white">
             </div>
 
             <div>
                 <label for="password_confirmation"
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm Password</label>
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm Password<span class="text-red-500">*</span></label>
                 <input id="password_confirmation" name="password_confirmation" type="password" required
                     class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:text-white">
             </div>
