@@ -55,8 +55,7 @@ class UserResource extends Resource
                 TextInput::make('email')
                 ->label('Email address')
                 ->email()
-                ->autocomplete(false)
-                ->required(),
+                ->autocomplete(false),
                 TextInput::make('password')
                 ->label('Password')
                 ->password()
