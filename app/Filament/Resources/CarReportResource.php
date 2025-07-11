@@ -209,14 +209,39 @@ class CarReportResource extends Resource
                         Hidden::make('img_before')
                         ->dehydrated(),
 
+                        // Select::make('responsible_dept_id')
+                        //     ->label('Reported to')
+                        //     ->placeholder('Select department')
+                        //     ->helperText('The department responsible for the issue')
+                        //     ->searchable()
+                        //     ->preload()
+                        //     ->required()
+                        //     ->relationship('responsible','dept_name'),
+
+                        Select::make('responsible_group')
+                        ->label('กลุ่มหน่วยงาน')
+                        ->options([
+                            'general' => 'ทั่วไป',
+                            'other' => 'อื่นๆ',
+
+                        ])
+                        ->default('general')
+                        ->reactive(),
+
                         Select::make('responsible_dept_id')
-                            ->label('Reported to')
-                            ->placeholder('Select department')
-                            ->helperText('The department responsible for the issue')
-                            ->searchable()
-                            ->preload()
-                            ->required()
-                            ->relationship('responsible','dept_name'),
+                            ->label('เลือกหน่วยงานที่รับผิดชอบ')
+                            ->options(function(callable $get) {
+                                $group = $get('responsible_group');
+
+                                if(!$group){
+                                    return [];
+                                }
+                                return Department::where('group',$group)->pluck('dept_name','dept_id');
+                            })
+                            ->hidden(fn(callable $get) => blank($get('responsible_group')))
+                            ->reactive()
+
+
 
                         ]),
                     ])->columns(1)->columnSpan(2),

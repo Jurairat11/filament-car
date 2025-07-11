@@ -34,7 +34,9 @@ class DepartmentResource extends Resource
                         ->required(),
                     TextInput::make('dept_code')
                         ->label('Department code')
-                        ->placeholder('Enter department code')
+                        ->placeholder('Enter department code'),
+                    TextInput::make('group')
+                    ->label('Group')
 
                 ])->columns(2),
             ]);
@@ -50,7 +52,9 @@ class DepartmentResource extends Resource
                 TextColumn::make('dept_name')
                     ->label('Department name'),
                 TextColumn::make('dept_code')
-                    ->label('Department code')
+                    ->label('Department code'),
+                TextColumn::make('group')
+                    ->label('Group')
             ])
             ->filters([
                 //
