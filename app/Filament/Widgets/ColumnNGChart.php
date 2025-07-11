@@ -36,9 +36,16 @@ class ColumnNGChart extends ApexChartWidget
     protected static ?int $sort = 3;
     protected function getOptions(): array
 {
-    $departments = Department::orderBy('dept_name')
-    ->whereNot('dept_name','IT')
+    // $departments = Department::orderBy('dept_name')
+    // ->whereNot('dept_name','IT')
+    // ->get();
+
+    $generalDepartments = Department::orderBy('dept_name')
+    ->where('group','general')
     ->get();
+
+    $otherDept = Department::where('group','other')
+    ->pluck('dept_id')->toArray();
 
     // ดึงจำนวน car report ทั้งหมด group by dept_id
     $totalCounts = Car_report::selectRaw('responsible_dept_id, COUNT(*) as total')
@@ -64,11 +71,27 @@ class ColumnNGChart extends ApexChartWidget
         ->pluck('total', 'car_reports.responsible_dept_id');
 
     // เตรียม labels (ชื่อแผนก) และ values (จำนวน)
-    $categories = $departments->map(fn($dept) => $dept->dept_name)->toArray();
-    $totalValues = $departments->map(fn($dept) => $totalCounts[$dept->dept_id] ?? 0)->toArray();
-    $closedValues = $departments->map(fn($dept) => $closedCounts[$dept->dept_id] ?? 0)->toArray();
-    $onProcessValues = $departments->map(fn($dept) => $onProcessCounts[$dept->dept_id] ?? 0)->toArray();
-    $delayValues = $departments->map(fn($dept) => $delayCounts[$dept->dept_id] ?? 0)->toArray();
+    // $categories = $departments->map(fn($dept) => $dept->dept_name)->toArray();
+    // $totalValues = $departments->map(fn($dept) => $totalCounts[$dept->dept_id] ?? 0)->toArray();
+    // $closedValues = $departments->map(fn($dept) => $closedCounts[$dept->dept_id] ?? 0)->toArray();
+    // $onProcessValues = $departments->map(fn($dept) => $onProcessCounts[$dept->dept_id] ?? 0)->toArray();
+    // $delayValues = $departments->map(fn($dept) => $delayCounts[$dept->dept_id] ?? 0)->toArray();
+
+    // เตรียม labels และ values สำหรับแผนกในกลุ่ม general
+    $categories = $generalDepartments->map(fn($dept) => $dept->dept_name)->toArray();
+    $totalValues = $generalDepartments->map(fn($dept) => $totalCounts[$dept->dept_id] ?? 0)->toArray();
+    $closedValues = $generalDepartments->map(fn($dept) => $closedCounts[$dept->dept_id] ?? 0)->toArray();
+    $onProcessValues = $generalDepartments->map(fn($dept) => $onProcessCounts[$dept->dept_id] ?? 0)->toArray();
+    $delayValues = $generalDepartments->map(fn($dept) => $delayCounts[$dept->dept_id] ?? 0)->toArray();
+
+    // 👇 เพิ่มข้อมูลของกลุ่ม 'Other' เป็นแท่งเดียว
+    $otherLabel = 'Other';
+
+    $totalValues[] = collect($otherDept)->sum(fn($id) => $totalCounts[$id] ?? 0);
+    $closedValues[] = collect($otherDept)->sum(fn($id) => $closedCounts[$id] ?? 0);
+    $onProcessValues[] = collect($otherDept)->sum(fn($id) => $onProcessCounts[$id] ?? 0);
+    $delayValues[] = collect($otherDept)->sum(fn($id) => $delayCounts[$id] ?? 0);
+    $categories[] = $otherLabel;
 
     return [
         'chart' => [
