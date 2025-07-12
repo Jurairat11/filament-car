@@ -40,7 +40,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                     ->placeholder('dd-mm-yyyy')
                     ->closeOnDateSelection()
                     ->suffixAction(
-                    Action::make('resetDate')
+                    Action::make('resetStartDate')
                         ->icon('heroicon-o-x-circle')
                         ->tooltip('clear')
                         ->action(fn ($state, callable $set) => $set('startDate', null))
@@ -52,7 +52,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                     ->placeholder('dd-mm-yyyy')
                     ->closeOnDateSelection()
                     ->suffixAction(
-                    Action::make('resetDate')
+                    Action::make('resetEndDate')
                         ->icon('heroicon-o-x-circle')
                         ->tooltip('clear')
                         ->action(fn ($state, callable $set) => $set('endDate', null))
