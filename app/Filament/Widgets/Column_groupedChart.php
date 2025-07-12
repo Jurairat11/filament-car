@@ -153,7 +153,7 @@ class Column_groupedChart extends ApexChartWidget
             })
         )
         // ->selectRaw("to_char(created_at,'MM') as month, COUNT(*) as total")
-
+        ->selectRaw("to_char(created_at,'MM') as month, COUNT(DISTINCT car_id) as total")
         ->where('status_reply', 'delay')
         ->groupBy('month')
         ->orderBy('month')
