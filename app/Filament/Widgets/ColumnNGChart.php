@@ -3,9 +3,10 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Car_report;
-use App\Models\Car_responses;
 use App\Models\Department;
+use App\Models\Car_responses;
 use Illuminate\Support\Facades\Auth;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
 class ColumnNGChart extends ApexChartWidget
@@ -34,8 +35,12 @@ class ColumnNGChart extends ApexChartWidget
     protected static bool $isLazy = false;
     protected int | string | array $columnSpan = 'full';
     protected static ?int $sort = 3;
+
+    use InteractsWithPageFilters;
     protected function getOptions(): array
-{
+    {
+        $start = $this->filters['startDate'];
+        $end = $this->filters['endDate'];
 
     $generalDepartments = Department::orderBy('dept_name')
     ->where('group','general')
@@ -44,49 +49,65 @@ class ColumnNGChart extends ApexChartWidget
     $otherDept = Department::where('group','other')
     ->pluck('dept_id')->toArray();
 
-    // ดึงจำนวน car report ทั้งหมด group by dept_id
-    $totalCounts = Car_report::selectRaw('responsible_dept_id, COUNT(*) as total')
-        ->groupBy('responsible_dept_id')
-        ->pluck('total', 'responsible_dept_id');
-
-    // ดึงจำนวน car report ที่ status = closed group by dept_id
-    $closedCounts = Car_report::selectRaw('responsible_dept_id, COUNT(*) as total')
-        ->where('status', 'closed')
-        ->groupBy('responsible_dept_id')
-        ->pluck('total', 'responsible_dept_id');
-
-    $delayCarIds = Car_responses::where('status_reply', 'delay')->pluck('car_id')->unique();
-
-    $onProcessCounts = Car_report::selectRaw('responsible_dept_id, COUNT(*) as total')
-    ->whereNot('status', 'closed')
-    ->whereNotIn('id', $delayCarIds)
-    ->groupBy('responsible_dept_id')
-    ->pluck('total', 'responsible_dept_id');
-
-    $delayCounts = Car_responses::where('status_reply', 'delay')
-    ->join('car_reports', 'car_responses.car_id', '=', 'car_reports.id')
-    ->selectRaw('car_reports.responsible_dept_id, COUNT(DISTINCT car_responses.car_id) as total') // นับไม่ให้ซ้ำ
-    ->groupBy('car_reports.responsible_dept_id')
-    ->pluck('total', 'car_reports.responsible_dept_id');
-
-    // $onProcessCounts = Car_report::selectRaw('responsible_dept_id, COUNT(*) as total')
-    //     ->whereNot('status', 'closed')
+    // $totalCounts = Car_report::selectRaw('responsible_dept_id, COUNT(*) as total')
     //     ->groupBy('responsible_dept_id')
     //     ->pluck('total', 'responsible_dept_id');
 
-    // $delayCounts = Car_responses::where('status_reply', 'delay')
-    //     ->whereHas('carReport') // ตรวจสอบว่ามีความสัมพันธ์
-    //     ->join('car_reports', 'car_responses.car_id', '=', 'car_reports.id')
-    //     ->selectRaw('car_reports.responsible_dept_id, COUNT(*) as total')
-    //     ->groupBy('car_reports.responsible_dept_id')
-    //     ->pluck('total', 'car_reports.responsible_dept_id');
+    $totalCounts = Car_report::when($start, fn($q) => $q->whereDate('created_at', '>=', $start))
+    ->when($end, fn($q) => $q->whereDate('created_at', '<=', $end))
+    ->selectRaw('responsible_dept_id, COUNT(*) as total')
+    ->groupBy('responsible_dept_id')
+    ->pluck('total', 'responsible_dept_id');
 
-    // เตรียม labels (ชื่อแผนก) และ values (จำนวน)
-    // $categories = $departments->map(fn($dept) => $dept->dept_name)->toArray();
-    // $totalValues = $departments->map(fn($dept) => $totalCounts[$dept->dept_id] ?? 0)->toArray();
-    // $closedValues = $departments->map(fn($dept) => $closedCounts[$dept->dept_id] ?? 0)->toArray();
-    // $onProcessValues = $departments->map(fn($dept) => $onProcessCounts[$dept->dept_id] ?? 0)->toArray();
-    // $delayValues = $departments->map(fn($dept) => $delayCounts[$dept->dept_id] ?? 0)->toArray();
+    // $closedCounts = Car_report::selectRaw('responsible_dept_id, COUNT(*) as total')
+    //     ->where('status', 'closed')
+    //     ->groupBy('responsible_dept_id')
+    //     ->pluck('total', 'responsible_dept_id');
+
+    $closedCounts = Car_report::when($start, fn($q) => $q->whereDate('created_at', '>=', $start))
+    ->when($end, fn($q) => $q->whereDate('created_at', '<=', $end))
+    ->where('status', 'closed')
+    ->selectRaw('responsible_dept_id, COUNT(*) as total')
+    ->groupBy('responsible_dept_id')
+    ->pluck('total', 'responsible_dept_id');
+
+
+    // $delayCarIds = Car_responses::where('status_reply', 'delay')->pluck('car_id')->unique();
+
+    $delayCarIds = Car_responses::when($start, fn($q) => $q->whereDate('created_at', '>=', $start))
+    ->when($end, fn($q) => $q->whereDate('created_at', '<=', $end))
+    ->where('status_reply', 'delay')
+    ->pluck('car_id')
+    ->unique();
+
+    // $onProcessCounts = Car_report::selectRaw('responsible_dept_id, COUNT(*) as total')
+    // ->whereNot('status', 'closed')
+    // ->whereNotIn('id', $delayCarIds)
+    // ->groupBy('responsible_dept_id')
+    // ->pluck('total', 'responsible_dept_id');
+
+    $onProcessCounts = Car_report::when($start, fn($q) => $q->whereDate('created_at', '>=', $start))
+    ->when($end, fn($q) => $q->whereDate('created_at', '<=', $end))
+    ->whereNot('status', 'closed')
+    ->whereNotIn('id', $delayCarIds)
+    ->selectRaw('responsible_dept_id, COUNT(*) as total')
+    ->groupBy('responsible_dept_id')
+    ->pluck('total', 'responsible_dept_id');
+
+    // $delayCounts = Car_responses::where('status_reply', 'delay')
+    // ->join('car_reports', 'car_responses.car_id', '=', 'car_reports.id')
+    // ->selectRaw('car_reports.responsible_dept_id, COUNT(DISTINCT car_responses.car_id) as total') // นับไม่ให้ซ้ำ
+    // ->groupBy('car_reports.responsible_dept_id')
+    // ->pluck('total', 'car_reports.responsible_dept_id');
+
+    $delayCounts = Car_responses::when($start, fn($q) => $q->whereDate('car_responses.created_at', '>=', $start))
+    ->when($end, fn($q) => $q->whereDate('car_responses.created_at', '<=', $end))
+    ->where('status_reply', 'delay')
+    ->join('car_reports', 'car_responses.car_id', '=', 'car_reports.id')
+    ->selectRaw('car_reports.responsible_dept_id, COUNT(DISTINCT car_responses.car_id) as total')
+    ->groupBy('car_reports.responsible_dept_id')
+    ->pluck('total', 'car_reports.responsible_dept_id');
+
 
     // เตรียม labels และ values สำหรับแผนกในกลุ่ม general
     $categories = $generalDepartments->map(fn($dept) => $dept->dept_name)->toArray();
@@ -148,7 +169,7 @@ class ColumnNGChart extends ApexChartWidget
                             'stepSize' => 2,
                         ],
         ],
-        'colors' => ['#3b82f6', '#10b981', '#f59e0b','#ef4444'], // สามารถเปลี่ยนสีได้ตามต้องการ
+        'colors' => ['#3b82f6', '#10b981', '#f59e0b','#ef4444'],
     ];
 }
 
@@ -159,3 +180,23 @@ class ColumnNGChart extends ApexChartWidget
         // return in_array($user?->name, ['Admin','Safety']);
     }
 }
+
+
+// $onProcessCounts = Car_report::selectRaw('responsible_dept_id, COUNT(*) as total')
+    //     ->whereNot('status', 'closed')
+    //     ->groupBy('responsible_dept_id')
+    //     ->pluck('total', 'responsible_dept_id');
+
+    // $delayCounts = Car_responses::where('status_reply', 'delay')
+    //     ->whereHas('carReport') // ตรวจสอบว่ามีความสัมพันธ์
+    //     ->join('car_reports', 'car_responses.car_id', '=', 'car_reports.id')
+    //     ->selectRaw('car_reports.responsible_dept_id, COUNT(*) as total')
+    //     ->groupBy('car_reports.responsible_dept_id')
+    //     ->pluck('total', 'car_reports.responsible_dept_id');
+
+    // เตรียม labels (ชื่อแผนก) และ values (จำนวน)
+    // $categories = $departments->map(fn($dept) => $dept->dept_name)->toArray();
+    // $totalValues = $departments->map(fn($dept) => $totalCounts[$dept->dept_id] ?? 0)->toArray();
+    // $closedValues = $departments->map(fn($dept) => $closedCounts[$dept->dept_id] ?? 0)->toArray();
+    // $onProcessValues = $departments->map(fn($dept) => $onProcessCounts[$dept->dept_id] ?? 0)->toArray();
+    // $delayValues = $departments->map(fn($dept) => $delayCounts[$dept->dept_id] ?? 0)->toArray();
