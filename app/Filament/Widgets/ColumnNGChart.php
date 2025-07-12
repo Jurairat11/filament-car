@@ -39,8 +39,9 @@ class ColumnNGChart extends ApexChartWidget
     use InteractsWithPageFilters;
     protected function getOptions(): array
     {
-        $start = $this->filters['startDate'];
-        $end = $this->filters['endDate'];
+    $start = data_get($this->filters, 'startDate');
+    $end = data_get($this->filters, 'endDate');
+
 
     $generalDepartments = Department::orderBy('dept_name')
     ->where('group','general')
