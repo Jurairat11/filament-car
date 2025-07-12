@@ -43,15 +43,11 @@ class Dashboard extends \Filament\Pages\Dashboard
                     Action::make('resetStartDate')
                         ->icon('heroicon-o-x-circle')
                         ->tooltip('clear')
-                        // ->action(fn ($state, callable $set) => $set('startDate', null))
+                        ->action(fn ($state, callable $set) => $set('startDate', null))
                         // ->action(function ($state, callable $set) {
                         //     $set('startDate', null);
                         //     return redirect()->route('filament.admin.pages.dashboard');
                         //     })
-                    ->action(function ($state, callable $set) {
-                        $set('startDate', null);
-                        return redirect()->to(url()->current()); // ล้าง query string
-                    })
                     ),
 
                 DatePicker::make('endDate')
