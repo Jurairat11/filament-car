@@ -111,6 +111,8 @@ class Column_groupedChart extends ApexChartWidget
             $closedData[$item->month] = $item->total;
         }
 
+        $delayCarIds = Car_responses::where('status_reply', 'delay')->pluck('car_id')->unique();
+
         // query for in progress status
         $data = Car_report::when(
             $start,
@@ -126,6 +128,7 @@ class Column_groupedChart extends ApexChartWidget
         )
         ->selectRaw("to_char(created_at,'MM') as month, COUNT(*) as total")
         ->whereNot('status', 'closed')
+        ->whereNotIn('id', $delayCarIds)
         ->groupBy('month')
         ->orderBy('month')
         ->get();
@@ -149,7 +152,8 @@ class Column_groupedChart extends ApexChartWidget
                 $q->where('responsible_dept_id', $dept);
             })
         )
-        ->selectRaw("to_char(created_at,'MM') as month, COUNT(*) as total")
+        // ->selectRaw("to_char(created_at,'MM') as month, COUNT(*) as total")
+        ->selectRaw("to_char(created_at,'MM') as month, COUNT(DISTINCT car_id) as total")
         ->where('status_reply', 'delay')
         ->groupBy('month')
         ->orderBy('month')
