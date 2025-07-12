@@ -43,8 +43,23 @@ class Dashboard extends \Filament\Pages\Dashboard
                     Action::make('resetStartDate')
                         ->icon('heroicon-o-x-circle')
                         ->tooltip('clear')
-                        ->action(fn ($state, callable $set) => $set('startDate', null))
+                        // ->action(fn ($state, callable $set) => $set('startDate', null))
+                        ->action(function ($state, callable $set, $livewire) {
+                            $set('startDate', null);
+                            $livewire->resetPage(); // รีเซ็ต pagination ถ้ามี
+                            request()->query->remove('startDate'); // ลบจาก query string
+                            return redirect(request()->url()); // รีเฟรชหน้าโดยไม่ส่ง query
+                            })
                     ),
+
+
+// ->action(function ($state, callable $set, $livewire) {
+//  $set('startDate', null);
+//  $livewire->resetPage(); // รีเซ็ต pagination ถ้ามี
+//  request()->query->remove('startDate'); // ลบจาก query string
+//  return redirect(request()->url()); // รีเฟรชหน้าโดยไม่ส่ง query
+// })
+
                 DatePicker::make('endDate')
                     ->label('Created until')
                     ->native(false)
