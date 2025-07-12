@@ -36,9 +36,6 @@ class ColumnNGChart extends ApexChartWidget
     protected static ?int $sort = 3;
     protected function getOptions(): array
 {
-    // $departments = Department::orderBy('dept_name')
-    // ->whereNot('dept_name','IT')
-    // ->get();
 
     $generalDepartments = Department::orderBy('dept_name')
     ->where('group','general')
@@ -58,17 +55,31 @@ class ColumnNGChart extends ApexChartWidget
         ->groupBy('responsible_dept_id')
         ->pluck('total', 'responsible_dept_id');
 
+    $delayCarIds = Car_responses::where('status_reply', 'delay')->pluck('car_id')->unique();
+
     $onProcessCounts = Car_report::selectRaw('responsible_dept_id, COUNT(*) as total')
-        ->whereNot('status', 'closed')
-        ->groupBy('responsible_dept_id')
-        ->pluck('total', 'responsible_dept_id');
+    ->whereNot('status', 'closed')
+    ->whereNotIn('id', $delayCarIds)
+    ->groupBy('responsible_dept_id')
+    ->pluck('total', 'responsible_dept_id');
 
     $delayCounts = Car_responses::where('status_reply', 'delay')
-        ->whereHas('carReport') // ตรวจสอบว่ามีความสัมพันธ์
-        ->join('car_reports', 'car_responses.car_id', '=', 'car_reports.id')
-        ->selectRaw('car_reports.responsible_dept_id, COUNT(*) as total')
-        ->groupBy('car_reports.responsible_dept_id')
-        ->pluck('total', 'car_reports.responsible_dept_id');
+    ->join('car_reports', 'car_responses.car_id', '=', 'car_reports.id')
+    ->selectRaw('car_reports.responsible_dept_id, COUNT(DISTINCT car_responses.car_id) as total') // นับไม่ให้ซ้ำ
+    ->groupBy('car_reports.responsible_dept_id')
+    ->pluck('total', 'car_reports.responsible_dept_id');
+
+    // $onProcessCounts = Car_report::selectRaw('responsible_dept_id, COUNT(*) as total')
+    //     ->whereNot('status', 'closed')
+    //     ->groupBy('responsible_dept_id')
+    //     ->pluck('total', 'responsible_dept_id');
+
+    // $delayCounts = Car_responses::where('status_reply', 'delay')
+    //     ->whereHas('carReport') // ตรวจสอบว่ามีความสัมพันธ์
+    //     ->join('car_reports', 'car_responses.car_id', '=', 'car_reports.id')
+    //     ->selectRaw('car_reports.responsible_dept_id, COUNT(*) as total')
+    //     ->groupBy('car_reports.responsible_dept_id')
+    //     ->pluck('total', 'car_reports.responsible_dept_id');
 
     // เตรียม labels (ชื่อแผนก) และ values (จำนวน)
     // $categories = $departments->map(fn($dept) => $dept->dept_name)->toArray();
@@ -84,7 +95,7 @@ class ColumnNGChart extends ApexChartWidget
     $onProcessValues = $generalDepartments->map(fn($dept) => $onProcessCounts[$dept->dept_id] ?? 0)->toArray();
     $delayValues = $generalDepartments->map(fn($dept) => $delayCounts[$dept->dept_id] ?? 0)->toArray();
 
-    // 👇 เพิ่มข้อมูลของกลุ่ม 'Other' เป็นแท่งเดียว
+    // เพิ่มข้อมูลของกลุ่ม 'Other' เป็นแท่งเดียว
     $otherLabel = 'Other';
 
     $totalValues[] = collect($otherDept)->sum(fn($id) => $totalCounts[$id] ?? 0);
