@@ -44,19 +44,15 @@ class Dashboard extends \Filament\Pages\Dashboard
                         ->icon('heroicon-o-x-circle')
                         ->tooltip('clear')
                         // ->action(fn ($state, callable $set) => $set('startDate', null))
-                        ->action(function ($state, callable $set) {
-                            $set('startDate', null);
-                            return redirect()->route('filament.admin.pages.dashboard'); // เปลี่ยนเป็น route ที่คุณใช้
-                            })
-
+                        // ->action(function ($state, callable $set) {
+                        //     $set('startDate', null);
+                        //     return redirect()->route('filament.admin.pages.dashboard');
+                        //     })
+                    ->action(function ($state, callable $set) {
+                        $set('startDate', null);
+                        return redirect()->to(url()->current()); // ล้าง query string
+                    })
                     ),
-
-
-// ->action(function ($state, callable $set) {
-//     $set('startDate', null);
-//     return redirect()->route('your.route.name'); // เปลี่ยนเป็น route ที่คุณใช้
-//     })
-
 
                 DatePicker::make('endDate')
                     ->label('Created until')
