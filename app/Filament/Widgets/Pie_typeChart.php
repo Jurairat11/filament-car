@@ -67,6 +67,10 @@ class Pie_typeChart extends ApexChartWidget
         $series = $data->pluck('total')->toArray();
         $labels = $data->map(fn($item) => $item->hazardType->type_name ?? 'Unknown')->toArray();
 
+        foreach ($series as $i => $count){
+            $Count = $count;
+        }
+
         if (empty($series)) {
             return [
                 'chart' => [
@@ -112,6 +116,10 @@ class Pie_typeChart extends ApexChartWidget
             //         return val.toFixed(1) + "%, " + count;
             //     }'),
             // ]
+            'dataLables' => [
+                'enabled' => true,
+                'formatter' => $Count
+            ]
 
         ];
     }
