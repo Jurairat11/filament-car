@@ -3,7 +3,6 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Car_report;
-use Illuminate\Support\Js;
 
 use Illuminate\Support\Facades\Auth;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
@@ -67,9 +66,6 @@ class Pie_typeChart extends ApexChartWidget
         $series = $data->pluck('total')->toArray();
         $labels = $data->map(fn($item) => $item->hazardType->type_name ?? 'Unknown')->toArray();
 
-        foreach ($series as $i => $count){
-            $Count = $count;
-        }
 
         if (empty($series)) {
             return [
@@ -116,10 +112,6 @@ class Pie_typeChart extends ApexChartWidget
             //         return val.toFixed(1) + "%, " + count;
             //     }'),
             // ]
-            'dataLabels' => [
-                'enabled' => true,
-                'formatter' => $Count
-            ]
 
         ];
     }
