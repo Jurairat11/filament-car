@@ -35,7 +35,7 @@ class CarReportResource extends Resource
     protected static ?string $model = Car_report::class;
     protected static ?string $navigationGroup = 'CAR Report';
     protected static ?string $navigationLabel = 'สร้าง CAR';
-    protected static ?string $pluralModelLabel = 'Car Report';
+    protected static ?string $pluralModelLabel = 'CAR Report';
     protected static ?string $navigationIcon = 'heroicon-o-document-plus';
     public static function form(Form $form): Form
     {
