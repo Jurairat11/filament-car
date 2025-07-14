@@ -3,7 +3,6 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Car_report;
-use Illuminate\Support\Js;
 use Illuminate\Support\Facades\Auth;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
