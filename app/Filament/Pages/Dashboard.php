@@ -51,9 +51,10 @@ class Dashboard extends \Filament\Pages\Dashboard
 
                         ->action(function () {
                             return <<<'JS'
-                                window.location.href = '/admin/dashboard';
+                                window.location.href = '{{ route('filament.admin.pages.dashboard') }}';
                             JS;
                         })
+
 
                     ),
 
