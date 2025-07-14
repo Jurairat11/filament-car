@@ -19,7 +19,7 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
 {
     use Tables\Concerns\InteractsWithTable;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
-    protected static ?string $title = 'รายการ CAR ทั้งหมด';
+    protected static ?string $title = 'รับเรื่อง CAR';
     protected static ?string $navigationGroup = 'CAR Responses';
     protected static ?int $navigationSort = 2;
     protected static string $view = 'filament.pages.department-car-alert';
