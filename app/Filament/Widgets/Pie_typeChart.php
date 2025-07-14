@@ -107,13 +107,13 @@ class Pie_typeChart extends ApexChartWidget
                 '#00E396',
             ],
 
-            'dataLabels' => [
-                'enabled' => true,
-                'formatter' => RawJs::make('function (val ,opts) {
-                    const count = opts.w.config.series[opts.seriesIndex];
-                    return val.toFixed(1) + "%, " + count;
-                }'),
-            ]
+            // 'dataLabels' => [
+            //     'enabled' => true,
+            //     'formatter' => RawJs::make('function (val ,opts) {
+            //         const count = opts.w.config.series[opts.seriesIndex];
+            //         return val.toFixed(1) + "%, " + count;
+            //     }'),
+            // ]
 
         ];
     }
