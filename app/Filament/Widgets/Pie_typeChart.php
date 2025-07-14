@@ -65,6 +65,15 @@ class Pie_typeChart extends ApexChartWidget
         $series = $data->pluck('total')->toArray();
         $labels = $data->map(fn($item) => $item->hazardType->type_name ?? 'Unknown')->toArray();
 
+        $total = array_sum($series);
+        $customLabels = [];
+
+        foreach ($series as $i => $count) {
+            $percent = ($count / $total) * 100;
+            $label = number_format($percent, 1) . '%, ' . $count;
+            $customLabels[] = $label;
+        }
+
         if (empty($series)) {
             return [
                 'chart' => [
@@ -87,7 +96,7 @@ class Pie_typeChart extends ApexChartWidget
                 'height' => 300,
             ],
             'series' => $series,
-            'labels' => $labels,
+            'labels' => $customLabels,
             'legend' => [
                 'labels' => [
                     'fontFamily' => 'inherit',
@@ -103,6 +112,11 @@ class Pie_typeChart extends ApexChartWidget
                 '#008FFB',
                 '#00E396',
             ],
+            'dataLabels' => [
+                'enabled' => true,
+
+            ]
+
         ];
     }
     public static function canView(): bool
