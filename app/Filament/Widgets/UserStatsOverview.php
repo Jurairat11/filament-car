@@ -29,54 +29,52 @@ class UserStatsOverview extends BaseWidget
         ->unique();
 
         $stats = [
-    'total' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
-        ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
-        ->where('responsible_dept_id', $deptId)
-        ->count(),
+        'total' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
+            ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
+            ->where('responsible_dept_id', $deptId)
+            ->count(),
 
-    'closed' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
-        ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
-        ->where('status', 'closed')
-        ->where('responsible_dept_id', $deptId)
-        ->count(),
+        'closed' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
+            ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
+            ->where('status', 'closed')
+            ->where('responsible_dept_id', $deptId)
+            ->count(),
 
-    'delay' => $delayCarIds->count(),
+        'delay' => $delayCarIds->count(),
 
-    'on_process' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
-        ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
-        ->whereNot('status', 'closed')
-        ->where('responsible_dept_id', $deptId)
-        ->whereNotIn('id', $delayCarIds)
-        ->count(),
-];
-
-
+        'on_process' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
+            ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
+            ->whereNot('status', 'closed')
+            ->where('responsible_dept_id', $deptId)
+            ->whereNotIn('id', $delayCarIds)
+            ->count(),
+        ];
 
         return [
 
-    Stat::make('Total Hazard', $stats['total'])
-        ->description('Total created car report.')
-        ->descriptionIcon('heroicon-m-document-text', IconPosition::Before)
-        ->chart([3, 5, 2, 4, 6, 1, 7])
-        ->color('info'),
+        Stat::make('Total Hazard', $stats['total'])
+            ->description('Total created car report.')
+            ->descriptionIcon('heroicon-m-document-text', IconPosition::Before)
+            ->chart([3, 5, 2, 4, 6, 1, 7])
+            ->color('info'),
 
-    Stat::make('Completed CAR', $stats['closed'])
-        ->description('Number of closed car report.')
-        ->descriptionIcon('heroicon-m-check-circle', IconPosition::Before)
-        ->chart([3, 5, 2, 4, 6, 1, 7])
-        ->color('success'),
+        Stat::make('Completed CAR', $stats['closed'])
+            ->description('Number of closed car report.')
+            ->descriptionIcon('heroicon-m-check-circle', IconPosition::Before)
+            ->chart([3, 5, 2, 4, 6, 1, 7])
+            ->color('success'),
 
-    Stat::make('On Process CAR', $stats['on_process'])
-        ->description('Number of on process car report.')
-        ->descriptionIcon('heroicon-m-clock', IconPosition::Before)
-        ->chart([3, 5, 2, 4, 6, 1, 7])
-        ->color('warning'),
+        Stat::make('On Process CAR', $stats['on_process'])
+            ->description('Number of on process car report.')
+            ->descriptionIcon('heroicon-m-clock', IconPosition::Before)
+            ->chart([3, 5, 2, 4, 6, 1, 7])
+            ->color('warning'),
 
-    Stat::make('Delay CAR', $stats['delay'])
-        ->description('Number of delay car report.')
-        ->descriptionIcon('heroicon-m-exclamation-triangle', IconPosition::Before)
-        ->chart([3, 5, 2, 4, 6, 1, 7])
-        ->color('danger'),
+        Stat::make('Delay CAR', $stats['delay'])
+            ->description('Number of delay car report.')
+            ->descriptionIcon('heroicon-m-exclamation-triangle', IconPosition::Before)
+            ->chart([3, 5, 2, 4, 6, 1, 7])
+            ->color('danger'),
 
         ];
     }

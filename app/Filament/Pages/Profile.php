@@ -54,6 +54,7 @@ class Profile extends EditProfile
                                 ->searchable()
                                 ->preload()
                                 ->relationship('deptID','dept_name')
+                                ->disabled()
                                 ->required(),
                         $this->getEmailFormComponent(),
                         $this->getPasswordFormComponent(),
