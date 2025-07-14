@@ -116,7 +116,7 @@ class Pie_typeChart extends ApexChartWidget
             //         return val.toFixed(1) + "%, " + count;
             //     }'),
             // ]
-            'dataLables' => [
+            'dataLabels' => [
                 'enabled' => true,
                 'formatter' => $Count
             ]
