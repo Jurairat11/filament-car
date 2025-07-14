@@ -103,6 +103,19 @@ class Pie_typeChart extends ApexChartWidget
                 '#008FFB',
                 '#00E396',
             ],
+            'dataLabels' => [
+            'enabled' => true,
+            'formatter' => new (<<<'JS'
+                function (val, opts) {
+                    const count = opts.w.config.series[opts.seriesIndex];
+                    return val.toFixed(1) + '% (' + count + ')';
+                }
+            JS),
+            'style' => [
+                'fontSize' => '14px',
+                'colors' => ['#fff'],
+                ],
+            ],
         ];
     }
     public static function canView(): bool
