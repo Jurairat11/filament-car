@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -63,7 +62,6 @@ class Car_report extends Model
             ]);
         }
     }
-
 
     public function department() {
         return $this->belongsTo(Department::class, 'dept_id');

@@ -62,7 +62,7 @@ class ViewCarReportCustom extends Page implements HasForms
                         ->content(fn()=>Carbon::parse($this->car_report->car_due_date)->format('d/m/Y') ?? '-'),
 
                     Placeholder::make('hazard_source_id')
-                            ->label('Hazard source')
+                            ->label('แหล่งที่มาของอันตราย')
                             ->content(fn () => optional ($this->car_report->hazardSource)->source_name),
 
                     Placeholder::make('place_id')

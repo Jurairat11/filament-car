@@ -428,7 +428,7 @@ class ViewCarReport extends ViewRecord
                         ->content(fn($record)=>Carbon::parse($record->car_due_date)->format('d/m/Y')),
 
                     Placeholder::make('hazard_source_id')
-                        ->label('Hazard source')
+                        ->label('แหล่งที่มาของอันตราย')
                         ->content(fn ($record) => optional ($record->hazardSource)->source_name),
 
                     Placeholder::make('place_id')
