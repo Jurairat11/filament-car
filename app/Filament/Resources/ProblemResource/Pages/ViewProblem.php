@@ -26,18 +26,17 @@ class ViewProblem extends ViewRecord
             ->schema([
 
                 Section::make('Reporter Information')
-                    ->description('Information about the person who reported the problem.')
                     ->schema([
                         Placeholder::make('user_id')
-                            ->label('Employee ID')
+                            ->label('รหัสพนักงาน')
                             ->content(fn ($record) => optional($record->user)->FullName),
 
                         Placeholder::make('dept_id')
-                            ->label('Department')
+                            ->label('แผนกผู้แจ้ง')
                             ->content(fn ($record) => optional($record->department)->dept_name),
 
                         Placeholder::make('prob_date')
-                            ->label('Reported Date')
+                            ->label('วันที่แจ้งอันตราย')
                             ->content(fn ($record) => Carbon::parse($record->prob_date)->format('d/m/Y')),
                 ])->columns(3),
 
@@ -49,27 +48,27 @@ class ViewProblem extends ViewRecord
                     ->schema([
 
                         Placeholder::make('title')
-                            ->label('Title')
+                            ->label('เรื่อง')
                             ->content(fn ($record) => $record->title),
 
                         Placeholder::make('place')
-                            ->label('Place')
+                            ->label('สถานที่')
                             ->content(fn ($record) => $record->place),
 
                         Placeholder::make('prob_desc')
-                            ->label('Description')
+                            ->label('รายละเอียดอันตรายที่พบ')
                             // ->columnspan(2)
                             ->content(fn ($record) => $record->prob_desc),
 
                         View::make('components.problem-view-image')
-                            ->label('Problem picture')
+                            ->label('รูปภาพอันตรายที่พบ')
                             ->viewData([
                                 'path' => $this->getRecord()->prob_img_path,
                             ])
                             ->columnSpanFull(),
 
                         Placeholder::make('dismiss_reason')
-                            ->label('Reason for Dismissal')
+                            ->label('สาเหตุไม่รับการแจ้งอันตราย')
                             ->content(fn ($record) => $record->dismiss_reason ?? '-')
                             ->visible(fn ($record) => $record->status === 'dismissed'),
 
