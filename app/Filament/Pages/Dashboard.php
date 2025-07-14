@@ -51,7 +51,7 @@ class Dashboard extends \Filament\Pages\Dashboard
 
                         ->action(function () {
                             return <<<'JS'
-                            window.location.href = window.location.pathname;
+                                window.location.href = '/admin/dashboard';
                             JS;
                         })
 
