@@ -65,8 +65,8 @@ class CarResponsesResource extends Resource
                 Section::make()
                 ->schema([
                     Select::make('car_id')
-                        ->label('CAR No.')
-                        ->placeholder('Select CAR No.')
+                        ->label('เลขที่ CAR')
+                        ->placeholder('เลือก เลขที่ CAR ที่ต้องการตอบกลับ')
                         ->options(function (){
                             if(Auth::user()?->hasAnyRole(['Admin'])) {
                                 return Car_report::all()
