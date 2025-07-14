@@ -48,8 +48,6 @@ class Dashboard extends \Filament\Pages\Dashboard
                         //     $set('startDate', null);
                         //     return redirect()->route('filament.admin.pages.dashboard');
                         //     })
-
-
                     ),
 
                 DatePicker::make('endDate')
