@@ -23,7 +23,7 @@ class ColumnNGChart extends ApexChartWidget
      *
      * @var string|null
      */
-    protected static ?string $heading = 'NG Patrol';
+    protected static ?string $heading = 'Summary Hazard of Department Classified by Permanent Countermeasure Status (Case)';
 
     /**
      * Chart options (series, labels, types, size, animations...)

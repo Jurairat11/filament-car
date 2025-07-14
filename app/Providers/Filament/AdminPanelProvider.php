@@ -52,7 +52,7 @@ class AdminPanelProvider extends PanelProvider
                 ->visible(fn() => Auth::user()?->emp_id)
             ])
             //->brandName('CAR')
-            ->brandLogo(asset('images/logo.png'))
+            ->brandLogo(asset('images/vcst-logo.png'))
             ->brandLogoHeight('3rem')
             ->colors([
                 'primary' => Color::Indigo,

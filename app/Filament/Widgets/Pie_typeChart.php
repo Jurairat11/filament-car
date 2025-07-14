@@ -21,7 +21,7 @@ class Pie_typeChart extends ApexChartWidget
      *
      * @var string|null
      */
-    protected static ?string $heading = 'Summary of Hazard Type';
+    protected static ?string $heading = 'Summary Hazard Classified by Type (Case)';
 
     /**
      * Chart options (series, labels, types, size, animations...)

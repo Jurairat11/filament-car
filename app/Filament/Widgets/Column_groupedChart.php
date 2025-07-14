@@ -22,7 +22,7 @@ class Column_groupedChart extends ApexChartWidget
      *
      * @var string|null
      */
-    protected static ?string $heading = 'Summary monthly of CAR reported';
+    protected static ?string $heading = 'Summary Hazard Classified by Permanent Countermeasure Status (Case)';
 
     /**
      * Chart options (series, labels, types, size, animations...)
