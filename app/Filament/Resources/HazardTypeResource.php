@@ -17,9 +17,9 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class HazardTypeResource extends Resource
 {
     protected static ?string $model = Hazard_type::class;
-    protected static ?string $navigationGroup = 'Car Report';
-    protected static ?string $navigationLabel = 'Hazard Type';
-    protected static ?string $pluralModelLabel = 'Hazard Type';
+    protected static ?string $navigationGroup = 'CAR Report';
+    protected static ?string $navigationLabel = 'ประเภทของอันตราย';
+    protected static ?string $pluralModelLabel = 'ประเภทของอันตราย';
     protected static ?string $navigationIcon = 'heroicon-o-stop';
 
     public static function form(Form $form): Form
@@ -27,8 +27,7 @@ class HazardTypeResource extends Resource
         return $form
             ->schema([
                 TextInput::make('type_name')
-                    ->label('Type')
-                    ->placeholder('Enter hazard type name')
+                    ->label('ประเภทของอันตราย')
                     ->required(),
             ]);
     }
@@ -40,7 +39,7 @@ class HazardTypeResource extends Resource
                 TextColumn::make('id')
                     ->label('ID'),
                 TextColumn::make('type_name')
-                    ->label('Hazard type'),
+                    ->label('ประเภทของอันตราย'),
             ])
             ->filters([
                 //
