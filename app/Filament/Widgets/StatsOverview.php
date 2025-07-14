@@ -23,94 +23,63 @@ class StatsOverview extends BaseWidget
     {
         $start = $this->filters['startDate'];
         $end = $this->filters['endDate'];
-        // $active = $this->filters['active'];
         $dept = $this->filters['dept_id'];
 
+        $delayCarIds = Car_responses::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
+        ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
+        ->where('status_reply', 'delay')
+        ->whereHas('carReport', fn($q) => $q->where('responsible_dept_id', $dept))
+        ->pluck('car_id')
+        ->unique();
+
+        $stats = [
+        'total' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
+            ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
+            ->where('responsible_dept_id', $dept)
+            ->count(),
+
+        'closed' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
+            ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
+            ->where('status', 'closed')
+            ->where('responsible_dept_id', $dept)
+            ->count(),
+
+        'delay' => $delayCarIds->count(),
+
+        'on_process' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
+            ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
+            ->whereNot('status', 'closed')
+            ->where('responsible_dept_id', $dept)
+            ->whereNotIn('id', $delayCarIds)
+            ->count(),
+        ];
 
         return [
-        Stat::make('Total Hazard',
-        Car_report::when(
-        $start,
-        fn ($query)=> $query->whereDate('created_at', '>',$start)
-        )
-        ->when(
-        $end,
-        fn($query)=> $query->whereDate('created_at','<',$end)
-        )
-        ->when(
-            $dept,
-                fn($query)=> $query->where('responsible_dept_id',$dept)
-        )
-        //->where('responsible_dept_id', $dept)
-        ->count()
-        )
-        ->description('Total created CAR report.')
-        ->descriptionIcon('heroicon-m-document-text', IconPosition::Before)
-        ->chart([7, 2, 10, 3, 15, 4, 17])
-        ->color('info'),
 
-        Stat::make('CAR Completed',Car_report::when(
-        $start,
-        fn ($query)=> $query->whereDate('created_at', '>',$start)
-        )
-        ->when(
-        $end,
-        fn($query)=> $query->whereDate('created_at','<',$end)
-        )
-        ->when(
-            $dept,
-            fn($query)=> $query->where('responsible_dept_id',$dept)
-        )
-        ->where('status', 'closed')
-        ->count()
-        )
-        ->description('Number of closed CAR report.')
-        ->descriptionIcon('heroicon-m-check-circle', IconPosition::Before)
-        ->chart([7, 2, 10, 3, 15, 4, 17])
-        ->color('success'),
+            Stat::make('Total Hazard', $stats['total'])
+                ->description('Total created car report.')
+                ->descriptionIcon('heroicon-m-document-text', IconPosition::Before)
+                ->chart([3, 5, 2, 4, 6, 1, 7])
+                ->color('info'),
 
-        Stat::make('CAR On Process',Car_report::when(
-        $start,
-        fn ($query)=> $query->whereDate('created_at', '>',$start)
-        )
-        ->when(
-        $end,
-        fn($query)=> $query->whereDate('created_at','<',$end)
-        )
-        ->when(
-            $dept,
-            fn($query)=> $query->where('responsible_dept_id',$dept)
-        )
-        ->whereNot('status', 'closed')
-        // ->where('responsible_dept_id', $dept)
-        ->count()
-        )
-        ->description('Number of on process CAR report.')
-        ->descriptionIcon('heroicon-m-clock', IconPosition::Before)
-        ->chart([7, 2, 10, 3, 15, 4, 17])
-        ->color('warning'),
+            Stat::make('Completed CAR', $stats['closed'])
+                ->description('Number of closed car report.')
+                ->descriptionIcon('heroicon-m-check-circle', IconPosition::Before)
+                ->chart([3, 5, 2, 4, 6, 1, 7])
+                ->color('success'),
 
-        Stat::make('CAR Delay', Car_responses::when(
-        $start,
-        fn ($query) => $query->whereDate('created_at', '>', $start)
-        )
-        ->when(
-            $end,
-            fn ($query) => $query->whereDate('created_at', '<', $end)
-        )
-        ->when(
-            $dept,
-            fn ($query) => $query->whereHas('carReport', function ($q) use ($dept) {
-                $q->where('responsible_dept_id', $dept);
-            })
-        )
-        ->where('status_reply', 'delay')
-        ->count()
-        )
-        ->description('Number of delay CAR report.')
-        ->descriptionIcon('heroicon-m-exclamation-triangle', IconPosition::Before)
-        ->chart([7, 2, 10, 3, 15, 4, 17])
-        ->color('danger'),
+            Stat::make('On Process CAR', $stats['on_process'])
+                ->description('Number of on process car report.')
+                ->descriptionIcon('heroicon-m-clock', IconPosition::Before)
+                ->chart([3, 5, 2, 4, 6, 1, 7])
+                ->color('warning'),
+
+            Stat::make('Delay CAR', $stats['delay'])
+                ->description('Number of delay car report.')
+                ->descriptionIcon('heroicon-m-exclamation-triangle', IconPosition::Before)
+                ->chart([3, 5, 2, 4, 6, 1, 7])
+                ->color('danger'),
+
         ];
     }
     public static function canView(): bool
