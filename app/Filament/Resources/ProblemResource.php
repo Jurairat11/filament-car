@@ -52,6 +52,7 @@ class ProblemResource extends Resource
 {
     protected static ?string $model = Problem::class;
     protected static ?string $navigationGroup = 'CAR Responses';
+    protected static ?string $navigationLabel = 'แจ้งอันตราย';
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-megaphone';
     public static function form(Form $form): Form
@@ -172,7 +173,7 @@ class ProblemResource extends Resource
                     ->searchable(),
 
                 ImageColumn::make('prob_img_path')
-                    ->label('รูปภาพอันตรายที่พบ')
+                    ->label('รูปภาพอันตราย')
                     ->square(),
 
                 TextColumn::make('title')
