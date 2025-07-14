@@ -21,14 +21,15 @@ class StatsOverview extends BaseWidget
     use InteractsWithPageFilters;
     protected function getStats(): array
     {
-        $start = $this->filters['startDate'];
-        $end = $this->filters['endDate'];
+        $start = $this->filters['startDate'] ?? null;
+        $end = $this->filters['endDate'] ?? null;
         $dept = $this->filters['dept_id'];
 
         $delayCarIds = Car_responses::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
             ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
             ->where('status_reply', 'delay')
-            ->whereHas('carReport', fn($q) => $q->where('responsible_dept_id', $dept))
+            ->when($dept, fn($q) =>
+                $q->whereHas('carReport', fn($q2) => $q2->where('responsible_dept_id', $dept)))
             ->pluck('car_id')
             ->unique();
 
@@ -36,14 +37,12 @@ class StatsOverview extends BaseWidget
             'total' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
                 ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
                 ->when($dept, fn($q) => $q->where('responsible_dept_id', $dept))
-                // ->where('responsible_dept_id', $dept)
                 ->count(),
 
             'closed' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
                 ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
                 ->when($dept, fn($q) => $q->where('responsible_dept_id', $dept))
                 ->where('status', 'closed')
-                // ->where('responsible_dept_id', $dept)
                 ->count(),
 
             'delay' => $delayCarIds->count(),
@@ -52,7 +51,6 @@ class StatsOverview extends BaseWidget
                 ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
                 ->when($dept, fn($q) => $q->where('responsible_dept_id', $dept))
                 ->whereNot('status', 'closed')
-                //->where('responsible_dept_id', $dept)
                 ->whereNotIn('id', $delayCarIds)
                 ->count(),
         ];

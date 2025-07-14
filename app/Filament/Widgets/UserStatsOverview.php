@@ -17,8 +17,8 @@ class UserStatsOverview extends BaseWidget
     use InteractsWithPageFilters;
     protected function getStats(): array
     {
-        $start = $this->filters['startDate'];
-        $end = $this->filters['endDate'];
+        $start = $this->filters['startDate'] ?? null;
+        $end = $this->filters['endDate'] ?? null;
         $deptId = Auth::user()->dept_id;
 
         $delayCarIds = Car_responses::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
