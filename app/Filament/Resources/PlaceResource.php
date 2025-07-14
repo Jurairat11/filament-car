@@ -16,7 +16,7 @@ use App\Filament\Resources\PlaceResource\RelationManagers;
 class PlaceResource extends Resource
 {
     protected static ?string $model = Place::class;
-    protected static ?string $navigationGroup = 'Car Report';
+    protected static ?string $navigationGroup = 'CAR Report';
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
     public static function form(Form $form): Form
     {
@@ -24,8 +24,7 @@ class PlaceResource extends Resource
             ->schema([
                 TextInput::make('place_name')
                     ->required()
-                    ->label('Place name')
-                    ->placeholder('Enter place name'),
+                    ->label('สถานที่ที่พบอันตราย'),
             ]);
     }
 
@@ -38,7 +37,7 @@ class PlaceResource extends Resource
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('place_name')
-                    ->label('Place name')
+                    ->label('สถานที่ที่พบอันตราย')
                     ->searchable(),
             ])
             ->filters([
