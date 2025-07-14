@@ -54,7 +54,7 @@ class overviewTable extends BaseWidget
                     ->color(fn (string $state): string => match ($state) {
                     'draft' => 'gray',
                     'reported' => 'info',
-                    'in_progress' => 'warning',
+                    'on_process' => 'warning',
                     'pending_review' => 'success',
                     'reopened' => 'warning',
                     'closed' => 'gray',
@@ -63,7 +63,7 @@ class overviewTable extends BaseWidget
                 ->formatStateUsing(fn (string $state) => match ($state) {
                     'draft' => 'draft',
                     'reported' => 'reported',
-                    'in_progress' => 'in progress',
+                    'on_process' => 'on process',
                     'pending_review' => 'pending review',
                     'reopened' => 'reopened',
                     'closed' => 'closed',
@@ -156,7 +156,7 @@ class overviewTable extends BaseWidget
                         ->options([
                             'draft' => 'Draft',
                             'reported' => 'Reported',
-                            'in_progress' => 'In progress',
+                            'on_process' => 'On process',
                             'pending_review' => 'Pending review',
                             'reopened' => 'Reopened',
                             'closed' => 'Closed',

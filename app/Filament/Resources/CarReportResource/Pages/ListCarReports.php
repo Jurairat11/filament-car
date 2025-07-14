@@ -36,11 +36,11 @@ class ListCarReports extends ListRecords
                 ->where('status', 'reported')->count())
                 ->badgeColor('info')
                 ->query(fn ($query) => $query->where('status', 'reported')),
-            'in progress' => Tab::make()
+            'on progress' => Tab::make()
                 ->badge(Car_report::whereYear('created_at',$year)
-                ->where('status', 'in_progress')->count())
+                ->where('status', 'on_process')->count())
                 ->badgeColor('warning')
-                ->query(fn ($query) => $query->where('status', 'in_progress')),
+                ->query(fn ($query) => $query->where('status', 'on_process')),
             'pending review' => Tab::make()
                 ->badge(Car_report::whereYear('created_at',$year)
                 ->where('status', 'pending_review')->count())

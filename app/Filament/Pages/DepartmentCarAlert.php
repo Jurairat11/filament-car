@@ -72,7 +72,7 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
                 ->color(fn (string $state): string => match ($state) {
                     'draft' => 'gray',
                     'reported' => 'info',
-                    'in_progress' => 'warning',
+                    'on_process' => 'warning',
                     'pending_review' => 'success',
                     'reopened' => 'warning',
                     'closed' => 'gray',
@@ -81,7 +81,7 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
                 ->formatStateUsing(fn (string $state) => match ($state) {
                     'draft' => 'draft',
                     'reported' => 'reported',
-                    'in_progress' => 'in progress',
+                    'on_process' => 'on process',
                     'pending_review' => 'pending review',
                     'reopened' => 'reopened',
                     'closed' => 'closed',
@@ -124,7 +124,7 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
                 ->options([
                     'draft' => 'Draft',
                     'reported' => 'Reported',
-                    'in_progress' => 'In progress',
+                    'on_process' => 'On process',
                     'pending_review' => 'Pending review',
                     'reopened' => 'Reopened',
                     'closed' => 'Closed'
@@ -161,7 +161,7 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
             ->visible(fn (Car_report $record) => $record->status === 'reported' && $record->responsible_dept_id === Auth::user()->dept_id)
             ->action(function (Car_report $record) {
                 // อัปเดตสถานะ
-                $record->update(['status' => 'in_progress'] );
+                $record->update(['status' => 'on_process'] );
 
                 // แจ้งไปยังผู้มี role = safety
                 User::role('Safety')->get()

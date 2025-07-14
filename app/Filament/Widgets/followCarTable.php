@@ -55,7 +55,7 @@ class followCarTable extends BaseWidget
                     ->color(fn (string $state): string => match ($state) {
                     'draft' => 'gray',
                     'reported' => 'info',
-                    'in_progress' => 'warning',
+                    'on_process' => 'warning',
                     'pending_review' => 'success',
                     'reopened' => 'warning',
                     'closed' => 'gray',
@@ -64,7 +64,7 @@ class followCarTable extends BaseWidget
                 ->formatStateUsing(fn (string $state) => match ($state) {
                     'draft' => 'draft',
                     'reported' => 'reported',
-                    'in_progress' => 'in progress',
+                    'on_process' => 'on process',
                     'pending_review' => 'pending review',
                     'reopened' => 'reopened',
                     'closed' => 'closed',
