@@ -85,6 +85,7 @@ class ProblemResource extends Resource
                                         => [$user->id => "{$user->emp_id} ({$user->emp_name} {$user->last_name})",]);
                             })
                             ->searchable()
+                            ->required()
                             ->default(fn($record)=> $record?->user_id),
 
                     Select::make('dept_id')

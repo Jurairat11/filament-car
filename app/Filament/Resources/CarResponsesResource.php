@@ -132,7 +132,6 @@ class CarResponsesResource extends Resource
 
                             TextInput::make('temp_responsible')
                             ->label('ผู้รับผิดชอบ')
-                            ->placeholder('Enter responsible person first name and last name'),
 
                         ]),
                     Tabs\Tab::make('Permanent action')
@@ -150,8 +149,7 @@ class CarResponsesResource extends Resource
                             ->dehydrated(true),
 
                             TextInput::make('perm_responsible')
-                            ->label('ผู้รับผิดชอบ')
-                            ->placeholder('Enter responsible person first name and last name'),
+                            ->label('ผู้รับผิดชอบ'),
 
                             Textarea::make('preventive')
                             ->label('กำหนดมาตรการป้องกันการเกิดปัญหาซ้ำ')
