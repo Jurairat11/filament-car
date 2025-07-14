@@ -51,7 +51,7 @@ use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 class ProblemResource extends Resource
 {
     protected static ?string $model = Problem::class;
-    protected static ?string $navigationGroup = 'Car Responses';
+    protected static ?string $navigationGroup = 'CAR Responses';
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-megaphone';
     public static function form(Form $form): Form
@@ -74,7 +74,7 @@ class ProblemResource extends Resource
                     Section::make()
                     ->schema([
                         Select::make('user_id')
-                            ->label('Reporter')
+                            ->label('ผู้แจ้ง')
                             ->options(function (){
                                 $deptID = Auth::user()->dept_id;
                                 return User::where('dept_id', $deptID)
@@ -86,8 +86,8 @@ class ProblemResource extends Resource
                             ->default(fn($record)=> $record?->user_id),
 
                     Select::make('dept_id')
-                        ->label('Department')
-                        ->helperText(new HtmlString('<strong style="color:red;">*เลือกแผนกของผู้รายงานปัญหา</strong>'))
+                        ->label('แผนก')
+                        ->helperText(new HtmlString('<strong style="color:red;">*เลือกแผนกของผู้รายงานอันตราย</strong>'))
                         // ->disabled()
                         ->reactive()
                         ->required()
@@ -100,7 +100,7 @@ class ProblemResource extends Resource
                     //     ->default(Auth::user()?->dept_id),
 
                     DatePicker::make('prob_date')
-                        ->label('Report date')
+                        ->label('วันที่แจ้งอันตราย')
                         ->native(false)
                         ->displayFormat('d/m/Y')
                         ->closeOnDateSelection()
@@ -110,13 +110,11 @@ class ProblemResource extends Resource
                     Section::make()
                     ->schema([
                         TextInput::make('title')
-                        ->label('Title')
-                        ->placeholder('Short title of the problem')
+                        ->label('เรื่อง')
                         ->required(),
 
                         TextInput::make('place')
-                        ->label('Place')
-                        ->placeholder('Where the problem occurred')
+                        ->label('สถานที่ที่พบอันตราย')
                         ->required(),
 
                         //filament default upload limit is 12MB
@@ -135,9 +133,9 @@ class ProblemResource extends Resource
                         //->getUploadedFileNameForStorageUsing(static fn (?Model $record) => "{$record->id}.jpg")
 
                         FileUpload::make('prob_img_path')
-                            ->label('Problem picture')
+                            ->label('รูปภาพอันตรายที่พบ')
                             ->image()
-                            ->helperText('The maximum picture size is 5MB')
+                            ->helperText('ขนาดสูงสุดไฟล์รูปภาพ 5MB')
                             ->downloadable()
                             ->maxSize(5120) // 5MB
                             ->directory('form-attachments')
@@ -149,8 +147,7 @@ class ProblemResource extends Resource
                         ->dehydrated(),
 
                         Textarea::make('prob_desc')
-                            ->label('Description')
-                            ->placeholder('Describe the problem in detail')
+                            ->label('รายละเอียดอันตรายที่พบ')
                             ->autosize()
                             ->columnSpanFull(),
 
@@ -175,17 +172,17 @@ class ProblemResource extends Resource
                     ->searchable(),
 
                 ImageColumn::make('prob_img_path')
-                    ->label('Picture')
+                    ->label('รูปภาพอันตรายที่พบ')
                     ->square(),
 
                 TextColumn::make('title')
-                    ->label('Title'),
+                    ->label('เรื่อง'),
 
                 TextColumn::make('user.FullName')
-                    ->label('Reporter'),
+                    ->label('ผู้แจ้ง'),
 
                 TextColumn::make('department.dept_name')
-                    ->label('Department')
+                    ->label('แผนกผู้แจ้ง')
                     ->searchable(),
 
                 TextColumn::make('status')
