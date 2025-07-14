@@ -21,7 +21,7 @@ class ViewCarReportCustom extends Page implements HasForms
     public ?array $data = [];
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static string $view = 'filament.pages.view-car-report-custom';
-    protected static ?string $title = 'View Car Report';
+    protected static ?string $title = 'View CAR Report';
     protected static ?string $slug = 'view-car-report-custom/{record}';
 
     public Car_report $car_report;
@@ -46,19 +46,19 @@ class ViewCarReportCustom extends Page implements HasForms
                     //     ->content(fn () => $this->car_report->car_no ?? '-'),
 
                     Placeholder::make('dept_id')
-                        ->label('Department')
+                        ->label('แผนก')
                         ->content(fn () => optional ($this->car_report->department)->dept_name ),
 
                     Placeholder::make('sec_id')
-                        ->label('Section')
+                        ->label('ส่วนงาน')
                         ->content(fn()=>optional($this->car_report->section)->sec_name),
 
                     Placeholder::make('car_date')
-                        ->label('Create Date')
+                        ->label('วันที่สร้าง CAR')
                         ->content(fn()=>Carbon::parse($this->car_report->car_date)->format('d/m/Y') ?? '-'),
 
                     Placeholder::make('car_due_date')
-                        ->label('Due date')
+                        ->label('วันที่ครบกำหนดแก้ไข')
                         ->content(fn()=>Carbon::parse($this->car_report->car_due_date)->format('d/m/Y') ?? '-'),
 
                     Placeholder::make('hazard_source_id')
@@ -66,39 +66,39 @@ class ViewCarReportCustom extends Page implements HasForms
                             ->content(fn () => optional ($this->car_report->hazardSource)->source_name),
 
                     Placeholder::make('place_id')
-                        ->label('Place')
+                        ->label('สถานที่ที่พบอันตราย')
                         ->content(fn () => optional ($this->car_report->Place)->place_name),
 
                     Placeholder::make('equipment')
-                        ->label('Equipment')
+                        ->label('เครื่องจักร/สิ่งของ')
                         ->content(fn()=>$this->car_report->equipment),
 
                     Placeholder::make('responsible_dept_id')
-                        ->label('Reported to')
+                        ->label('แผนกผู้รับผิดชอบ')
                         ->content(fn () => optional ($this->car_report->responsible)->dept_name ),
 
                     Placeholder::make('car_desc')
-                        ->label('Description')
+                        ->label('รายละเอียดความไม่ปลอดภัย')
                         ->columnSpan(2)
                         ->content(fn()=>$this->car_report->car_desc),
 
                     Placeholder::make('hazard_level_id')
-                        ->label('Hazard level')
+                        ->label('ระดับความอันตราย')
                         ->content(fn () => optional ($this->car_report->hazardLevel)->level_name ),
 
                     Placeholder::make('hazard_type_id')
-                        ->label('Hazard type')
+                        ->label('ประเภทของอันตราย')
                         ->content(fn () => optional ($this->car_report->hazardType)->type_name ),
 
                     View::make('components.car-reports-view-image')
-                        ->label('Before Image')
+                        ->label('รูปภาพอันตราย (ก่อน)')
                         ->viewData([
                             //'path' => $this->getRecord()->img_before_path,
                             'path' => $this->car_report->img_before_path,
                         ])->columnSpan(2),
 
                     Placeholder::make('reopen_car_reason')
-                        ->label('Cause for reopening CAR')
+                        ->label('สาเหตุการออก CAR ใหม่')
                         ->content(fn () => $this->car_report->reopen_car_reason ?? '-')
                         ->visible(fn () => $this->car_report->status === 'reopened')
                         ->columns(2),

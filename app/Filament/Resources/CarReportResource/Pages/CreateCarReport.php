@@ -12,7 +12,7 @@ use App\Filament\Resources\CarReportResource;
 class CreateCarReport extends CreateRecord
 {
     protected static string $resource = CarReportResource::class;
-    protected static ?string $title = 'Create Car Report';
+    protected static ?string $title = 'Create CAR Report';
     public string $generatedCarNo;
     public function mount(): void
     {

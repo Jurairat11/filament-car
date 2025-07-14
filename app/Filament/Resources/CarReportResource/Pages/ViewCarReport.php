@@ -356,23 +356,23 @@ class ViewCarReport extends ViewRecord
                         ->content(fn ($record) => $record->problem?->prob_id),
 
                     Placeholder::make('title')
-                        ->label('Title')
+                        ->label('เรื่อง')
                         ->content(fn ($record) => $record->problem?->title),
 
                     Placeholder::make('place')
-                        ->label('Place')
+                        ->label('สถานที่ที่พบอันตราย')
                         ->content(fn ($record) => $record->problem?->place),
 
                     Placeholder::make('user_id')
-                        ->label('Reporter')
+                        ->label('ผู้แจ้งอันตราย')
                         ->content(fn ($record) => optional($record->problem?->user)->FullName),
 
                     Placeholder::make('dept_id')
-                        ->label('Department')
+                        ->label('แผนกผู้แจ้ง')
                         ->content(fn ($record) => optional($record->problem?->department)->dept_name),
 
                     Placeholder::make('prob_desc')
-                        ->label('Problem Description')
+                        ->label('รายละเอียดอันตราย')
                         ->content(fn ($record) => $record->problem?->prob_desc)
                         ->columnSpanFull(),
                 ])
@@ -387,15 +387,15 @@ class ViewCarReport extends ViewRecord
                         ->content(fn ($record) => $record->problem?->prob_id),
 
                     Placeholder::make('title')
-                        ->label('Title')
+                        ->label('เรื่อง')
                         ->content(fn ($record) => $record->problem?->title),
 
                     Placeholder::make('place')
-                        ->label('Place')
+                        ->label('สถานที่ที่พบอันตราย')
                         ->content(fn ($record) => $record->problem?->place),
 
                     Placeholder::make('prob_desc')
-                        ->label('Problem Description')
+                        ->label('รายละเอียดอันตราย')
                         ->content(fn ($record) => $record->problem?->prob_desc),
                 ])
                 ->collapsed()
@@ -412,19 +412,19 @@ class ViewCarReport extends ViewRecord
                     //     ->content(fn($record)=>optional($record->problem)->prob_id),
 
                     Placeholder::make('dept_id')
-                        ->label('Department')
+                        ->label('แผนก')
                         ->content(fn ($record) => optional ($record->department)->dept_name ),
 
                     Placeholder::make('sec_id')
-                        ->label('Section')
+                        ->label('ส่วนงาน')
                         ->content(fn($record)=>optional($record->section)->sec_name),
 
                     Placeholder::make('car_date')
-                        ->label('Created date')
+                        ->label('วันที่สร้าง CAR')
                         ->content(fn($record)=>Carbon::parse($record->car_date)->format('d/m/Y')),
 
                     Placeholder::make('car_due_date')
-                        ->label('Due date')
+                        ->label('วันที่ครบกำหนดแก้ไข')
                         ->content(fn($record)=>Carbon::parse($record->car_due_date)->format('d/m/Y')),
 
                     Placeholder::make('hazard_source_id')
@@ -432,38 +432,38 @@ class ViewCarReport extends ViewRecord
                         ->content(fn ($record) => optional ($record->hazardSource)->source_name),
 
                     Placeholder::make('place_id')
-                        ->label('Place')
+                        ->label('สถานที่ที่พบอันตราย')
                         ->content(fn ($record) => optional ($record->Place)->place_name),
 
                     Placeholder::make('equipment')
-                        ->label('Equipment')
+                        ->label('เครื่องจักร/สิ่งของ')
                         ->content(fn($record)=>$record->equipment),
 
                     Placeholder::make('responsible_dept_id')
-                        ->label('Reported to')
+                        ->label('แผนกผู้รับผิดชอบ')
                         ->content(fn ($record) => optional ($record->responsible)->dept_name ),
 
                     Placeholder::make('car_desc')
-                        ->label('Description')
+                        ->label('รายละเอียดความไม่ปลอดภัย')
                         ->columnSpan(2)
                         ->content(fn($record)=>$record->car_desc),
 
                     Placeholder::make('hazard_level_id')
-                        ->label('Hazard level')
+                        ->label('ระดับความอันตราย')
                         ->content(fn ($record) => optional ($record->hazardLevel)->level_name ),
 
                     Placeholder::make('hazard_type_id')
-                        ->label('Hazard type')
+                        ->label('ประเภทของอันตราย')
                         ->content(fn ($record) => optional ($record->hazardType)->type_name ),
 
                     View::make('components.car-reports-view-image')
-                        ->label('Before Image')
+                        ->label('รูปภาพอันตราย(ก่อน)')
                         ->viewData([
                             'path' => $this->getRecord()->img_before_path,
                         ])->columnSpan(2),
 
                     Placeholder::make('reopen_car_reason')
-                        ->label('Cause for reopening CAR')
+                        ->label('สาเหตุการออก CAR ใหม่')
                         ->content(fn ($record) => $record->reopen_car_reason ?? '-')
                         ->visible(fn ($record) => $record->status === 'reopened')
                         ->columns(2),
@@ -474,14 +474,14 @@ class ViewCarReport extends ViewRecord
                 ->visible(fn($record) => $record->carResponse !== null)
                 ->schema([
                     View::make('components.car-responses-view-image')
-                        ->label('After Image')
+                        ->label('รูปภาพอันตราย (หลัง)')
                         ->viewData([
                             'path' => $this->getRecord()->carResponse?->img_after_path,
                         ])
                         ->columnSpanFull(),
 
                         Placeholder::make('cause')
-                        ->label('Cause')
+                        ->label('สาเหตุ')
                         ->columnSpan(2)
                         ->content(fn ($record) => $record->carResponse?->cause ),
 
@@ -491,42 +491,42 @@ class ViewCarReport extends ViewRecord
                         ucfirst(str_replace('_', ' ', $record->carResponse?->status))),
 
                         Placeholder::make('created_by')
-                        ->label('Created by')
+                        ->label('ผู้สร้าง')
                         ->content(fn($record)=>optional($record->carResponse?->createdResponse)->FullName),
 
                         Placeholder::make('temp_desc')
-                        ->label('Temporary action')
+                        ->label('มาตรการแก้ไขชั่วคราว')
                         ->columnSpan(2)
                         ->content(fn($record)=>$record->carResponse?->temp_desc ? $record->carResponse?->temp_desc : ''),
 
                         Placeholder::make('temp_due_date')
-                        ->label('Due date')
+                        ->label('วันที่กำหนดเสร็จ')
                         ->content(fn ($record) => $record->carResponse?->temp_due_date
                                     ? Carbon::parse($record->carResponse?->temp_due_date)->format('d/m/Y')
                                     : '-'),
 
                         Placeholder::make('temp_responsible')
-                        ->label('Responsible')
+                        ->label('ผู้รับผิดชอบ')
                         ->content(fn($record)=>$record->carResponse?->temp_responsible ? $record->carResponse?->temp_responsible : ''),
 
                         Placeholder::make('perm_desc')
-                        ->label('Permanent action')
+                        ->label('มาตรการแก้ไขถาวร')
                         ->columnSpan(2)
                         ->content(fn($record)=>$record->carResponse?->perm_desc ? $record->carResponse?->perm_desc : ''),
 
 
                         Placeholder::make('perm_due_date')
-                        ->label('Due date')
+                        ->label('วันที่กำหนดเสร็จ')
                         ->content(fn ($record) => $record->carResponse?->perm_due_date
                                     ? Carbon::parse($record->carResponse?->perm_due_date)->format('d/m/Y')
                                     : '-'),
 
                         Placeholder::make('perm_responsible')
-                        ->label('Responsible')
+                        ->label('ผู้รับผิดชอบ')
                         ->content(fn($record)=>$record->carResponse?->perm_responsible ? $record->carResponse?->perm_responsible : ''),
 
                         Placeholder::make('preventive')
-                        ->label('Preventive action')
+                        ->label('กำหนดมาตรการป้องกันการเกิดปัญหาซ้ำ')
                         ->columnSpanFull()
                         ->content(fn($record)=>$record->carResponse?->preventive),
 

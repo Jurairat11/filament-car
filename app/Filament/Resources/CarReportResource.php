@@ -190,7 +190,7 @@ class CarReportResource extends Resource
                 Section::make()
                     ->schema([
                         Textarea::make('car_desc')
-                            ->label('รายละเอียดเพิ่มเติม')
+                            ->label('รายละเอียดความไม่ปลอดภัย')
                             ->autosize()
                             ->required(),
 
