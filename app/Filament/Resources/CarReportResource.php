@@ -34,7 +34,7 @@ class CarReportResource extends Resource
 {
     protected static ?string $model = Car_report::class;
     protected static ?string $navigationGroup = 'Car Report';
-    protected static ?string $navigationLabel = 'CAR Report';
+    protected static ?string $navigationLabel = 'สร้าง CAR';
     protected static ?string $pluralModelLabel = 'Car Report';
     protected static ?string $navigationIcon = 'heroicon-o-document-plus';
     public static function form(Form $form): Form
@@ -77,7 +77,7 @@ class CarReportResource extends Resource
                         ->required(),
 
                     Select::make('dept_id')
-                        ->label('Department')
+                        ->label('แผนก')
                         ->placeholder('Select department')
                         ->searchable()
                         ->preload()
@@ -87,7 +87,7 @@ class CarReportResource extends Resource
                         ->afterStateUpdated(fn ($state, callable $set) => $set('sec_id', null)),
 
                     Select::make('sec_id')
-                        ->label('Section')
+                        ->label('ส่วนงาน')
                         ->placeholder('Select section')
                         ->searchable()
                         ->preload()
@@ -101,7 +101,7 @@ class CarReportResource extends Resource
                         ->required(),
 
                     DatePicker::make('car_date')
-                        ->label('Create date')
+                        ->label('วันที่สร้าง CAR')
                         ->native(false)
                         ->displayFormat('d/m/Y')
                         ->closeOnDateSelection()
@@ -110,7 +110,7 @@ class CarReportResource extends Resource
                         ->required(),
 
                     DatePicker::make('car_due_date')
-                        ->label('Car due date')
+                        ->label('วันที่ครบกำหนดแก้ไข')
                         ->native(false)
                         ->displayFormat('d/m/Y')
                         // ->format('d/m/Y')
@@ -133,24 +133,24 @@ class CarReportResource extends Resource
                             ->required(),
 
                         Select::make('place_id')
-                            ->label('Place')
+                            ->label('สถานที่ที่พบอันตราย')
                             ->relationship('place','place_name')
                             ->searchable()
                             ->preload()
                             ->placeholder('Select place')
                             ->createOptionForm([
                                 TextInput::make('place_name')
-                                    ->label('Place name')
+                                    ->label('สถานที่ที่พบอันตราย')
                             ])
                             ->required(),
 
                         TextInput::make('equipment')
-                            ->label('Machine/Equipment')
+                            ->label('เครื่องจักร/สิ่งของ')
                             ->placeholder('Machine/Equipment')
                             ->required(),
 
                         Select::make('hazard_level_id')
-                            ->label('Hazard level')
+                            ->label('ระดับความอันตราย')
                             ->helperText(new HtmlString('<strong style="color:red;">*ระดับ A = 3 วัน, ระดับ B = 5 วัน และระดับ C = 7 วัน</strong>'))
                             ->placeholder('Select hazard level')
                             ->relationship('hazardLevel','level_name')
@@ -176,7 +176,7 @@ class CarReportResource extends Resource
                             ->required(),
 
                         Select::make('hazard_type_id')
-                            ->label('Hazard type')
+                            ->label('ประเภทของอันตราย')
                             ->placeholder('Select hazard type')
                             ->relationship('hazardType','type_name')
                             // ปิด กดเพิ่ม hazard type
@@ -190,13 +190,13 @@ class CarReportResource extends Resource
                 Section::make()
                     ->schema([
                         Textarea::make('car_desc')
-                            ->label('Description')
+                            ->label('รายละเอียดเพิ่มเติม')
                             ->placeholder('Describe the issue')
                             ->autosize()
                             ->required(),
 
                         FileUpload::make('img_before_path')
-                            ->label('Picture before')
+                            ->label('รูปภาพอันตราย (ก่อน)')
                             ->helperText('The maximum picture size is 5MB')
                             ->image()
                             ->downloadable()
@@ -241,8 +241,6 @@ class CarReportResource extends Resource
                             ->hidden(fn(callable $get) => blank($get('responsible_group')))
                             ->reactive()
 
-
-
                         ]),
                     ])->columns(1)->columnSpan(2),
                 ]),
@@ -267,30 +265,30 @@ class CarReportResource extends Resource
             ->defaultSort('created_at', 'desc') //sort order by created_at
             ->columns([
                 TextColumn::make('car_no')
-                ->label('Car No.')
+                ->label('เลขที่ CAR')
                 ->searchable(),
 
                 TextColumn::make('car_date')
-                ->label('Create date')
+                ->label('วันที่สร้าง CAR')
                 ->sortable()
                 ->dateTime('d/m/Y')
                 ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('car_due_date')
-                ->label('Due date')
+                ->label('วันที่ครบกำหนดแก้ไข')
                 ->sortable()
                 ->dateTime('d/m/Y'),
 
                 ImageColumn::make('img_before_path')
-                ->label('Picture before')
+                ->label('รูปภาพอันตราย (ก่อน)')
                 ->square(),
 
                 TextColumn::make('hazardLevel.level_name')
-                ->label('Hazard level')
+                ->label('ระดับความอันตราย')
                 ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('hazardType.type_name')
-                ->label('Hazard type')
+                ->label('ประเภทอันตราย')
                 ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('status')
@@ -316,16 +314,16 @@ class CarReportResource extends Resource
                 }),
 
                 TextColumn::make('close_car_date')
-                ->label('Closed date')
+                ->label('วันที่ปิดจบ CAR')
                 ->dateTime('d/m/Y')
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('responsible.dept_name')
-                ->label('Reported to'),
+                ->label('แผนกผู้รับผิดชอบ'),
 
                 TextColumn::make('users.FullName')
-                ->label('Created by'),
+                ->label('ผู้สร้าง'),
 
                 TextColumn::make('created_at')
                 ->label('Created at')
@@ -335,7 +333,7 @@ class CarReportResource extends Resource
                 ->timezone('Asia/Bangkok'),
 
                 TextColumn::make('follow_car')
-                ->label('Reopen car')
+                ->label('เลขที่ CAR เปิดใหม่')
                 ->getStateUsing(function ($record) {
                     return $record->status === 'reopened' ? optional($record->followUp)->car_no : null;
                 })
