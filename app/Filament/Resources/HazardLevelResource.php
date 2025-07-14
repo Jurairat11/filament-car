@@ -18,27 +18,23 @@ use App\Filament\Resources\HazardLevelResource\RelationManagers;
 class HazardLevelResource extends Resource
 {
     protected static ?string $model = Hazard_level::class;
-    protected static ?string $navigationGroup = 'Car Report';
-    protected static ?string $navigationLabel = 'Hazard Level';
-    protected static ?string $pluralModelLabel = 'Hazard Level';
+    protected static ?string $navigationGroup = 'CAR Report';
+    protected static ?string $navigationLabel = 'ระดับความอันตราย';
+    protected static ?string $pluralModelLabel = 'ระดับความอันตราย';
     protected static ?string $navigationIcon = 'heroicon-o-square-3-stack-3d';
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('Hazard Level')
+                Section::make('ระดับความอันตราย')
                     ->description('Define the hazard level details for the car report.')
                 ->schema([
                     TextInput::make('level_name')
-                        ->label('Level')
-                        ->placeholder('Enter hazard level name'),
+                        ->label('ระดับความอันตราย'),
                     TextInput::make('level_desc')
-                        ->label('Description')
-                        ->placeholder('Enter hazard level description'),
+                        ->label('รายละเอียดเพิ่มเติม'),
                     TextInput::make('due_days')
-                        ->label('Due Days')
-                        ->placeholder('Enter number of days for due')
+                        ->label('จำนวนวันครบกำหนดแก้ไข')
                         ->numeric()
                         ->minValue(0)
                 ])->columns(2),
@@ -52,11 +48,11 @@ class HazardLevelResource extends Resource
                 TextColumn::make('id')
                     ->label('ID'),
                 TextColumn::make('level_name')
-                    ->label('Level'),
+                    ->label('ระดับความอันตราย'),
                 TextColumn::make('level_desc')
-                    ->label('Description'),
+                    ->label('รายละเอียดเพิ่มเติม'),
                 TextColumn::make('due_days')
-                    ->label('Due Days')
+                    ->label('จำนวนวันครบกำหนดแก้ไข')
                     ->numeric()
 
             ])

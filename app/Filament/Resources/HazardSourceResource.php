@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class HazardSourceResource extends Resource
 {
     protected static ?string $model = Hazard_source::class;
-    protected static ?string $navigationGroup = 'Car Report';
+    protected static ?string $navigationGroup = 'CAR Report';
     protected static ?string $navigationLabel = 'Hazard Source';
     protected static ?string $pluralModelLabel = 'Hazard Source';
     protected static ?string $navigationIcon = 'heroicon-o-globe-alt';
