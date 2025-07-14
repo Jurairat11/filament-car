@@ -70,17 +70,17 @@ class ViewCarResponses extends ViewRecord
                 ->schema([
 
                     Placeholder::make('cause')
-                        ->label('Cause')
+                        ->label('สาเหตุ')
                         ->columnSpan(2)
                         ->content(fn ($record) => $record->cause ),
 
                     Placeholder::make('created_by')
-                    ->label('Created by')
+                    ->label('ผู้ตอบกลับ')
                     ->columnSpan(2)
                     ->content(fn($record)=>optional($record->createdResponse)->FullName),
 
                     View::make('components.car-responses-view-image')
-                        ->label('After Image')
+                        ->label('รูปภาพอันตราย (หลัง)')
                         ->viewData([
                             'path' => $this->getRecord()->img_after_path,
                         ])->columnSpan(1),
@@ -94,18 +94,18 @@ class ViewCarResponses extends ViewRecord
                     ->schema([
 
                         Placeholder::make('temp_desc')
-                        ->label('Temporary C/M')
+                        ->label('มาตรการแก้ไขชั่วคราว')
                         ->columnSpan(2)
                         ->content(fn($record)=>$record->temp_desc ? $record->temp_desc : ''),
 
                         Placeholder::make('temp_due_date')
-                        ->label('Due date')
+                        ->label('วันที่กำหนดเสร็จ')
                         ->content(fn ($record) => $record->temp_due_date
                                     ? Carbon::parse($record->temp_due_date)->format('d/m/Y')
                                     : ''),
 
                         Placeholder::make('temp_responsible')
-                            ->label('Responsible person')
+                            ->label('ผู้รับผิดชอบ')
                             ->content(fn($record)=>$record->temp_responsible ? $record->temp_responsible : ''),
 
                     ])->columns(4),
@@ -117,19 +117,19 @@ class ViewCarResponses extends ViewRecord
                     ->schema([
 
                             Placeholder::make('perm_desc')
-                            ->label('Permanent C/M')
+                            ->label('มาตรการแก้ไขถาวร')
                             ->columnSpan(2)
                             ->content(fn($record)=>$record->perm_desc ? $record->perm_desc : ''),
 
 
                             Placeholder::make('perm_due_date')
-                            ->label('Due date')
+                            ->label('วันที่กำหนดเสร็จ')
                             ->content(fn ($record) => $record->perm_due_date
                                         ? Carbon::parse($record->perm_due_date)->format('d/m/Y')
                                         : '-'),
 
                             Placeholder::make('perm_responsible')
-                            ->label('Responsible person')
+                            ->label('ผู้รับผิดชอบ')
                             ->content(fn($record)=>$record->perm_responsible ? $record->perm_responsible : ''),
 
                     ])->columns(4),
@@ -137,7 +137,7 @@ class ViewCarResponses extends ViewRecord
                     Section::make()
                     ->schema([
                         Placeholder::make('preventive')
-                            ->label('Preventive actions')
+                            ->label('มาตรการป้องกันการเกิดปัญหาซ้ำ')
                             ->columnSpanFull()
                             ->content(fn($record)=>$record->preventive),
                     ])

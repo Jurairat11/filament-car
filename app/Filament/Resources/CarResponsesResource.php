@@ -34,10 +34,10 @@ use App\Filament\Resources\CarResponsesResource\RelationManagers;
 class CarResponsesResource extends Resource
 {
     protected static ?string $model = Car_responses::class;
-    protected static ?string $navigationLabel = 'CAR Responses';
-    protected static ?string $pluralModelLabel = 'Car Responses';
+    protected static ?string $navigationLabel = 'ตอบกลับ CAR';
+    protected static ?string $pluralModelLabel = 'ตอบกลับ CAR';
     protected static ?string $navigationIcon = 'heroicon-o-arrow-uturn-left';
-    protected static ?string $navigationGroup = 'Car Responses';
+    protected static ?string $navigationGroup = 'CAR Responses';
     protected static ?int $navigationSort = 3;
 
     public static function getEloquentQuery(): Builder
@@ -98,13 +98,13 @@ class CarResponsesResource extends Resource
                         ->dehydrated(true),
 
                         Textarea::make('cause')
-                        ->label('Cause')
+                        ->label('สาเหตุ')
                         ->autosize()
                         ->required(),
 
                         FileUpload::make('img_after_path')
-                            ->label('Picture after')
-                            ->helperText('The maximum picture size is 5MB')
+                            ->label('รูปภาพอันตราย (หลัง)')
+                            ->helperText('ขนาดสูงสุดไฟล์รูปภาพ 5MB')
                             ->image()
                             ->downloadable()
                             //->acceptedFileTypes(['jpg'])
@@ -120,29 +120,29 @@ class CarResponsesResource extends Resource
                     Tabs\Tab::make('Temporary action')
                         ->schema([
                             Textarea::make('temp_desc')
-                            ->label('Temporary action')
+                            ->label('มาตรการแก้ไขชั่วคราว')
                             ->autosize(),
 
                             DatePicker::make('temp_due_date')
-                            ->label('Due date')
+                            ->label('วันที่กำหนดเสร็จ')
                             ->native(false)
                             ->displayFormat('d/m/Y')
                             ->disabled()
                             ->dehydrated(),
 
                             TextInput::make('temp_responsible')
-                            ->label('Responsible person')
+                            ->label('ผู้รับผิดชอบ')
                             ->placeholder('Enter responsible person first name and last name'),
 
                         ]),
                     Tabs\Tab::make('Permanent action')
                         ->schema([
                             Textarea::make('perm_desc')
-                            ->label('Permanent action')
+                            ->label('มาตรการแก้ไขถาวร')
                             ->autosize(),
 
                             DatePicker::make('perm_due_date')
-                            ->label('Due date')
+                            ->label('วันที่กำหนดเสร็จ')
                             ->native(false)
                             ->displayFormat('d/m/Y')
                             // ->format('d/m/Y')
@@ -150,11 +150,11 @@ class CarResponsesResource extends Resource
                             ->dehydrated(true),
 
                             TextInput::make('perm_responsible')
-                            ->label('Responsible person')
+                            ->label('ผู้รับผิดชอบ')
                             ->placeholder('Enter responsible person first name and last name'),
 
                             Textarea::make('preventive')
-                            ->label('Preventive action')
+                            ->label('กำหนดมาตรการป้องกันการเกิดปัญหาซ้ำ')
                             ->autosize()
                             ->nullable()
 
@@ -178,11 +178,11 @@ class CarResponsesResource extends Resource
             ->defaultSort('created_at','desc')
             ->columns([
                 TextColumn::make('carReport.car_no')
-                ->label('CAR No.')
+                ->label('CAR no.')
                 ->searchable(),
 
                 ImageColumn::make('img_after_path')
-                ->label('Picture after')
+                ->label('รูปภาพอันตราย (หลัง)')
                 ->square(),
 
                 TextColumn::make('status')
@@ -203,7 +203,7 @@ class CarResponsesResource extends Resource
                 }),
 
                 TextColumn::make('createdResponse.FullName')
-                ->label('Created by')
+                ->label('ผู้สร้าง')
                 ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('created_at')
@@ -214,17 +214,17 @@ class CarResponsesResource extends Resource
                 ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('temp_desc')
-                ->label('Temporary action')
+                ->label('มาตรการแก้ไขชั่วคราว')
                 ->limit(50)
                 ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('temp_due_date')
-                ->label('Temp due date')
+                ->label('วันที่ครบกำหนดแก้ไขชั่วคราว')
                 ->timezone('Asia/Bangkok')
                 ->dateTime('d/m/Y'),
 
                 TextColumn::make('temp_status')
-                    ->label('Temp status')
+                    ->label('สถานะการตอบกลับ (ชั่วคราว)')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'on process' => 'warning',
@@ -237,20 +237,20 @@ class CarResponsesResource extends Resource
                     }),
 
                 TextColumn::make('perm_desc')
-                    ->label('Permanent action')
+                    ->label('มาตรการแก้ไขถาวร')
                     ->limit(50)
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('perm_due_date')
-                    ->label('Perm due date')
+                    ->label('วันที่ครบกำหนดแก้ไขถาวร')
                     ->timezone('Asia/Bangkok')
                     ->dateTime('d/m/Y'),
 
                 TextColumn::make('days_perm')
-                    ->label('Days Perm'),
+                    ->label('จำนวนวันคงเหลือ'),
 
                 TextColumn::make('perm_status')
-                    ->label('Perm status')
+                    ->label('สถานะการตอบกลับ (ถาวร)')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'on process' => 'warning',
@@ -264,7 +264,7 @@ class CarResponsesResource extends Resource
                     }),
 
                 TextColumn::make('status_reply')
-                    ->label('Status reply')
+                    ->label('สถานะการตอบกลับ')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'on process' => 'warning',
