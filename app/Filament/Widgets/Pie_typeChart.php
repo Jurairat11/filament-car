@@ -105,6 +105,7 @@ class Pie_typeChart extends ApexChartWidget
                 '#008FFB',
                 '#00E396',
             ],
+
             // 'dataLabels' => [
             //     'enabled' => true,
             //     'formatter' => Js::raw('function (val ,opts) {

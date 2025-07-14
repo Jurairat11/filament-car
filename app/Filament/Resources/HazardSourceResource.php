@@ -18,8 +18,8 @@ class HazardSourceResource extends Resource
 {
     protected static ?string $model = Hazard_source::class;
     protected static ?string $navigationGroup = 'CAR Report';
-    protected static ?string $navigationLabel = 'Hazard Source';
-    protected static ?string $pluralModelLabel = 'Hazard Source';
+    protected static ?string $navigationLabel = 'แหล่งที่มาของอันตราย';
+    protected static ?string $pluralModelLabel = 'แหล่งที่มาของอันตราย';
     protected static ?string $navigationIcon = 'heroicon-o-globe-alt';
 
     public static function form(Form $form): Form
@@ -28,8 +28,7 @@ class HazardSourceResource extends Resource
             ->schema([
                 TextInput::make('source_name')
                     ->required()
-                    ->label('Source name')
-                    ->placeholder('Enter hazard source name'),
+                    ->label('แหล่งที่มาของอันตราย'),
             ]);
     }
 
@@ -42,7 +41,7 @@ class HazardSourceResource extends Resource
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('source_name')
-                    ->label('Source name')
+                    ->label('แหล่งที่มาของอันตราย')
                     ->searchable(),
             ])
             ->filters([
