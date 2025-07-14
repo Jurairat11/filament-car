@@ -27,7 +27,6 @@ class HazardLevelResource extends Resource
         return $form
             ->schema([
                 Section::make('ระดับความอันตราย')
-                    ->description('Define the hazard level details for the car report.')
                 ->schema([
                     TextInput::make('level_name')
                         ->label('ระดับความอันตราย'),
