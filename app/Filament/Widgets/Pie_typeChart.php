@@ -3,6 +3,8 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Car_report;
+use Illuminate\Support\Js;
+
 use Illuminate\Support\Facades\Auth;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
@@ -103,14 +105,13 @@ class Pie_typeChart extends ApexChartWidget
                 '#008FFB',
                 '#00E396',
             ],
-            'dataLabels' => [
-                'enabled' => true,
-                'formatter' => Js::raw('function (val ,opts) {
-                    const count = opts.w.config.series[opts.seriesIndex];
-                    return val.toFixed(1) + "%, " + count;
-                }'),
-
-            ]
+            // 'dataLabels' => [
+            //     'enabled' => true,
+            //     'formatter' => Js::raw('function (val ,opts) {
+            //         const count = opts.w.config.series[opts.seriesIndex];
+            //         return val.toFixed(1) + "%, " + count;
+            //     }'),
+            // ]
 
         ];
     }
