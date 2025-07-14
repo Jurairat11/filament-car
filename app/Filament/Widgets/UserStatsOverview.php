@@ -56,14 +56,14 @@ class UserStatsOverview extends BaseWidget
 
     Stat::make('Total Hazard', $stats['total'])
         ->description('Total created car report.')
-        ->descriptionIcon('heroicon-m-document', IconPosition::Before)
-        ->chart([2, 5, 7, 4, 9, 12, 10])
-        ->color('primary'),
+        ->descriptionIcon('heroicon-m-document-text', IconPosition::Before)
+        ->chart([3, 5, 2, 4, 6, 1, 7])
+        ->color('info'),
 
     Stat::make('Completed CAR', $stats['closed'])
         ->description('Number of closed car report.')
         ->descriptionIcon('heroicon-m-check-circle', IconPosition::Before)
-        ->chart([1, 2, 3, 4, 5, 6, 7])
+        ->chart([3, 5, 2, 4, 6, 1, 7])
         ->color('success'),
 
     Stat::make('On Process CAR', $stats['on_process'])
@@ -75,7 +75,7 @@ class UserStatsOverview extends BaseWidget
     Stat::make('Delay CAR', $stats['delay'])
         ->description('Number of delay car report.')
         ->descriptionIcon('heroicon-m-exclamation-triangle', IconPosition::Before)
-        ->chart([1, 1, 1, 0, 0, 0, 0])
+        ->chart([3, 5, 2, 4, 6, 1, 7])
         ->color('danger'),
 
         ];
