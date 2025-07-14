@@ -210,4 +210,9 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
         return 'New CAR report';
     }
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return Auth::user()?->hasAnyRole(['User', 'Admin']);
+    }
+
 }
