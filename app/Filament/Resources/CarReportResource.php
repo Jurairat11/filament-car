@@ -33,7 +33,7 @@ use App\Filament\Resources\CarReportResource\RelationManagers;
 class CarReportResource extends Resource
 {
     protected static ?string $model = Car_report::class;
-    protected static ?string $navigationGroup = 'Car Report';
+    protected static ?string $navigationGroup = 'CAR Report';
     protected static ?string $navigationLabel = 'สร้าง CAR';
     protected static ?string $pluralModelLabel = 'Car Report';
     protected static ?string $navigationIcon = 'heroicon-o-document-plus';
@@ -78,7 +78,7 @@ class CarReportResource extends Resource
 
                     Select::make('dept_id')
                         ->label('แผนก')
-                        ->placeholder('Select department')
+                        ->placeholder('เลือกแผนกผู้รับผิดชอบ')
                         ->searchable()
                         ->preload()
                         ->required()
@@ -88,7 +88,7 @@ class CarReportResource extends Resource
 
                     Select::make('sec_id')
                         ->label('ส่วนงาน')
-                        ->placeholder('Select section')
+                        ->placeholder('เลือกส่วนงานผู้รับผิดชอบ')
                         ->searchable()
                         ->preload()
                         ->options(function (callable $get) {
@@ -137,7 +137,7 @@ class CarReportResource extends Resource
                             ->relationship('place','place_name')
                             ->searchable()
                             ->preload()
-                            ->placeholder('Select place')
+                            ->placeholder('เลือกสถานที่ที่พบอันตราย')
                             ->createOptionForm([
                                 TextInput::make('place_name')
                                     ->label('สถานที่ที่พบอันตราย')
@@ -146,13 +146,13 @@ class CarReportResource extends Resource
 
                         TextInput::make('equipment')
                             ->label('เครื่องจักร/สิ่งของ')
-                            ->placeholder('Machine/Equipment')
+                            ->placeholder('เครื่องจักร/สิ่งของที่เป็นสาเหตุอันตราย')
                             ->required(),
 
                         Select::make('hazard_level_id')
                             ->label('ระดับความอันตราย')
                             ->helperText(new HtmlString('<strong style="color:red;">*ระดับ A = 3 วัน, ระดับ B = 5 วัน และระดับ C = 7 วัน</strong>'))
-                            ->placeholder('Select hazard level')
+                            ->placeholder('เลือกระดับความอันตราย')
                             ->relationship('hazardLevel','level_name')
                             ->reactive()
                             ->afterStateUpdated(function ($state, callable $set) {
@@ -177,7 +177,7 @@ class CarReportResource extends Resource
 
                         Select::make('hazard_type_id')
                             ->label('ประเภทของอันตราย')
-                            ->placeholder('Select hazard type')
+                            ->placeholder('เลือกประเภทของอันตราย')
                             ->relationship('hazardType','type_name')
                             // ปิด กดเพิ่ม hazard type
                             // ->createOptionForm([
@@ -191,13 +191,12 @@ class CarReportResource extends Resource
                     ->schema([
                         Textarea::make('car_desc')
                             ->label('รายละเอียดเพิ่มเติม')
-                            ->placeholder('Describe the issue')
                             ->autosize()
                             ->required(),
 
                         FileUpload::make('img_before_path')
                             ->label('รูปภาพอันตราย (ก่อน)')
-                            ->helperText('The maximum picture size is 5MB')
+                            ->helperText('ขนาดสูงสุดของไฟล์รูปภาพไม่เกิน 5MB')
                             ->image()
                             ->downloadable()
                             //->acceptedFileTypes(['jpg'])
