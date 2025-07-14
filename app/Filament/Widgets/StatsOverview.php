@@ -26,32 +26,35 @@ class StatsOverview extends BaseWidget
         $dept = $this->filters['dept_id'];
 
         $delayCarIds = Car_responses::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
-        ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
-        ->where('status_reply', 'delay')
-        ->whereHas('carReport', fn($q) => $q->where('responsible_dept_id', $dept))
-        ->pluck('car_id')
-        ->unique();
+            ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
+            ->where('status_reply', 'delay')
+            ->whereHas('carReport', fn($q) => $q->where('responsible_dept_id', $dept))
+            ->pluck('car_id')
+            ->unique();
 
         $stats = [
-        'total' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
-            ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
-            ->where('responsible_dept_id', $dept)
-            ->count(),
+            'total' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
+                ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
+                ->when($dept, fn($q) => $q->where('responsible_dept_id', $dept))
+                // ->where('responsible_dept_id', $dept)
+                ->count(),
 
-        'closed' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
-            ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
-            ->where('status', 'closed')
-            ->where('responsible_dept_id', $dept)
-            ->count(),
+            'closed' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
+                ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
+                ->when($dept, fn($q) => $q->where('responsible_dept_id', $dept))
+                ->where('status', 'closed')
+                // ->where('responsible_dept_id', $dept)
+                ->count(),
 
-        'delay' => $delayCarIds->count(),
+            'delay' => $delayCarIds->count(),
 
-        'on_process' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
-            ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
-            ->whereNot('status', 'closed')
-            ->where('responsible_dept_id', $dept)
-            ->whereNotIn('id', $delayCarIds)
-            ->count(),
+            'on_process' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
+                ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
+                ->when($dept, fn($q) => $q->where('responsible_dept_id', $dept))
+                ->whereNot('status', 'closed')
+                //->where('responsible_dept_id', $dept)
+                ->whereNotIn('id', $delayCarIds)
+                ->count(),
         ];
 
         return [

@@ -22,11 +22,11 @@ class UserStatsOverview extends BaseWidget
         $deptId = Auth::user()->dept_id;
 
         $delayCarIds = Car_responses::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
-        ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
-        ->where('status_reply', 'delay')
-        ->whereHas('carReport', fn($q) => $q->where('responsible_dept_id', $deptId))
-        ->pluck('car_id')
-        ->unique();
+            ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
+            ->where('status_reply', 'delay')
+            ->whereHas('carReport', fn($q) => $q->where('responsible_dept_id', $deptId))
+            ->pluck('car_id')
+            ->unique();
 
         $stats = [
         'total' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
