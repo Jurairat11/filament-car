@@ -53,6 +53,7 @@ class ProblemResource extends Resource
     protected static ?string $model = Problem::class;
     protected static ?string $navigationGroup = 'CAR Responses';
     protected static ?string $navigationLabel = 'แจ้งอันตราย';
+    protected static ?string $pluralModelLabel = 'รายการอันตราย';
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-megaphone';
     public static function form(Form $form): Form

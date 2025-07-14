@@ -19,8 +19,8 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
 {
     use Tables\Concerns\InteractsWithTable;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
-    protected static ?string $title = 'All CAR Reported';
-    protected static ?string $navigationGroup = 'Car Responses';
+    protected static ?string $title = 'รายการ CAR ทั้งหมด';
+    protected static ?string $navigationGroup = 'CAR Responses';
     protected static ?int $navigationSort = 2;
     protected static string $view = 'filament.pages.department-car-alert';
     protected function getTableQuery(): Builder
@@ -44,25 +44,25 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
             ->label('CAR no.')
             ->searchable(),
 
-            TextColumn::make('car_due_date')
-            ->label('Due date'),
+            TextColumn::make('car_date')
+            ->label('วันที่สร้าง CAR'),
 
             ImageColumn::make('img_before_path')
-            ->label('Picture before')
+            ->label('รูปภาพอันตราย (ก่อน)')
             ->square(),
 
             TextColumn::make('hazardLevel.level_name')
-                ->label('Hazard level')
+                ->label('ระดับความอันตราย')
                 ->searchable(),
                 // ->toggleable(isToggledHiddenByDefault: true),
 
             TextColumn::make('hazardType.type_name')
-                ->label('Hazard type')
+                ->label('ประเภทของอันตราย')
                 ->searchable(),
                 // ->toggleable(isToggledHiddenByDefault: true),
 
             TextColumn::make('car_due_date')
-            ->label('Due date')
+            ->label('วันที่ครบกำหนดแก้ไข CAR')
             ->dateTime('d/m/Y')
             ->timezone('Asia/Bangkok'),
 
@@ -89,11 +89,11 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
                 }),
 
             TextColumn::make('users.FullName')
-                ->label('Created by')
+                ->label('ผู้สร้าง')
                 ->toggleable(isToggledHiddenByDefault: true),
 
             TextColumn::make('responsible.dept_name')
-                ->label('Reported to')
+                ->label('แผนกผู้รับผิดชอบ')
                 ->searchable(),
         ];
     }
