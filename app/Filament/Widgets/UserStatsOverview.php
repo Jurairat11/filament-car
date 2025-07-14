@@ -51,7 +51,7 @@ class UserStatsOverview extends BaseWidget
                 ->chart([7, 2, 10, 3, 15, 4, 17])
                 ->color('success'),
 
-            Stat::make('In Progress CAR',
+            Stat::make('On Process CAR',
             Car_report::when(
                 $start,
                     fn ($query)=> $query->whereDate('created_at', '>',$start)
@@ -61,7 +61,7 @@ class UserStatsOverview extends BaseWidget
             ))
             ->whereNot('status','closed')
             ->where('responsible_dept_id', Auth::user()->dept_id)->count())
-            ->description('Number of in progress car report.')
+            ->description('Number of on process car report.')
                 ->descriptionIcon('heroicon-m-clock', IconPosition::Before)
                 ->chart([7, 2, 10, 3, 15, 4, 17])
                 ->color('warning'),
