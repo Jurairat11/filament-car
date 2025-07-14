@@ -105,7 +105,7 @@ class Pie_typeChart extends ApexChartWidget
             ],
             'dataLabels' => [
             'enabled' => true,
-            'formatter' => new (<<<'JS'
+            'formatter' => \Illuminate\Support\Js::from(<<<'JS'
                 function (val, opts) {
                     const count = opts.w.config.series[opts.seriesIndex];
                     return val.toFixed(1) + '% (' + count + ')';
