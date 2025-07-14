@@ -137,7 +137,7 @@ class ColumnNGChart extends ApexChartWidget
                 'data' => $totalValues,
             ],
             [
-                'name' => 'Completed',
+                'name' => 'Finished',
                 'data' => $closedValues,
             ],
             [

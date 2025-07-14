@@ -175,7 +175,7 @@ class Column_groupedChart extends ApexChartWidget
                     'data' => array_values($seriesData),
                 ],
                 [
-                    'name' => 'Completed',
+                    'name' => 'Finished',
                     'data' => array_values($closedData),
                 ],
                 [
