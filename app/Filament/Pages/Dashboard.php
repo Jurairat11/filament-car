@@ -60,7 +60,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                     Action::make('resetEndDate')
                         ->icon('heroicon-o-x-circle')
                         ->tooltip('clear')
-                        ->action(fn ($state, callable $set) => $set('endDate', null))
+                        ->action(fn ($state, callable $set) => $set('endDate', ''))
                     ),
                 ])->columns(3)
 
