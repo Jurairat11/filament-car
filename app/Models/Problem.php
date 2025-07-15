@@ -48,30 +48,30 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
     public static function createProblemWithRetry(int $maxRetries = 5): ?Problem
     {
-    $attempts = 0;
+        $attempts = 0;
 
-    while ($attempts < $maxRetries) {
-        try {
-            return DB::transaction(function () {
-                DB::table('problems')->sharedLock()->get();
+        while ($attempts < $maxRetries) {
+            try {
+                return DB::transaction(function () {
+                    DB::table('problems')->sharedLock()->get();
 
-                $probId = self::generateNextProbId();
+                    $probId = self::generateNextProbId();
 
-                return Problem::create(['prob_id' => $probId]);
-            });
-        } catch (QueryException $e) {
-            if ($e->getCode() === '23505') { // duplicate key
-                $attempts++;
-                usleep(100000); // หน่วงเวลา 100ms
-                continue;
+                    return Problem::create(['prob_id' => $probId]);
+                });
+            } catch (QueryException $e) {
+                if ($e->getCode() === '23505') { // duplicate key
+                    $attempts++;
+                    usleep(100000); // หน่วงเวลา 100ms
+                    continue;
+                }
+
+                throw $e;
             }
-
-            throw $e;
         }
-    }
 
-    return null;
-}
+        return null;
+    }
 
     public function setImgBeforePathAttribute($value)
     {

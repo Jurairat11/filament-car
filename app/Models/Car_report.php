@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -48,49 +49,6 @@ class Car_report extends Model
         $runningNumber = str_pad($count, 3, '0', STR_PAD_LEFT);
 
         return "{$prefix}{$runningNumber}/{$year}";
-    }
-
-    public static function createCarReportWithLock(array $data, int $maxRetries = 5): ?Car_report
-    {
-        $attempts = 0;
-
-        while ($attempts < $maxRetries) {
-            try {
-                return DB::transaction(function () use ($data) {
-                    // ล็อกแถวล่าสุดที่เกี่ยวข้องกับ car_no
-                    $latest = DB::table('car_reports')
-                        ->where('car_no', 'like', 'C-%/' . now()->format('y'))
-                        ->orderByDesc('id')
-                        ->lockForUpdate()
-                        ->first();
-
-                    // สร้างหมายเลขใหม่จากข้อมูลล่าสุด
-                    $latestNumber = 0;
-                    $year = now()->format('y');
-
-                    if ($latest && preg_match('/C-(\d{3})\/' . $year . '/', $latest->car_no, $matches)) {
-                        $latestNumber = (int) $matches[1];
-                    }
-
-                    $nextNumber = str_pad($latestNumber + 1, 3, '0', STR_PAD_LEFT);
-                    $carNo = "C-{$nextNumber}/{$year}";
-
-                    $data['car_no'] = $carNo;
-
-                    return Car_report::create($data);
-                });
-            } catch (QueryException $e) {
-                if ($e->getCode() === '23505') { // PostgreSQL duplicate key
-                    $attempts++;
-                    usleep(100000); // หน่วงเวลา 100ms ก่อน retry
-                    continue;
-                }
-
-                throw $e;
-            }
-        }
-
-        return null;
     }
 
     public function mount(): void
