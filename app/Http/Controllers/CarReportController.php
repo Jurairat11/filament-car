@@ -14,7 +14,7 @@ class CarReportController extends Controller
             $report = DB::transaction(function () use ($request) {
                 // นับแบบ lock เพื่อไม่ให้ซ้ำ
                 $count = Car_report::whereYear('created_at', now()->year)->lockForUpdate()->count() + 1;
-                $carNo = 'C-' . now()->format('y') . '-' . str_pad($count, 3, '0', STR_PAD_LEFT);
+                $carNo = 'C-' . now()->format('y') . '_' . str_pad($count, 3, '0', STR_PAD_LEFT);
 
                 $data = $request->all();
                 $data['car_no'] = $carNo;
