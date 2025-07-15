@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
     class Problem extends Model
     {
@@ -43,6 +45,33 @@ use Illuminate\Database\Eloquent\Model;
 
         return "P-{$nextNumber}/{$year}";
     }
+
+    public static function createProblemWithRetry(int $maxRetries = 5): ?Problem
+    {
+    $attempts = 0;
+
+    while ($attempts < $maxRetries) {
+        try {
+            return DB::transaction(function () {
+                DB::table('problems')->sharedLock()->get();
+
+                $probId = self::generateNextProbId();
+
+                return Problem::create(['prob_id' => $probId]);
+            });
+        } catch (QueryException $e) {
+            if ($e->getCode() === '23505') { // duplicate key
+                $attempts++;
+                usleep(100000); // หน่วงเวลา 100ms
+                continue;
+            }
+
+            throw $e;
+        }
+    }
+
+    return null;
+}
 
     public function setImgBeforePathAttribute($value)
     {

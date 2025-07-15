@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Car_report extends Model
 {
     use HasFactory;
-
     protected $primaryKey = 'id';
     protected $fillable = [
         'car_no',
@@ -48,6 +49,35 @@ class Car_report extends Model
 
         return "{$prefix}{$runningNumber}/{$year}";
     }
+
+    public static function createCarReportWithRetry(array $data, int $maxRetries = 5): ?Car_report
+{
+    $attempts = 0;
+
+    while ($attempts < $maxRetries) {
+        try {
+            return DB::transaction(function () use ($data) {
+                DB::table('car_reports')->sharedLock()->get();
+
+                $carNo = self::generateNextCarNo(); // สร้างหมายเลขใหม่
+
+                $data['car_no'] = $carNo;
+
+                return Car_report::create($data);
+            });
+        } catch (QueryException $e) {
+            if ($e->getCode() === '23505') { // PostgreSQL: duplicate key
+                $attempts++;
+                usleep(100000); // หน่วงเวลา 100ms
+                continue;
+            }
+
+            throw $e;
+        }
+    }
+
+    return null;
+}
 
     public function mount(): void
     {
