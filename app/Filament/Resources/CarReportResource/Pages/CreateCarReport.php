@@ -5,6 +5,7 @@ namespace App\Filament\Resources\CarReportResource\Pages;
 use Carbon\Carbon;
 use App\Models\Car_report;
 use App\Helpers\ImageHelper;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\CarReportResource;
@@ -58,17 +59,21 @@ class CreateCarReport extends CreateRecord
                 ]);
         }
 
-        //$hazard = $this->record->hazardLevel; // ความสัมพันธ์ hazard_level_id -> hazardLevel
-
-        // if ($hazard) {
-        //     $carDate = Carbon::parse($this->record->car_date);
-        //     $dueDate = $carDate->copy()->addDays($hazard->due_days);
-        //     $this->record->update([
-        //         'car_due_date' => $dueDate,
-        //         'car_delay' => $hazard->due_days,
-        //     ]);
-        // }
     }
+
+    public function CreateCarReport(Request $request)
+    {
+        $data = $request->all();
+
+        $report = Car_report::createCarReportWithRetry($data);
+
+        if ($report) {
+            return response()->json($report, 201); // สร้างสำเร็จ
+        } else {
+            return response()->json(['error' => 'ไม่สามารถสร้าง car_no ได้'], 500);
+        }
+    }
+
 
     protected function getRedirectUrl(): string
     {
