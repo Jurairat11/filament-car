@@ -61,19 +61,18 @@ class CreateCarReport extends CreateRecord
 
     }
 
-    public function CreateCarReport(Request $request)
-    {
-        $data = $request->all();
+    // public function CreateCarReport(Request $request)
+    // {
+    //     $data = $request->all();
 
-        $report = Car_report::createCarReportWithRetry($data);
+    //     $report = Car_report::createCarReportWithRetry($data);
 
-        if ($report) {
-            return response()->json($report, 201); // สร้างสำเร็จ
-        } else {
-            return response()->json(['error' => 'ไม่สามารถสร้าง car_no ได้'], 500);
-        }
-    }
-
+    //     if ($report) {
+    //         return response()->json($report, 201); // สร้างสำเร็จ
+    //     } else {
+    //         return response()->json(['error' => 'ไม่สามารถสร้าง car_no ได้'], 500);
+    //     }
+    // }
 
     protected function getRedirectUrl(): string
     {

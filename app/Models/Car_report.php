@@ -50,34 +50,48 @@ class Car_report extends Model
         return "{$prefix}{$runningNumber}/{$year}";
     }
 
-    public static function createCarReportWithRetry(array $data, int $maxRetries = 5): ?Car_report
-{
-    $attempts = 0;
+    public static function createCarReportWithLock(array $data, int $maxRetries = 5): ?Car_report
+    {
+        $attempts = 0;
 
-    while ($attempts < $maxRetries) {
-        try {
-            return DB::transaction(function () use ($data) {
-                DB::table('car_reports')->sharedLock()->get();
+        while ($attempts < $maxRetries) {
+            try {
+                return DB::transaction(function () use ($data) {
+                    // ล็อกแถวล่าสุดที่เกี่ยวข้องกับ car_no
+                    $latest = DB::table('car_reports')
+                        ->where('car_no', 'like', 'C-%/' . now()->format('y'))
+                        ->orderByDesc('id')
+                        ->lockForUpdate()
+                        ->first();
 
-                $carNo = self::generateNextCarNo(); // สร้างหมายเลขใหม่
+                    // สร้างหมายเลขใหม่จากข้อมูลล่าสุด
+                    $latestNumber = 0;
+                    $year = now()->format('y');
 
-                $data['car_no'] = $carNo;
+                    if ($latest && preg_match('/C-(\d{3})\/' . $year . '/', $latest->car_no, $matches)) {
+                        $latestNumber = (int) $matches[1];
+                    }
 
-                return Car_report::create($data);
-            });
-        } catch (QueryException $e) {
-            if ($e->getCode() === '23505') { // PostgreSQL: duplicate key
-                $attempts++;
-                usleep(100000); // หน่วงเวลา 100ms
-                continue;
+                    $nextNumber = str_pad($latestNumber + 1, 3, '0', STR_PAD_LEFT);
+                    $carNo = "C-{$nextNumber}/{$year}";
+
+                    $data['car_no'] = $carNo;
+
+                    return Car_report::create($data);
+                });
+            } catch (QueryException $e) {
+                if ($e->getCode() === '23505') { // PostgreSQL duplicate key
+                    $attempts++;
+                    usleep(100000); // หน่วงเวลา 100ms ก่อน retry
+                    continue;
+                }
+
+                throw $e;
             }
-
-            throw $e;
         }
-    }
 
-    return null;
-}
+        return null;
+    }
 
     public function mount(): void
     {
