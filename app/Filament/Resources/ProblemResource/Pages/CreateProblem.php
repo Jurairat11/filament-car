@@ -26,11 +26,11 @@ class CreateProblem extends CreateRecord
         parent::mount();
 
         // Generate prob_id ตอนเปิดหน้า
-        $this->generatedProbId = Problem::generateNextProbId();
+        //$this->generatedProbId = Problem::generateNextProbId();
 
         // fill ค่าเข้า form
         $this->form->fill([
-            'prob_id' => $this->generatedProbId,
+            //'prob_id' => $this->generatedProbId,
             'user_id' => Auth::user()?->id,
             'dept_id' => Auth::user()?->dept_id,
             'prob_date' => now(),
@@ -41,7 +41,7 @@ class CreateProblem extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['prob_id'] = $this->generatedProbId ?? Problem::generateNextProbId();
+        $data['prob_id'] = $this->generatedProbId ?? Problem::generateProbId();
         $data['prob_img'] = ImageHelper::convertToUrl($data['prob_img_path'] ?? null);
         return $data;
     }

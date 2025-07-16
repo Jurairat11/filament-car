@@ -26,51 +26,47 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
         'prob_img_path'
     ];
 
-    public static function generateNextProbId(): string
+    // public static function generateNextProbId(): string
+    // {
+    //     $year = now()->format('y'); // เช่น '25'
+    //     $prefix = 'P-';
+
+    //     $last = self::where('prob_id', 'like', "P-%/{$year}")
+    //         ->orderByDesc('id')
+    //         ->first();
+
+    //     $lastNumber = 0;
+
+    //     if ($last && preg_match('/P-(\d{3})\/' . $year . '/', $last->prob_id, $matches)) {
+    //         $lastNumber = (int) $matches[1];
+    //     }
+
+    //     $nextNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+
+    //     return "P-{$nextNumber}/{$year}";
+    // }
+
+    public static function generateProbId(): string
     {
-        $year = now()->format('y'); // เช่น '25'
-        $prefix = 'P-';
+        return DB::transaction(function () {
+            $year = now()->format('y'); // เช่น '25'
+            $prefix = 'P-';
 
-        $last = self::where('prob_id', 'like', "P-%/{$year}")
-            ->orderByDesc('id')
-            ->first();
+            // หารายการล่าสุดของปีนี้ แล้ว lock row เดียว
+            $latest = self::whereYear('created_at', now()->year)
+                ->orderByDesc('id')
+                ->lockForUpdate()
+                ->first();
 
-        $lastNumber = 0;
+            $lastRunning = 0;
 
-        if ($last && preg_match('/P-(\d{3})\/' . $year . '/', $last->prob_id, $matches)) {
-            $lastNumber = (int) $matches[1];
-        }
-
-        $nextNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-
-        return "P-{$nextNumber}/{$year}";
-    }
-
-    public static function createProblemWithRetry(int $maxRetries = 5): ?Problem
-    {
-        $attempts = 0;
-
-        while ($attempts < $maxRetries) {
-            try {
-                return DB::transaction(function () {
-                    DB::table('problems')->sharedLock()->get();
-
-                    $probId = self::generateNextProbId();
-
-                    return Problem::create(['prob_id' => $probId]);
-                });
-            } catch (QueryException $e) {
-                if ($e->getCode() === '23505') { // duplicate key
-                    $attempts++;
-                    usleep(100000); // หน่วงเวลา 100ms
-                    continue;
-                }
-
-                throw $e;
+            if ($latest && preg_match('/P-(\d+)\/' . $year . '/', $latest->prob_id, $matches)) {
+                $lastRunning = (int) $matches[1];
             }
-        }
 
-        return null;
+            $nextRunning = str_pad($lastRunning + 1, 3, '0', STR_PAD_LEFT);
+            return "{$prefix}{$nextRunning}/{$year}";
+        });
     }
 
     public function setImgBeforePathAttribute($value)

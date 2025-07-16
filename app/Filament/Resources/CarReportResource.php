@@ -49,7 +49,8 @@ class CarReportResource extends Resource
 
                     Hidden::make('car_no')
                     ->label('CAR no.')
-                    ->dehydrated(true),
+                    ->dehydrated(true)
+                    ->required(),
 
                     // Select::make('problem_id')
                     // ->label('Problem ID')

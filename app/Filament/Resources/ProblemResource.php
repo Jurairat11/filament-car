@@ -61,15 +61,15 @@ class ProblemResource extends Resource
         return $form
             ->schema([
                 Section::make('Problem Details')
-                ->description(fn ($livewire) =>
-                    'Problem ID: ' . ($livewire->form->getRawState()['prob_id'] ?? 'new')
-                )
+                // ->description(fn ($livewire) =>
+                //     'Problem ID: ' . ($livewire->form->getRawState()['prob_id'] ?? 'new')
+                // )
 
                 ->schema([
                     Hidden::make('prob_id')
                         ->label('Problem ID')
                         ->disabled()
-                        ->dehydrated()
+                        ->dehydrated(true)
                         ->required(),
 
                     Split::make([
