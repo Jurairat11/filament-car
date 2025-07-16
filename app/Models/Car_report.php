@@ -54,17 +54,23 @@ class Car_report extends Model
     public static function generateCarNo(): string
     {
         return DB::transaction(function () {
-            $year = now()->format('y');     // เช่น '25'
+            $year = now()->format('y'); // เช่น '25'
             $prefix = 'C-';
 
-            // นับจำนวนภายในปีปัจจุบัน พร้อม lock เพื่อกันชน
-            $count = DB::table('car_reports')
-                ->whereYear('created_at', now()->year)
+            // หารายการล่าสุดของปีนี้ แล้ว lock row เดียว
+            $latest = self::whereYear('created_at', now()->year)
+                ->orderByDesc('id')
                 ->lockForUpdate()
-                ->count();
+                ->first();
 
-            $running = str_pad($count + 1, 3, '0', STR_PAD_LEFT);
-            return "{$prefix}{$running}/{$year}";
+            $lastRunning = 0;
+
+            if ($latest && preg_match('/C-(\d+)\/' . $year . '/', $latest->car_no, $matches)) {
+                $lastRunning = (int) $matches[1];
+            }
+
+            $nextRunning = str_pad($lastRunning + 1, 3, '0', STR_PAD_LEFT);
+            return "{$prefix}{$nextRunning}/{$year}";
         });
     }
 
