@@ -16,7 +16,7 @@ class ProblemController extends Controller
         while ($retry < $maxRetries) {
             try {
                 // Generate prob_id อย่างปลอดภัย
-                $data['prob_id'] = Problem::generatedProbId();
+                $data['prob_id'] = Problem::generateProbId();
 
                 // สร้าง Problem ด้วยข้อมูลทั้งหมด (รวม prob_id)
                 $problem = Problem::create($data);
