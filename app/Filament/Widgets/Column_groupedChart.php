@@ -214,7 +214,7 @@ class Column_groupedChart extends ApexChartWidget
             'dataLabels' => [
                 'enabled' => true,
                 'style' => [
-                    'colors' => ['#898989']
+                    'colors' => ['#00000']
                 ]
             ],
             'colors' => [ '#3b82f6','#10b981','#f59e0b','#ef4444']
