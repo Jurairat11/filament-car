@@ -19,7 +19,7 @@ class CreateCarReport extends CreateRecord
     {
         parent::mount();
 
-        $this->generatedCarNo = Car_report::generateNextCarNo(); // เรียกจาก Model
+        //$this->generatedCarNo = Car_report::generateNextCarNo(); // เรียกจาก Model
 
         $this->form->fill([
             'car_no' => $this->generatedCarNo,
@@ -39,12 +39,20 @@ class CreateCarReport extends CreateRecord
             'created_by'        => Auth::user()?->id,
             'responsible_dept_id' => request()->get('responsible_dept_id'),
             'parent_car_id'       => request()->get('parent_car_id'),
+            'responsible_group' => 'general'
         ]);
     }
 
+    // protected function mutateFormDataBeforeCreate(array $data): array
+    // {
+    //     $data['car_no'] = $this->generatedCarNo ?? Car_report::generateNextCarNo();
+    //     $data['img_before'] = ImageHelper::convertToUrl($data['img_before_path'] ?? null);
+    //     return $data;
+    // }
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['car_no'] = $this->generatedCarNo ?? Car_report::generateNextCarNo();
+        $data['car_no'] = $this->generatedCarNo ?? Car_report::generateCarNo();
         $data['img_before'] = ImageHelper::convertToUrl($data['img_before_path'] ?? null);
         return $data;
     }
@@ -60,19 +68,6 @@ class CreateCarReport extends CreateRecord
         }
 
     }
-
-    // public function CreateCarReport(Request $request)
-    // {
-    //     $data = $request->all();
-
-    //     $report = Car_report::createCarReportWithRetry($data);
-
-    //     if ($report) {
-    //         return response()->json($report, 201); // สร้างสำเร็จ
-    //     } else {
-    //         return response()->json(['error' => 'ไม่สามารถสร้าง car_no ได้'], 500);
-    //     }
-    // }
 
     protected function getRedirectUrl(): string
     {

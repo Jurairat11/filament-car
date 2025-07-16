@@ -37,18 +37,35 @@ class Car_report extends Model
         'img_before_path'
     ];
 
-    public static function generateNextCarNo(): string
+    // public static function generateNextCarNo(): string
+    // {
+    //     $year = now()->format('y'); // ปี พ.ศ. สั้น เช่น 25
+
+    //     $prefix = "C-";
+
+    //     // นับรายการในปีปัจจุบัน
+    //     $count = self::whereYear('created_at', now()->year)->count() + 1;
+
+    //     $runningNumber = str_pad($count, 3, '0', STR_PAD_LEFT);
+
+    //     return "{$prefix}{$runningNumber}/{$year}";
+    // }
+
+    public static function generateCarNo(): string
     {
-        $year = now()->format('y'); // ปี พ.ศ. สั้น เช่น 25
+        return DB::transaction(function () {
+            $year = now()->format('y');     // เช่น '25'
+            $prefix = 'C-';
 
-        $prefix = "C-";
+            // นับจำนวนภายในปีปัจจุบัน พร้อม lock เพื่อกันชน
+            $count = DB::table('car_reports')
+                ->whereYear('created_at', now()->year)
+                ->lockForUpdate()
+                ->count();
 
-        // นับรายการในปีปัจจุบัน
-        $count = self::whereYear('created_at', now()->year)->count() + 1;
-
-        $runningNumber = str_pad($count, 3, '0', STR_PAD_LEFT);
-
-        return "{$prefix}{$runningNumber}/{$year}";
+            $running = str_pad($count + 1, 3, '0', STR_PAD_LEFT);
+            return "{$prefix}{$running}/{$year}";
+        });
     }
 
     public function mount(): void

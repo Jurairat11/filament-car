@@ -46,6 +46,11 @@ class CarReportResource extends Resource
                     'No: ' . ($livewire->form->getRawState()['car_no'] ?? '')
                 )
                 ->schema([
+
+                    Hidden::make('car_no')
+                    ->label('CAR no.')
+                    ->dehydrated(true),
+
                     // Select::make('problem_id')
                     // ->label('Problem ID')
                     // ->options(fn() => Problem::where('status','!=','closed')->pluck('prob_id', 'id'))

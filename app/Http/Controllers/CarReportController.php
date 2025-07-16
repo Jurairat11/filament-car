@@ -4,28 +4,34 @@ namespace App\Http\Controllers;
 
 use App\Models\Car_report;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class CarReportController extends Controller
 {
-    // public function CreateCarReport(Request $request)
-    // {
-    //     try {
-    //         $report = DB::transaction(function () use ($request) {
-    //             // นับแบบ lock เพื่อไม่ให้ซ้ำ
-    //             $count = Car_report::whereYear('created_at', now()->year)->lockForUpdate()->count() + 1;
-    //             $carNo = 'C-' . now()->format('y') . '_' . str_pad($count, 3, '0', STR_PAD_LEFT);
+    public function store(Request $request)
+    {
+        $data = $request->all();
+        $maxRetries = 3;
+        $retry = 0;
 
-    //             $data = $request->all();
-    //             $data['car_no'] = $carNo;
+        while ($retry < $maxRetries) {
+            try {
+                // Generate car_no อย่างปลอดภัย
+                $data['car_no'] = Car_report::generateCarNo();
 
-    //             return Car_report::create($data);
-    //         });
+                // สร้าง CarReport ด้วยข้อมูลทั้งหมด (รวม car_no)
+                $carReport = Car_report::create($data);
 
-    //         return response()->json($report, 201);
+                return response()->json($carReport, 201);
+            } catch (\Illuminate\Database\QueryException $e) {
+                if ($e->getCode() === '23505') { // PostgreSQL duplicate key
+                    $retry++;
+                    usleep(100000); // รอ 0.1 วินาทีก่อน retry
+                } else {
+                    throw $e;
+                }
+            }
+        }
 
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => 'สร้างไม่สำเร็จ: ' . $e->getMessage()], 500);
-    //     }
-    // }
+        return response()->json(['error' => 'ไม่สามารถสร้าง car_no ได้เนื่องจากซ้ำซ้อน'], 500);
+    }
 }
