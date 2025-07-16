@@ -4,8 +4,8 @@ namespace App\Filament\Widgets;
 
 use App\Models\Car_report;
 use App\Models\Car_responses;
+use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Auth;
-use Filament\Support\Facades\FilamentColor;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
@@ -164,7 +164,7 @@ class Column_groupedChart extends ApexChartWidget
             $delayData[$item->month] = $item->total;
         }
 
-        $isDark = FilamentColor::isDarkMode();
+        $isDark = Filament::getTheme() === 'dark';
 
         // Return the chart options
         return [
