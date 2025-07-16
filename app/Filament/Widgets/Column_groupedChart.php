@@ -186,6 +186,7 @@ class Column_groupedChart extends ApexChartWidget
                     'name' => 'Delay',
                     'data' => array_values($delayData),
                 ],
+                'colors' => []
             ],
             'xaxis' => [
                 'categories' => array_map(function ($month) use ($monthName) {
@@ -210,6 +211,11 @@ class Column_groupedChart extends ApexChartWidget
                         'ticks' => [
                             'stepSize' => 2,
                         ],
+            ],
+            'dataLabels' => [
+                'style' => [
+                    'colors' => '#898989'
+                ]
             ],
             'colors' => [ '#3b82f6','#10b981','#f59e0b','#ef4444']
 
