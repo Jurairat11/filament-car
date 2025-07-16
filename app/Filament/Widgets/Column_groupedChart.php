@@ -164,7 +164,6 @@ class Column_groupedChart extends ApexChartWidget
             $delayData[$item->month] = $item->total;
         }
 
-        $isDark = Filament::getTheme() === 'dark';
 
         // Return the chart options
         return [
@@ -217,11 +216,8 @@ class Column_groupedChart extends ApexChartWidget
             'dataLabels' => [
                 'enabled' => true,
                 'style' => [
-                    'colors' => [$isDark ? '#ffffff' : '#000000'],
+                    'colors' => ['#ddddd']
                 ]
-            ],
-            'theme' => [
-            'mode' => $isDark ? 'dark' : 'light',
             ],
             'colors' => [ '#3b82f6','#10b981','#f59e0b','#ef4444']
 
@@ -235,27 +231,5 @@ class Column_groupedChart extends ApexChartWidget
     }
 }
 
-// use Filament\Support\Facades\FilamentColor;
 
-// protected function getOptions(): array
-// {
-//     $isDark = FilamentColor::isDarkMode();
-
-//     return [
-//         'chart' => [
-//             'type' => 'pie',
-//         ],
-//         'series' => [44, 55, 13],
-//         'labels' => ['A', 'B', 'C'],
-//         'dataLabels' => [
-//             'enabled' => true,
-//             'style' => [
-//                 'colors' => [$isDark ? '#ffffff' : '#000000'],
-//             ],
-//         ],
-//         'theme' => [
-//             'mode' => $isDark ? 'dark' : 'light',
-//         ],
-//     ];
-// }
 
