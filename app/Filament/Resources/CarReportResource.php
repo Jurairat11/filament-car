@@ -42,9 +42,9 @@ class CarReportResource extends Resource
         return $form
             ->schema([
                 Section::make('CAR Information')->id('submit')
-                ->description(fn ($livewire) =>
-                    'No: ' . ($livewire->form->getRawState()['car_no'] ?? '')
-                )
+                // ->description(fn ($livewire) =>
+                //     'No: ' . ($livewire->form->getRawState()['car_no'] ?? '')
+                // )
                 ->schema([
 
                     Hidden::make('car_no')
