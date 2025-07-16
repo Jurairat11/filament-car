@@ -194,6 +194,7 @@ class Column_groupedChart extends ApexChartWidget
                 'labels' => [
                     'style' => [
                         'fontFamily' => 'inherit',
+                        'color' => '#898989'
                     ],
                 ],
             ],
