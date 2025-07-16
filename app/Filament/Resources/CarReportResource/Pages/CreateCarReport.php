@@ -22,7 +22,7 @@ class CreateCarReport extends CreateRecord
         //$this->generatedCarNo = Car_report::generateNextCarNo(); // เรียกจาก Model
 
         $this->form->fill([
-            'car_no' => $this->generatedCarNo,
+            //'car_no' => $this->generatedCarNo,
             'status' => 'draft',
             'problem_id'        => request()->get('problem_id'),
             'dept_id'           => request()->get('dept_id'),
