@@ -46,7 +46,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
     //     return "P-{$nextNumber}/{$year}";
     // }
 
-    public static function generateProbId(): string
+    public static function generatedProbId(): string
     {
         return DB::transaction(function () {
             $year = now()->format('y'); // เช่น '25'
