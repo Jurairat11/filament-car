@@ -170,6 +170,12 @@ class ColumnNGChart extends ApexChartWidget
                             'stepSize' => 2,
                         ],
         ],
+        'dataLabels' => [
+            'enabled' => true,
+            'style' => [
+                'colors' => ['#a9a9a9']
+            ],
+        ],
         'colors' => ['#3b82f6', '#10b981', '#f59e0b','#ef4444'],
     ];
 }
