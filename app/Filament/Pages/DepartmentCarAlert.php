@@ -151,7 +151,7 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
         return [
             Action::make('acknowledge')
             ->label('Acknowledge')
-            ->tooltip('Acknowledge car report')
+            ->tooltip('Acknowledge CAR report')
             ->icon('heroicon-o-check-circle')
             ->color('success')
             ->requiresConfirmation()

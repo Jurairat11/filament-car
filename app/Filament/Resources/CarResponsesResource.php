@@ -383,4 +383,16 @@ class CarResponsesResource extends Resource
         ];
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+
+        if (Auth::user()->hasAnyRole(['Safety','Admin'])) {
+            return (string) static::$model::where('perm_status', 'on_process')->count();
+        }
+        return null;
+
+    }
+
+
+
 }
