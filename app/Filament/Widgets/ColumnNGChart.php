@@ -173,7 +173,7 @@ class ColumnNGChart extends ApexChartWidget
         'dataLabels' => [
             'enabled' => true,
             'style' => [
-                'colors' => ['#a9a9a9']
+                'colors' => []
             ],
         ],
         'colors' => ['#3b82f6', '#10b981', '#f59e0b','#ef4444'],
