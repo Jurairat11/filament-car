@@ -46,7 +46,7 @@ use App\Filament\Resources\ProblemResource\Pages\EditProblem;
 use App\Filament\Resources\ProblemResource\Pages\ViewProblem;
 use App\Filament\Resources\ProblemResource\Pages\ListProblems;
 use App\Filament\Resources\ProblemResource\Pages\CreateProblem;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+
 
 class ProblemResource extends Resource
 {
@@ -69,8 +69,7 @@ class ProblemResource extends Resource
                     Hidden::make('prob_id')
                         ->label('Problem ID')
                         ->disabled()
-                        ->dehydrated(true)
-                        ->required(),
+                        ->dehydrated(true),
 
                     Split::make([
                     Section::make()
