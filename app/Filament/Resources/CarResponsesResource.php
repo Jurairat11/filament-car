@@ -392,7 +392,9 @@ class CarResponsesResource extends Resource
         return null;
 
     }
-
-
+    public static function getNavigationBadgeTooltip(): ?string
+    {
+        return 'Check CAR responses';
+    }
 
 }
