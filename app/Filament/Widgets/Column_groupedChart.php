@@ -5,6 +5,7 @@ namespace App\Filament\Widgets;
 use App\Models\Car_report;
 use App\Models\Car_responses;
 use Illuminate\Support\Facades\Auth;
+use Filament\Support\Facades\FilamentColor;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
@@ -163,6 +164,8 @@ class Column_groupedChart extends ApexChartWidget
             $delayData[$item->month] = $item->total;
         }
 
+        $isDark = FilamentColor::isDarkMode();
+
         // Return the chart options
         return [
             'chart' => [
@@ -214,8 +217,11 @@ class Column_groupedChart extends ApexChartWidget
             'dataLabels' => [
                 'enabled' => true,
                 'style' => [
-                    'colors' => ['#00000']
+                    'colors' => [$isDark ? '#ffffff' : '#000000'],
                 ]
+            ],
+            'theme' => [
+            'mode' => $isDark ? 'dark' : 'light',
             ],
             'colors' => [ '#3b82f6','#10b981','#f59e0b','#ef4444']
 
@@ -228,3 +234,28 @@ class Column_groupedChart extends ApexChartWidget
         // return in_array($user?->name, ['Admin','Safety']);
     }
 }
+
+// use Filament\Support\Facades\FilamentColor;
+
+// protected function getOptions(): array
+// {
+//     $isDark = FilamentColor::isDarkMode();
+
+//     return [
+//         'chart' => [
+//             'type' => 'pie',
+//         ],
+//         'series' => [44, 55, 13],
+//         'labels' => ['A', 'B', 'C'],
+//         'dataLabels' => [
+//             'enabled' => true,
+//             'style' => [
+//                 'colors' => [$isDark ? '#ffffff' : '#000000'],
+//             ],
+//         ],
+//         'theme' => [
+//             'mode' => $isDark ? 'dark' : 'light',
+//         ],
+//     ];
+// }
+

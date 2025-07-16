@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Enums\ThemeMode;
 use Filament\Facades\Filament;
 use App\Filament\Pages\Profile;
 use Filament\Navigation\MenuItem;
@@ -51,6 +52,7 @@ class AdminPanelProvider extends PanelProvider
                 ->label(fn () => 'Employee ID: ' . (Auth::user()?->emp_id ?? '-'))
                 ->visible(fn() => Auth::user()?->emp_id)
             ])
+            ->defaultThemeMode(ThemeMode::Light)
             //->brandName('CAR')
             ->brandLogo(asset('images/vcst-logo.png'))
             ->brandLogoHeight('3rem')
