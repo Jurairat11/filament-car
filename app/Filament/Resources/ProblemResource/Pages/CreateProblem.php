@@ -11,7 +11,7 @@ use App\Filament\Resources\ProblemResource;
 class CreateProblem extends CreateRecord
 {
     protected static string $resource = ProblemResource::class;
-    protected ?string $generatedProbId = null;
+    protected ?string $generatedProbId;
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

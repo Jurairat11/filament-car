@@ -18,7 +18,7 @@ class ProblemController extends Controller
                 // Generate prob_id อย่างปลอดภัย
                 $data['prob_id'] = Problem::generateProbId();
 
-                // สร้าง CarReport ด้วยข้อมูลทั้งหมด (รวม car_no)
+                // สร้าง Problem ด้วยข้อมูลทั้งหมด (รวม prob_id)
                 $problem = Problem::create($data);
 
                 return response()->json($problem, 201);
@@ -32,6 +32,6 @@ class ProblemController extends Controller
             }
         }
 
-        return response()->json(['error' => 'ไม่สามารถสร้าง car_no ได้เนื่องจากซ้ำซ้อน'], 500);
+        return response()->json(['error' => 'ไม่สามารถสร้าง prob_id ได้เนื่องจากซ้ำซ้อน'], 500);
     }
 }
