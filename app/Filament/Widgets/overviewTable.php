@@ -35,7 +35,7 @@ class overviewTable extends BaseWidget
             ->defaultSort('created_at', 'desc') //sort order by created_at
             ->columns([
                 TextColumn::make('car_no')
-                    ->label('Car No.')
+                    ->label('CAR No.')
                     ->searchable(),
 
                 TextColumn::make('hazardLevel.level_name')
