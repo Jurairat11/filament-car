@@ -136,6 +136,11 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
     {
         return 'above-content'; // Replace with the correct layout string
     }
+
+    protected function getTableEmptyStateHeading(): ?string
+    {
+        return 'No data available';
+    }
     protected function getTableBulkActions(): array
     {
         return [
