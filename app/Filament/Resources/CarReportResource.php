@@ -245,6 +245,7 @@ class CarReportResource extends Resource
                             })
                             ->hidden(fn(callable $get) => blank($get('responsible_group')))
                             ->reactive()
+                            ->required()
 
                         ]),
                     ])->columns(1)->columnSpan(2),
