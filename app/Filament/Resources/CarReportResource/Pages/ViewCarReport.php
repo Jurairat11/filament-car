@@ -177,6 +177,12 @@ class ViewCarReport extends ViewRecord
             ->visible(fn ($record) =>
                 Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status === 'pending_review')
                 ->action(function () {
+
+                    Notification::make()
+                    ->title('The CAR has already been closed')
+                    ->success()
+                    ->send();
+
                     // ปิดใบปัจจุบัน
                     $this->record->update(['status' => 'closed']);
                     $this->record->update(['close_car_date' => today()]);
