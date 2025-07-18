@@ -338,10 +338,10 @@ class CarResponsesResource extends Resource
                         Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status_reply !== 'finished'
                 )
                 ->action(function($record, array $data) {
-                        Notification::make()
-                        ->title('CAR has been checked.')
-                        ->success()
-                        ->send();
+                        // Notification::make()
+                        // ->title('CAR has been checked.')
+                        // ->success()
+                        // ->send();
 
                         $record->update([
                             'perm_status' => 'finished',

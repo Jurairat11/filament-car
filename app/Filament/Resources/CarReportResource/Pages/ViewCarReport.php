@@ -111,6 +111,7 @@ class ViewCarReport extends ViewRecord
             Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status === 'pending_review')
 
             ->action(function ( $record, array $data) {
+
                 $record->update([
                     'status' => 'reopened',
                     'reopen_car_reason' => $data['reopen_car_reason'],
