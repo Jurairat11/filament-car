@@ -368,7 +368,7 @@ class CarResponsesResource extends Resource
                     ),
                     Tables\Actions\DeleteAction::make()
                     ->visible(fn ($record) =>
-                        $record->status_reply !== 'finished'
+                        $record->status_reply !== 'finished' && Auth::user()->hasAnyRole(['Admin','Safety'])
                     ),
                 ])->label('Actions')->dropdownPlacement('top-start'),
 
