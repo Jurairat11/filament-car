@@ -366,7 +366,10 @@ class CarResponsesResource extends Resource
                     ->visible(fn ($record) =>
                         $record->status_reply !== 'finished'
                     ),
-                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\DeleteAction::make()
+                    ->visible(fn ($record) =>
+                        $record->status_reply !== 'finished'
+                    ),
                 ])->label('Actions')->dropdownPlacement('top-start'),
 
                 // ActionGroup::make([
