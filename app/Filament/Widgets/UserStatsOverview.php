@@ -32,6 +32,7 @@ class UserStatsOverview extends BaseWidget
         'total' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
             ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
             ->where('responsible_dept_id', $deptId)
+            ->whereNot('status','draft')
             ->count(),
 
         'closed' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))

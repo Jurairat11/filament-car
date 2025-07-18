@@ -30,6 +30,7 @@ class followCarTable extends BaseWidget
             ->query(
                 Car_report::query()
                     ->where('responsible_dept_id',Auth::user()->dept_id)
+                    ->whereNot('status','draft')
                     ->leftJoin('car_responses', 'car_reports.id', '=','car_responses.car_id')
                     ->select('car_reports.*', 'car_responses.temp_desc', 'car_responses.temp_status', 'car_responses.perm_desc', 'car_responses.perm_status','car_responses.status_reply')
             )
