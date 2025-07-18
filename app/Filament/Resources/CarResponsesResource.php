@@ -117,7 +117,7 @@ class CarResponsesResource extends Resource
 
                 Tabs::make('Tabs')
                 ->tabs([
-                    Tabs\Tab::make('Temporary action')
+                    Tabs\Tab::make('มาตรการแก้ไขชั่วคราว')
                         ->schema([
                             Textarea::make('temp_desc')
                             ->label('มาตรการแก้ไขชั่วคราว')
@@ -134,7 +134,7 @@ class CarResponsesResource extends Resource
                             ->label('ผู้รับผิดชอบ')
 
                         ]),
-                    Tabs\Tab::make('Permanent action')
+                    Tabs\Tab::make('มาตรการแก้ไขถาวร')
                         ->schema([
                             Textarea::make('perm_desc')
                             ->label('มาตรการแก้ไขถาวร')
