@@ -27,6 +27,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\CarResponsesResource\Pages;
 use App\Filament\Resources\CarResponsesResource\RelationManagers;
@@ -337,6 +338,11 @@ class CarResponsesResource extends Resource
                         Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status_reply !== 'finished'
                 )
                 ->action(function($record, array $data) {
+                        Notification::make()
+                        ->title('CAR has been checked.')
+                        ->success()
+                        ->send();
+
                         $record->update([
                             'perm_status' => 'finished',
                             'status_reply' => 'finished'
