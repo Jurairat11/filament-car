@@ -268,6 +268,7 @@ class CarReportResource extends Resource
     {
         return $table
             ->defaultSort('created_at', 'desc') //sort order by created_at
+            ->emptyStateHeading('No data available')
             ->columns([
                 TextColumn::make('car_no')
                 ->label('เลขที่ CAR')

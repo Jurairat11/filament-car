@@ -174,6 +174,7 @@ class CarResponsesResource extends Resource
     {
         return $table
             ->defaultSort('created_at','desc')
+            ->emptyStateHeading('No data available')
             ->columns([
                 TextColumn::make('carReport.car_no')
                 ->label('CAR no.')
