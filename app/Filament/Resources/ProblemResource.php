@@ -290,7 +290,7 @@ class ProblemResource extends Resource
                     ->modalSubmitActionLabel('OK')
                     ->form([
                 Textarea::make('dismiss_reason')
-                        ->label('Reason for dismissal')
+                        ->label('สาเหตุการปฏิเสธการแจ้งอันตราย')
                         ->required()
                         ->autosize()
                         ->maxLength(500),

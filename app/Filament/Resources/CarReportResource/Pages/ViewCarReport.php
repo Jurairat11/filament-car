@@ -102,7 +102,7 @@ class ViewCarReport extends ViewRecord
             ->modalSubmitActionLabel('OK')
             ->form([
                 Textarea::make('reopen_car_reason')
-                        ->label('Reason for reopening CAR')
+                        ->label('สาเหตุการออกใบ CAR ใหม่')
                         ->required()
                         ->autosize()
                         ->maxLength(500),
