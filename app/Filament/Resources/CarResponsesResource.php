@@ -9,6 +9,7 @@ use App\Models\Car_report;
 use Filament\Tables\Table;
 use App\Models\Car_responses;
 use Filament\Resources\Resource;
+use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Tabs;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Filters\Filter;
@@ -148,6 +149,13 @@ class CarResponsesResource extends Resource
                             // ->format('d/m/Y')
                             ->disabled()
                             ->dehydrated(true),
+
+                            // เพิ่มวันที่คาดการณ์ว่าจะกำหนดเสร็จ
+                            DatePicker::make('actual_date')
+                            ->label('วันที่คาดการณ์ว่ากำหนดเสร็จ')
+                            ->native(false)
+                            ->displayFormat('d/m/y')
+                            ->helperText(new HtmlString('<strong style="color:red;">*ใส่ในกรณีมาตรการแก้ไขถาวรใช้เวลาเลยวันที่กำหนดเสร็จ</strong>')),
 
                             TextInput::make('perm_responsible')
                             ->label('ผู้รับผิดชอบ'),

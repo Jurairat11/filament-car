@@ -80,9 +80,10 @@ class Car_responsesObserver
         if (is_null($car_responses->days_perm) && $car_responses->perm_status === 'finished') {
             $car_responses->status_reply = 'finished';
 
-            } elseif ($car_responses->days_perm >= 0) {
+            } elseif ($car_responses->days_perm >= 0 || $car_responses->actual_date !== null) {
                 $car_responses->status_reply = 'on process';
             }
+
 
         //Update status = pending_review
         if ($car_responses->status_reply === 'finished' && $car_responses->perm_status === 'finished') {
