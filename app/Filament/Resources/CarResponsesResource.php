@@ -384,10 +384,10 @@ class CarResponsesResource extends Resource
                 //     ->button()
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make()
 
-                ])->visible(fn ($record) =>$record->status_reply !== 'finished' && Auth::user()->hasAnyRole(['Admin','Safety'])),
+                // ]),
             ]);
     }
 
