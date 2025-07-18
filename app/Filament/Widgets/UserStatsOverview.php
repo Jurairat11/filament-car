@@ -45,7 +45,8 @@ class UserStatsOverview extends BaseWidget
 
         'on_process' => Car_report::when($start, fn($q) => $q->whereDate('created_at', '>', $start))
             ->when($end, fn($q) => $q->whereDate('created_at', '<', $end))
-            ->whereNot('status', 'closed' && 'draft')
+            ->whereNot('status', 'closed')
+            ->whereNot('status', 'draft')
             ->where('responsible_dept_id', $deptId)
             ->whereNotIn('id', $delayCarIds)
             ->count(),
