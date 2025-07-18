@@ -334,7 +334,7 @@ class CarResponsesResource extends Resource
                 ->modalDescription('The car responses have been checked.')
                 ->modalSubmitActionLabel('OK')
                 ->visible(fn ($record) =>
-                        Auth::user()?->hasAnyRole(['Admin', 'Safety']) //&& $record->status_reply === 'on process'
+                        Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status_reply !== 'finished'
                 )
                 ->action(function($record, array $data) {
                         $record->update([
