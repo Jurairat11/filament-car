@@ -155,6 +155,7 @@ class CarResponsesResource extends Resource
                             ->label('วันที่คาดการณ์ว่ากำหนดเสร็จ')
                             ->native(false)
                             ->displayFormat('d/m/y')
+                            ->placeholder('dd-mm-yyyy')
                             ->helperText(new HtmlString('<strong style="color:red;">*ใส่ในกรณีมาตรการแก้ไขถาวรใช้เวลาเลยวันที่กำหนดเสร็จ</strong>')),
 
                             TextInput::make('perm_responsible')
