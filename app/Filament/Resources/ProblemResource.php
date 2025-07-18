@@ -168,6 +168,7 @@ class ProblemResource extends Resource
     {
         return $table
             ->defaultSort('created_at','desc')
+            ->emptyStateDescription('ไม่พบข้อมูล')
             ->columns([
                 TextColumn::make('prob_id')
                     ->label('Problem ID')
