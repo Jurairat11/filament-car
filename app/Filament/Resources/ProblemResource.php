@@ -254,6 +254,12 @@ class ProblemResource extends Resource
                     )
 
                     ->action(function($record, array $data) {
+
+                        Notification::make()
+                        ->title('The problem report has been accepted')
+                        ->success()
+                        ->send();
+
                         $record->update([
                             'status' => 'accepted',
                         ]);
@@ -293,6 +299,11 @@ class ProblemResource extends Resource
                         Auth::user()?->hasAnyRole(['Safety','Admin']) && $record->status === 'new'
                     )
                 ->action(function ($record, array $data) {
+                    Notification::make()
+                        ->title('The problem report has been dismissed')
+                        ->success()
+                        ->send();
+
                     $record->update([
                         'status' => 'dismissed',
                         'dismiss_reason' => $data['dismiss_reason'],
