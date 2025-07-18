@@ -386,11 +386,8 @@ class CarResponsesResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
-                    ->visible(fn ($record) =>
-                        $record->status_reply !== 'finished'
-                    ),
                 ]),
-            ]);
+            ])->visible(fn ($record) =>$record->status_reply !== 'finished' && Auth::user()->hasAnyRole(['Admin','Safety']));
     }
 
     public static function getRelations(): array
