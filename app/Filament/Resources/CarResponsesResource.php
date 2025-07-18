@@ -156,6 +156,7 @@ class CarResponsesResource extends Resource
                             ->native(false)
                             ->displayFormat('d/m/y')
                             ->placeholder('dd-mm-yyyy')
+                            ->closeOnDateSelection()
                             ->helperText(new HtmlString('<strong style="color:red;">*ใส่ในกรณีมาตรการแก้ไขถาวรใช้เวลาเลยวันที่กำหนดเสร็จ</strong>')),
 
                             TextInput::make('perm_responsible')
@@ -360,7 +361,11 @@ class CarResponsesResource extends Resource
 
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make()->modalHeading(fn ($record) => 'Edit Car responses'),
+                    Tables\Actions\EditAction::make()
+                    ->modalHeading(fn ($record) => 'Edit CAR responses')
+                    ->visible(fn ($record) =>
+                        $record->status_reply !== 'finished'
+                    ),
                     Tables\Actions\DeleteAction::make(),
                 ])->label('Actions')->dropdownPlacement('top-start'),
 
