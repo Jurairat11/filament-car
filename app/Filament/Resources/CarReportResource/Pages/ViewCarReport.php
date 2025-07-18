@@ -39,6 +39,12 @@ class ViewCarReport extends ViewRecord
                         Auth::user()?->hasAnyRole(['Safety','Admin']) && $record->status === 'draft'
                     )
             ->action(function($record, array $data) {
+
+                Notification::make()
+                ->title('Reported successfully')
+                ->success()
+                ->send();
+
                 $record->update([
                     'status' => 'reported',
 
