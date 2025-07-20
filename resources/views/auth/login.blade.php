@@ -44,7 +44,7 @@
                     class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
             </div>
 
-            <div class="flex flex-col items-start gap-2 mt-4">
+            {{-- <div class="flex flex-col items-start gap-2 mt-4">
                 <a href="{{ route('register') }}" class="text-sm text-blue-600 hover:underline">
                     Don't have an account?
                 </a>
@@ -52,7 +52,7 @@
                 {{-- <a href="{{ route('password.request') }}" class="text-sm text-blue-600 hover:underline">
                     Forgot your password?
                 </a> --}}
-            </div>
+            {{-- </div> --}}
             <div class="flex justify-end mt-4">
                 <button type="submit"
                     class="inline-flex items-center px-4 py-2 text-sm font-medium text-white transition bg-blue-600 rounded-md hover:bg-blue-700">

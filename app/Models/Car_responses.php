@@ -50,15 +50,13 @@ class Car_responses extends Model
 
         $days = round(now()->diffInDays($this->perm_due_date, false));
 
-        //dd($days);
-
         if ($days === -0.0) {
-            return 0;
+            $days = 0;
         }
 
-        return $days;
-
+        return $days + ($this->days_perm_value ?? 0);
     }
+
     public function carReport() {
         return $this->belongsTo(Car_report::class,'car_id','id');
     }
