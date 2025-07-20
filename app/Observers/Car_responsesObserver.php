@@ -77,7 +77,10 @@ class Car_responsesObserver
             }
         }
 
-        $extraDays = $car_responses->perm_due_date->diffInDays($car_responses->actual_date, false);
+        $permDueDate = Carbon::parse($car_responses->perm_due_date);
+        $actualDate = Carbon::parse($car_responses->actual_date);
+
+        $extraDays = $permDueDate->diffInDays($actualDate, false); // false = อนุญาตติดลบได้
 
         if ($extraDays > 0) {
             $car_responses->days_perm += $extraDays;
