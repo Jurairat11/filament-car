@@ -20,6 +20,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\ImageColumn;
@@ -157,7 +158,9 @@ class CarResponsesResource extends Resource
                             ->displayFormat('d/m/y')
                             ->placeholder('dd-mm-yyyy')
                             ->closeOnDateSelection()
-                            ->helperText(new HtmlString('<strong style="color:red;">*ใส่ในกรณีมาตรการแก้ไขถาวรใช้เวลาเลยวันที่กำหนดเสร็จ</strong>')),
+                            ->helperText(new HtmlString('<strong style="color:red;">*ใส่ในกรณีมาตรการแก้ไขถาวรใช้เวลาเลยวันที่กำหนดเสร็จ</strong>'))
+                            ->disabled(fn (?Model $record) => filled($record?->actual_date)), // Disable if actual_date is filled
+
 
                             TextInput::make('perm_responsible')
                             ->label('ผู้รับผิดชอบ'),
@@ -348,10 +351,6 @@ class CarResponsesResource extends Resource
                         Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status_reply !== 'finished'
                 )
                 ->action(function($record, array $data) {
-                        // Notification::make()
-                        // ->title('CAR has been checked.')
-                        // ->success()
-                        // ->send();
 
                         $record->update([
                             'perm_status' => 'finished',
@@ -364,12 +363,17 @@ class CarResponsesResource extends Resource
                     Tables\Actions\EditAction::make()
                     ->modalHeading(fn ($record) => 'Edit CAR responses')
                     ->visible(fn ($record) =>
-                        $record->status_reply !== 'finished'
-                    ),
+                    Auth::user()?->hasRole('User')
+                        ? $record->status_reply !== 'finished'
+                        : true
+                ),
                     Tables\Actions\DeleteAction::make()
                     ->visible(fn ($record) =>
-                        $record->status_reply !== 'finished' && Auth::user()->hasAnyRole(['Admin','Safety'])
-                    ),
+                    Auth::user()?->hasRole('User')
+                        ? $record->status_reply !== 'finished'
+                        : true
+                ),
+
                 ])->label('Actions')->dropdownPlacement('top-start'),
 
                 // ActionGroup::make([
