@@ -78,6 +78,8 @@ class Car_responsesObserver
         }
         $adjustedDueDate = Carbon::parse($car_responses->actual_date)->addDays($car_responses->days_perm);
 
+        dd($adjustedDueDate);
+
         //Update status_reply
         if (is_null($car_responses->days_perm) && $car_responses->perm_status === 'finished') {
             $car_responses->status_reply = 'finished';
