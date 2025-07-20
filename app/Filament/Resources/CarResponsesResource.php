@@ -161,7 +161,7 @@ class CarResponsesResource extends Resource
                             ->helperText(new HtmlString('<strong style="color:red;">*ใส่ในกรณีมาตรการแก้ไขถาวรใช้เวลาเลยวันที่กำหนดเสร็จ</strong>'))
                             ->disabled(function (?Model $record) {
                                 // ถ้าเป็น admin ไม่ disabled
-                                if (Auth::user()?->hasRole('admin')) {
+                                if (Auth::user()?->hasRole('Admin')) {
                                     return false;
                                 }
 
