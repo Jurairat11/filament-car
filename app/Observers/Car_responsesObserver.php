@@ -76,9 +76,13 @@ class Car_responsesObserver
                 $car_responses->perm_status = 'on process';
             }
         }
-        $adjustedDueDate = Carbon::parse($car_responses->actual_date)->addDays($car_responses->days_perm);
 
-        dd($adjustedDueDate);
+        $extraDays = $car_responses->perm_due_date->diffInDays($car_responses->actual_date, false);
+
+        if ($extraDays > 0) {
+            $car_responses->days_perm += $extraDays;
+        }
+
 
         //Update status_reply
         if (is_null($car_responses->days_perm) && $car_responses->perm_status === 'finished') {

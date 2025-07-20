@@ -11,7 +11,6 @@ use App\Models\Car_responses;
 use Filament\Resources\Resource;
 use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Tabs;
-use Filament\Tables\Actions\Action;
 use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Split;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +29,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Notification;
+use Filament\Forms\Components\Actions\Action;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\CarResponsesResource\Pages;
 use App\Filament\Resources\CarResponsesResource\RelationManagers;
@@ -159,8 +159,17 @@ class CarResponsesResource extends Resource
                             ->placeholder('dd-mm-yyyy')
                             ->closeOnDateSelection()
                             ->helperText(new HtmlString('<strong style="color:red;">*ใส่ในกรณีมาตรการแก้ไขถาวรใช้เวลาเลยวันที่กำหนดเสร็จ</strong>'))
-                            ->disabled(fn (?Model $record) => filled($record?->actual_date)), // Disable if actual_date is filled
-
+                            ->disabled(fn (?Model $record) => filled($record?->actual_date)) // Disable if actual_date is filled
+                            ->suffixAction(
+                                Action::make('clearActualDate')
+                                    ->icon('heroicon-o-trash')
+                                    ->tooltip('ล้างวันที่')
+                                    ->action(function ($state, callable $set) {
+                                        $set('actual_date', null); // เคลียร์ค่า
+                                    })
+                                    ->visible(fn ($record) =>
+                                    Auth::user()?->hasAnyRole(['Admin', 'Safety']) )
+                                ),
 
                             TextInput::make('perm_responsible')
                             ->label('ผู้รับผิดชอบ'),
