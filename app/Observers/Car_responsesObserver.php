@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use App\Models\Car_responses;
 
@@ -75,12 +76,13 @@ class Car_responsesObserver
                 $car_responses->perm_status = 'on process';
             }
         }
+        $adjustedDueDate = Carbon::parse($car_responses->actual_date)->addDays($car_responses->days_perm);
 
         //Update status_reply
         if (is_null($car_responses->days_perm) && $car_responses->perm_status === 'finished') {
             $car_responses->status_reply = 'finished';
 
-            } elseif ($car_responses->days_perm >= 0 || $car_responses->actual_date !== null) {
+            } elseif ($car_responses->days_perm >= 0) {
                 $car_responses->status_reply = 'on process';
             }
 
