@@ -27,7 +27,8 @@ class Car_responses extends Model
         'status_reply',
         'temp_responsible',
         'perm_responsible',
-        'img_after_path'
+        'img_after_path',
+        'actual_date',
 
     ];
 
