@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel {
         // $schedule->job(new UpdatePermStatus)->dailyAt('00:00');
         // $schedule->job(new DelayStatus)->dailyAt('00:00');
         $schedule->command('app:delay-status')->dailyAt('11:35');
-        $schedule->command('app:perm-status')->dailyAt('11:35');
+        //$schedule->command('app:perm-status')->dailyAt('11:35');
     }
     protected function commands(): void {
         $this->load(__DIR__.'/Commands');
