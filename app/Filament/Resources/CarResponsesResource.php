@@ -175,7 +175,11 @@ class CarResponsesResource extends Resource
                             Textarea::make('preventive')
                             ->label('กำหนดมาตรการป้องกันการเกิดปัญหาซ้ำ')
                             ->autosize()
-                            ->nullable()
+                            ->nullable(),
+
+                            Hidden::make('days_perm_value')
+                            ->dehydrated(true)
+                            ->default(0)
 
                         ]),
                     ]),
