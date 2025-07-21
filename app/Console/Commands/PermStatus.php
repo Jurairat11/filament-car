@@ -27,14 +27,14 @@ class PermStatus extends Command
      */
     public function handle()
     {
-        $now = Carbon::now();
-        $items = Car_responses::whereDate('perm_due_date', '<=', $now)
-        ->where('perm_status','=', 'on process')
-        ->get();
+        // $now = Carbon::now();
+        // $items = Car_responses::whereDate('perm_due_date', '<=', $now)
+        // ->where('perm_status','=', 'on process')
+        // ->get();
 
-        foreach($items as $item) {
-            $item->perm_status = 'finished';
-            $item->save();
-        }
+        // foreach($items as $item) {
+        //     $item->perm_status = 'finished';
+        //     $item->save();
+        // }
     }
 }

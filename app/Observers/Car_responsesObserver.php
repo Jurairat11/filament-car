@@ -85,10 +85,10 @@ class Car_responsesObserver
         //dd($extraDays); // 10.0
 
 
-        // if ($extraDays > 0) {
-        //     $car_responses->days_perm_value += $extraDays;
-        //     $car_responses->save();
-        // }
+        if ($extraDays > 0) {
+            $car_responses->days_perm_value += $extraDays;
+            $car_responses->save();
+        }
 
         //Update status_reply
         if (is_null($car_responses->days_perm) && $car_responses->perm_status === 'finished') {
