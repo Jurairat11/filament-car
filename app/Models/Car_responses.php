@@ -29,6 +29,7 @@ class Car_responses extends Model
         'perm_responsible',
         'img_after_path',
         'actual_date',
+        'days_perm_value',
 
     ];
 
