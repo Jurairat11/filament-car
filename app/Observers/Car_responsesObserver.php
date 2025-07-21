@@ -88,7 +88,7 @@ class Car_responsesObserver
         if ($extraDays > 0) {
             $car_responses->days_perm_value = $extraDays;
         }else {
-            $car_responses->days_perm_value = $extraDays;
+            $car_responses->days_perm_value = 0;
         }
 
         //Update status_reply
