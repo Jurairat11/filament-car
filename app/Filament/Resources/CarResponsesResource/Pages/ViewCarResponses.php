@@ -88,7 +88,9 @@ class ViewCarResponses extends ViewRecord
                     Placeholder::make('actual_date')
                         ->label('วันที่คาดการณ์จะเสร็จสิ้น')
                         ->columnSpan(2)
-                        ->content(fn ($record) => $record->actual_date ? $record->actual_date : '' ),
+                        ->content(fn ($record) => $record->actual_date
+                                        ? Carbon::parse($record->actual_date_date)->format('d/m/Y')
+                                        : '-'),
 
                 ])->columns(4),
 
