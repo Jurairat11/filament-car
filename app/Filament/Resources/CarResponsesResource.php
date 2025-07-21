@@ -167,7 +167,8 @@ class CarResponsesResource extends Resource
 
                                 // ถ้า actual_date ถูกกรอกแล้ว ให้ disabled
                                 return filled($record?->actual_date);
-                            }),
+                            })
+                            ->visible(fn($record) => 'status_reply' !== 'on process'),
 
                             TextInput::make('perm_responsible')
                             ->label('ผู้รับผิดชอบ'),
