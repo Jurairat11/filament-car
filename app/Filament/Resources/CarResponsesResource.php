@@ -148,7 +148,7 @@ class CarResponsesResource extends Resource
                             ->native(false)
                             ->displayFormat('d/m/Y')
                             // ->format('d/m/Y')
-                            ->disabled()
+                            //->disabled()
                             ->dehydrated(true),
 
                             // เพิ่มวันที่คาดการณ์ว่าจะกำหนดเสร็จ
