@@ -85,6 +85,11 @@ class ViewCarResponses extends ViewRecord
                             'path' => $this->getRecord()->img_after_path,
                         ])->columnSpan(1),
 
+                    Placeholder::make('days_perm_value')
+                        ->label('วันที่คาดการณ์จะเสร็จสิ้น')
+                        ->columnSpan(1)
+                        ->content(fn ($record) => $record->days_perm_value ? $record->days_perm_value : '' ),
+
                 ])->columns(4),
 
                     Section::make('Temporary actions')

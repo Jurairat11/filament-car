@@ -153,7 +153,7 @@ class CarResponsesResource extends Resource
 
                             // เพิ่มวันที่คาดการณ์ว่าจะกำหนดเสร็จ
                             DatePicker::make('actual_date')
-                            ->label('วันที่คาดการณ์ว่ากำหนดเสร็จ')
+                            ->label('วันที่คาดการณ์จะเสร็จสิ้น')
                             ->native(false)
                             ->displayFormat('d/m/y')
                             ->placeholder('dd-mm-yyyy')
