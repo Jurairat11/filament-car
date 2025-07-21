@@ -85,10 +85,10 @@ class ViewCarResponses extends ViewRecord
                             'path' => $this->getRecord()->img_after_path,
                         ])->columnSpan(2),
 
-                    Placeholder::make('days_perm_value')
+                    Placeholder::make('actual_date')
                         ->label('วันที่คาดการณ์จะเสร็จสิ้น')
                         ->columnSpan(2)
-                        ->content(fn ($record) => $record->days_perm_value ? $record->days_perm_value : '' ),
+                        ->content(fn ($record) => $record->actual_date ? $record->actual_date : '' ),
 
                 ])->columns(4),
 
