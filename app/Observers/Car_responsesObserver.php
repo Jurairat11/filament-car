@@ -82,7 +82,7 @@ class Car_responsesObserver
 
         $extraDays = $permDueDate->diffInDays($actualDate, false); // false = อนุญาตติดลบได้
 
-        dd($extraDays);
+        //dd($extraDays); // 10.0
 
 
         if ($extraDays > 0) {
