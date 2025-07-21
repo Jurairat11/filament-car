@@ -20,7 +20,7 @@ class DelayStatus extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Update the status of CAR responses to "delay" if the due date has passed and the status reply is "on process"';
 
     /**
      * Execute the console command.
