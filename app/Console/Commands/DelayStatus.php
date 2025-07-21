@@ -41,5 +41,9 @@ class DelayStatus extends Command
                 $item->save();
             }
         }
+
+
     }
+
+
 }
