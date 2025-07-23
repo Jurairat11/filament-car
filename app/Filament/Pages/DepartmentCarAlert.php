@@ -36,6 +36,13 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
         return $query;
     }
 
+    public ?string $id;
+
+    public function mount($id): void
+    {
+        $this->id = $id;
+    }
+
     protected function getTableColumns(): array
     {
         return [
@@ -104,7 +111,8 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
             SelectFilter::make('id')
             ->label('CAR No.')
             ->options(Car_report::pluck('car_no', 'id'))
-            ->default(request('id'))
+            //->default(request('id'))
+            ->default($this->id)
             ->indicator('CAR No.'),
 
             SelectFilter::make('responsible_id')
