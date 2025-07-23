@@ -51,6 +51,7 @@ class Car_responses extends Model
 
         $days = round(now()->diffInDays($this->perm_due_date, false));
 
+        dd($days); // Debugging output
         if ($days === -0.0) { // Handle the case where the difference is exactly zero
             $days = 0;
         }
