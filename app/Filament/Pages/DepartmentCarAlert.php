@@ -36,13 +36,6 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
         return $query;
     }
 
-    public ?string $id;
-
-    public function mount($id): void
-    {
-        $this->id = $id;
-    }
-
     protected function getTableColumns(): array
     {
         return [
