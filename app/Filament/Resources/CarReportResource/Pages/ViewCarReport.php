@@ -87,7 +87,10 @@ class ViewCarReport extends ViewRecord
             $card->setColor('01BC36')
                 ->addFacts('รายละเอียด', ['เลขที่ CAR ' => $data['car_no'], 'ความไม่ปลอดภัย' => $data['car_desc'],
                 'หน่วยงานผู้รับผิดชอบ' => $data['responsible_dept_id']])
-                ->addAction('Visit Issue', route('filament.admin.pages.department-car-alert',  $record->id));
+                ->addAction(
+                    'Visit Issue',
+                    route('filament.admin.pages.department-car-alert') . '?id=' . $this->record->id
+                );
             // send card via connector
             $connector->send($card);
 
