@@ -32,7 +32,7 @@ class DelayStatus extends Command
     public function handle()
     {
         $now = Carbon::now();
-        $items = Car_responses::whereDate('perm_due_date', '<', $now)
+        $items = Car_responses::whereDate('perm_due_date', '<', $now || 'actual_date', '<', $now)
         ->where('status_reply', '=', 'on process')
         ->get();
 

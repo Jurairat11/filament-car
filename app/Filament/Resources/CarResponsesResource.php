@@ -363,8 +363,8 @@ class CarResponsesResource extends Resource
                 ->color('success')
                 ->icon('heroicon-o-check-circle')
                 ->requiresConfirmation()
-                ->modalHeading("Checked the car report.")
-                ->modalDescription('The car responses have been checked.')
+                ->modalHeading("Checked the CAR report.")
+                ->modalDescription('The CAR responses have been checked.')
                 ->modalSubmitActionLabel('OK')
                 ->visible(fn ($record) =>
                         Auth::user()?->hasAnyRole(['Admin', 'Safety']) && $record->status_reply !== 'finished'
@@ -372,7 +372,7 @@ class CarResponsesResource extends Resource
                 ->action(function($record, array $data) {
 
                         $record->update([
-                            'perm_status' => 'finished',
+                            'perm_status' => 'finished', //เอาออกได้
                             'status_reply' => 'finished'
                         ]);
                     }),

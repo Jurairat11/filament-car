@@ -69,6 +69,7 @@ class Car_responsesObserver
         }else{
             $car_responses->temp_status = 'finished';
         }
+
         // Update perm_status
         // ถ้ามีคำอธิบาย (perm_desc) และยังไม่มีสถานะ (perm_status)
         if ($car_responses->perm_desc && !$car_responses->perm_status) {
@@ -83,7 +84,6 @@ class Car_responsesObserver
         $extraDays = $permDueDate->diffInDays($actualDate, false); // false = อนุญาตติดลบได้
 
         //dd($extraDays); // 10.0
-
 
         if ($extraDays > 0) {
             $car_responses->days_perm_value = $extraDays;

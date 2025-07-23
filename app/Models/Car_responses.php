@@ -45,13 +45,13 @@ class Car_responses extends Model
 
     public function getDaysPermAttribute()
     {
-        if ($this->perm_status === 'finished') {
+        if ($this->perm_status === 'finished' || now()->eq($this->actual_date))  {
             return null;
         }
 
         $days = round(now()->diffInDays($this->perm_due_date, false));
 
-        if ($days === -0.0) {
+        if ($days === -0.0) { // Handle the case where the difference is exactly zero
             $days = 0;
         }
 
