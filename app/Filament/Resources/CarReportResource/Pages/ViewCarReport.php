@@ -4,22 +4,23 @@ namespace App\Filament\Resources\CarReportResource\Pages;
 
 use Carbon\Carbon;
 use App\Models\User;
+use GuzzleHttp\Client;
 use App\Models\Problem;
 use Filament\Forms\Form;
-use GuzzleHttp\Client;
 use Illuminate\Support\Str;
+use Filament\Actions\Action;
+use GuzzleHttp\Psr7\Request;
 use App\Models\Car_responses;
 use Filament\Forms\Components\View;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
+use GuzzleHttp\Cookie\SessionCookieJar;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Forms\Components\Placeholder;
-use Filament\Actions\Action;
 use App\Filament\Resources\CarReportResource;
-use GuzzleHttp\Cookie\SessionCookieJar;
-use GuzzleHttp\Psr7\Request;
 
 class ViewCarReport extends ViewRecord
 {
@@ -68,7 +69,6 @@ class ViewCarReport extends ViewRecord
             }
 
             $data = [
-                'id' => $this->record->id ?? '-',
                 'car_no' => $this->record->car_no ?? '-',
                 'car_desc' => $this->record->car_desc ?? '-',
                 'responsible_dept_id' => $this->record->responsible->dept_name?? '-',
@@ -91,7 +91,7 @@ class ViewCarReport extends ViewRecord
                 ->addAction(
                     'Visit Issue',
                     route('filament.admin.pages.department-car-alert') . '?id=' . ($this->record->id ?? '')
-                );
+                ); Log::info('CAR record id: ' . ($this->record->id ?? 'NULL'));
             // send card via connector
             $connector->send($card);
 
