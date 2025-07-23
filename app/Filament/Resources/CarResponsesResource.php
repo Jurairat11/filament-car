@@ -231,13 +231,6 @@ class CarResponsesResource extends Resource
                 ->label('ผู้สร้าง')
                 ->toggleable(isToggledHiddenByDefault: true),
 
-                TextColumn::make('created_at')
-                ->label('Created at')
-                ->sortable()
-                ->timezone('Asia/Bangkok')
-                ->dateTime('d/m/Y H:i')
-                ->toggleable(isToggledHiddenByDefault: true),
-
                 TextColumn::make('temp_desc')
                 ->label('มาตรการแก้ไขชั่วคราว')
                 ->limit(50)
@@ -302,7 +295,21 @@ class CarResponsesResource extends Resource
                         'finished' => 'finished',
                         'delay' => 'delay',
                         default => ucfirst($state),
-                    })
+                    }),
+
+                TextColumn::make('created_at')
+                ->label('Created at')
+                ->sortable()
+                ->timezone('Asia/Bangkok')
+                ->dateTime('d/m/Y H:i')
+                ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('updated_at')
+                ->label('Updated at')
+                ->sortable()
+                ->timezone('Asia/Bangkok')
+                ->dateTime('d/m/Y H:i')
+                ->toggleable(isToggledHiddenByDefault: true),
 
             ])
             ->filters([
