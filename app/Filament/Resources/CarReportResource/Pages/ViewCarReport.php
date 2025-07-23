@@ -68,6 +68,7 @@ class ViewCarReport extends ViewRecord
             }
 
             $data = [
+                'id' => $this->record->id ?? '-',
                 'car_no' => $this->record->car_no ?? '-',
                 'car_desc' => $this->record->car_desc ?? '-',
                 'responsible_dept_id' => $this->record->responsible->dept_name?? '-',
