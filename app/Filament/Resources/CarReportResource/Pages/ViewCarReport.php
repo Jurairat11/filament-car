@@ -68,7 +68,6 @@ class ViewCarReport extends ViewRecord
             }
 
             $data = [
-                'id' => $this->record->id ?? '-',
                 'car_no' => $this->record->car_no ?? '-',
                 'car_desc' => $this->record->car_desc ?? '-',
                 'responsible_dept_id' => $this->record->responsible->dept_name?? '-',
@@ -90,7 +89,7 @@ class ViewCarReport extends ViewRecord
                 'หน่วยงานผู้รับผิดชอบ' => $data['responsible_dept_id']])
                 ->addAction(
                     'Visit Issue',
-                    route('filament.admin.pages.department-car-alert' , $data['id']));
+                    route('filament.admin.pages.department-car-alert' , ['id' => $this->record->id]));
             // send card via connector
             $connector->send($card);
 
