@@ -104,8 +104,7 @@ class DepartmentCarAlert extends Page implements Tables\Contracts\HasTable
             SelectFilter::make('id')
             ->label('CAR No.')
             ->options(Car_report::pluck('car_no', 'id'))
-            //->default(request('id'))
-            ->default($this->id)
+            ->default(request('id'))
             ->indicator('CAR No.'),
 
             SelectFilter::make('responsible_id')
