@@ -33,22 +33,29 @@ class ViewCarReport extends ViewRecord
             ->color('success')
             ->requiresConfirmation()
             ->modalHeading("Report CAR")
-            ->modalDescription('You are about to report the car issue to the responsible department.')
+            ->modalDescription('You are about to report the CAR issue to the responsible department.')
             ->modalSubmitActionLabel('OK')
             ->visible(fn ($record) =>
                         Auth::user()?->hasAnyRole(['Safety','Admin']) && $record->status === 'draft'
                     )
             ->action(function($record, array $data) {
 
-                Notification::make()
-                ->title('Reported successfully')
-                ->success()
-                ->send();
+               // ดึง due_days จากความสัมพันธ์ hazard_level (หรือจะใช้ query ก็ได้)
+                $dueDays = optional($record->hazardLevel)->due_days ?? 0;
 
+                // คำนวณวันครบกำหนด
+                $dueDate = now()->addDays($dueDays);
+
+                // อัปเดตข้อมูล
                 $record->update([
                     'status' => 'reported',
-
+                    'car_due_date' => $dueDate,
                 ]);
+
+                Notification::make()
+                    ->title('Reported successfully')
+                    ->success()
+                    ->send();
                 Problem::where('id', $record->problem_id)->update(['status' => 'reported']);
 
                 //แจ้งหน่วยงานที่รับผิดชอบ

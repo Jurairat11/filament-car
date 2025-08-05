@@ -159,25 +159,18 @@ class CarReportResource extends Resource
                             ->helperText(new HtmlString('<strong style="color:red;">*ระดับ A = 3 วัน, ระดับ B = 5 วัน และระดับ C = 7 วัน</strong>'))
                             ->placeholder('เลือกระดับความอันตราย')
                             ->relationship('hazardLevel','level_name')
-                            ->reactive()
-                            ->afterStateUpdated(function ($state, callable $set) {
-                                // Hazard_level model has a 'due_days' field
-                                $hazardLevel = Hazard_level::find($state);
+                            // ->reactive()
+                            // ->afterStateUpdated(function ($state, callable $set) {
+                            //     // Hazard_level model has a 'due_days' field
+                            //     $hazardLevel = Hazard_level::find($state);
 
-                                if ($hazardLevel && $hazardLevel->due_days) {
-                                    $currentDate = now();
-                                    $newDueDate = $currentDate->copy()->addDays($hazardLevel->due_days);
-                                    $set('car_due_date', $newDueDate->format('Y/m/d'));
+                            //     if ($hazardLevel && $hazardLevel->due_days) {
+                            //         $currentDate = now();
+                            //         $newDueDate = $currentDate->copy()->addDays($hazardLevel->due_days);
+                            //         $set('car_due_date', $newDueDate->format('Y/m/d'));
 
-                                    //dd($newDueDate);
-                                }
-
-                                // $date =2024-08-08;
-                                // $daysToAdd = 5;
-                                // $date = $date->addDays($daysToAdd);
-
-                                //addDays(5)
-                            })
+                            //     }
+                            // })
                             ->required(),
 
                         Select::make('hazard_type_id')
