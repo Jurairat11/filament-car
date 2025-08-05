@@ -24,7 +24,7 @@ class DelayStatus extends Command
      *
      * @var string
      */
-    protected $description = 'Update the status of CAR responses to "delay" if the due date has passed and the status reply is "on process"';
+    protected $description = 'Update the status of CAR responses to "delay" if the due date or actual date has passed and the status reply is "on process"';
 
     /**
      * Execute the console command.
@@ -32,53 +32,56 @@ class DelayStatus extends Command
     public function handle()
     {
         $now = Carbon::now();
-        $items = Car_responses::whereDate('perm_due_date', '<', $now || 'actual_date', '<', $now)
-        ->where('status_reply', '=', 'on process')
-        ->get();
+
+        // หาเฉพาะรายการที่ perm_due_date หรือ actual_date เลยวันนี้ และ status_reply = 'on process'
+        $items = Car_responses::where('status_reply', 'on process')
+            ->where(function ($query) use ($now) {
+                $query->whereDate('perm_due_date', '<', $now)
+                    ->orWhereDate('actual_date', '<', $now);
+            })
+            ->get();
+
+        if ($items->isEmpty()) {
+            $this->info('No overdue CAR responses found.');
+            return;
+        }
 
         foreach ($items as $item) {
-            //dd($item->days_perm); //-2.0
-
-            // Use the accessor in PHP
+            // ตรวจสอบว่า days_perm ติดลบจริง
             if ($item->days_perm < 0) {
                 $item->status_reply = 'delay';
                 $item->save();
-            }
-        }
 
-        $item = $items->first(); // Get the first item to use for notification
+                // ค้นหา CAR Report
+                $report = Car_report::find($item->car_id);
 
-            $report = Car_report::find($item->car_id);
+                if ($report) {
+                    // รวมผู้ใช้ที่ต้องแจ้งเตือน
+                    $usersToNotify = collect();
 
-            if ($report) {
-                    // Notify users in dept_id
                     if ($report->dept_id) {
-                        $users = User::where('dept_id', $report->dept_id)->get();
-                        foreach ($users as $user) {
-                            Notification::make()
-                                ->title("CAR Overdue")
-                                ->icon('heroicon-o-exclamation-triangle')
-                                ->iconColor('danger')
-                                ->body("CAR no.{$report->car_no} has no replied")
-                                ->success()
-                                ->sendToDatabase($user);
-                        }
+                        $usersToNotify = $usersToNotify->merge(
+                            User::where('dept_id', $report->dept_id)->get()
+                        );
                     }
 
-                    // Notify users in responsible_dept_id
                     if ($report->responsible_dept_id) {
-                        $users = User::where('dept_id', $report->responsible_dept_id)->get();
-                        foreach ($users as $user) {
-                            Notification::make()
-                                ->title("CAR Overdue")
-                                ->icon('heroicon-o-exclamation-triangle')
-                                ->iconColor('danger')
-                                ->body("CAR no.{$report->car_no} has overdue")
-                                ->success()
-                                ->sendToDatabase($user);
-                        }
-            }
-        }
+                        $usersToNotify = $usersToNotify->merge(
+                            User::where('dept_id', $report->responsible_dept_id)->get()
+                        );
+                    }
+
+                    // แจ้งเตือนผู้ใช้ทั้งหมดในระบบ
+                    foreach ($usersToNotify as $user) {
+                        Notification::make()
+                            ->title("CAR Overdue")
+                            ->icon('heroicon-o-exclamation-triangle')
+                            ->iconColor('danger')
+                            ->body("CAR no. {$report->car_no} has overdue")
+                            ->success()
+                            ->sendToDatabase($user);
+                    }
+
             $data = [
                         'car_id' => $item->carReport->car_no ?? '-',
                         'cause' => $item->cause ?? '-',
