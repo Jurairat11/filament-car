@@ -146,10 +146,10 @@ class CarResponsesResource extends Resource
                             DatePicker::make('perm_due_date')
                             ->label('วันที่กำหนดเสร็จ')
                             ->native(false)
-                            ->displayFormat('d/m/Y')
+                            ->displayFormat('d/m/Y'),
                             // ->format('d/m/Y')
-                            ->disabled()
-                            ->dehydrated(true),
+                            // ->disabled()
+                            // ->dehydrated(true),
 
                             // เพิ่มวันที่คาดการณ์ว่าจะกำหนดเสร็จ
                             DatePicker::make('actual_date')
