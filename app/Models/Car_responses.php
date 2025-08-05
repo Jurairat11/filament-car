@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -45,18 +46,18 @@ class Car_responses extends Model
 
     public function getDaysPermAttribute()
     {
-        if ($this->perm_status === 'finished' || now()->eq($this->actual_date))  {
-            return null;
-        }
+    // หยุดการคำนวณ ถ้าสถานะคือ finished หรือ actual_date ตรงกับวันนี้
+    if ($this->perm_status === 'finished' || ($this->actual_date && now()->eq(Carbon::parse($this->actual_date)))) {
+        return null;
+    }
 
-        $days = round(now()->diffInDays($this->perm_due_date, false)) + 1; // +1 to include the current day
+    $days = round(now()->diffInDays($this->perm_due_date, false)) + 1;
 
-        //dd($days); // Debugging output
-        if ($days === -0.0) { // Handle the case where the difference is exactly zero
-            $days = 0;
-        }
+    if ($days === -0.0) {
+        $days = 0;
+    }
 
-        return $days + ($this->days_perm_value ?? 0);
+    return $days + ($this->days_perm_value ?? 0);
     }
 
     public function carReport() {
