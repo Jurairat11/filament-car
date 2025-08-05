@@ -24,7 +24,7 @@ class DelayStatus extends Command
      *
      * @var string
      */
-    protected $description = 'Update the status of CAR responses to "delay" if the due date or actual date has passed and the status reply is "on process"';
+    protected $description = 'Update the status of CAR responses to "delay" if the due date has passed and the status reply is "on process"';
 
     /**
      * Execute the console command.
@@ -81,7 +81,8 @@ class DelayStatus extends Command
                             ->success()
                             ->sendToDatabase($user);
                     }
-
+                }
+            }
             $data = [
                         'car_id' => $item->carReport->car_no ?? '-',
                         'cause' => $item->cause ?? '-',
@@ -106,6 +107,7 @@ class DelayStatus extends Command
 
 
     }
+}
 
 
 }
