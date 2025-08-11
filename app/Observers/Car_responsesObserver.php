@@ -81,7 +81,7 @@ class Car_responsesObserver
         $permDueDate = Carbon::parse($car_responses->perm_due_date);
         $actualDate = Carbon::parse($car_responses->actual_date);
 
-        $extraDays = $permDueDate->diffInDays($actualDate, false); // false = อนุญาตติดลบได้
+        $extraDays = round($permDueDate->diffInDays($actualDate, false)); // false = อนุญาตติดลบได้
 
         //dd($extraDays); // 10.0
 
