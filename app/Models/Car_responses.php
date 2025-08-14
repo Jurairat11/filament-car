@@ -51,7 +51,7 @@ class Car_responses extends Model
         return null;
     }
 
-    $days = round(now()->diffInDays($this->perm_due_date, false)) + 1;
+    $days = round(now()->diffInDays($this->perm_due_date, false));
 
     if ($days === -0.0) {
         $days = 0;
